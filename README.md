@@ -30,6 +30,10 @@ To start the application, right click on the "App" class found within the base p
 ## Android App
 The Android application is based on the following technologies:
   * Spring for Android
+  * Jackson
+  * Google Play services Maps
+  * Google Play services GCM
+  * Google Maps Android API utility library
   
 ### Import into Android Studio
 
