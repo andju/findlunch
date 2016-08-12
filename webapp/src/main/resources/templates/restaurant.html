@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+
+		<h1 th:if="${#httpServletRequest.requestURI}=='/restaurant/add'">
+			<span th:text="#{restaurant.label.add}" th:remove="tag">title</span>
+			<small th:text="#{label.required}">Subtitle</small>
+		</h1>
+		<h1 th:if="${#httpServletRequest.requestURI}=='/restaurant/edit'">
+			<span th:text="#{restaurant.label.edit}" th:remove="tag">title</span>
+			<small th:text="#{label.required}">Subtitle</small>
+
+		</h1>
+		<div th:if="${param.required}" class="alert alert-danger" role="alert"
+			th:text="#{restaurant.required}">restaurant.required</div>
+
+
+		<form th:object="${restaurant}" method="post" action="#">
+			<input type="hidden" th:field="${restaurant.id}" />
+			<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td><label class="control-label" for="name"
+								th:text="#{restaurant.label.name}">name</label>*</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.name}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-12"
+									th:classappend="${#fields.hasErrors('${restaurant.name}')}? has-error">
+									<input type="text" th:field="${restaurant.name}"
+										class="form-control" id="name"
+										th:placeholder="#{restaurant.label.name}" />
+								</div>
+
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.name}')}? has-error">
+									<div class="alert alert-danger" role="alert"
+										th:errors="${restaurant.name}"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="street"
+								th:text="#{restaurant.label.street}">street,
+									streetnumber</label>*</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.street}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-8"
+									th:classappend="${#fields.hasErrors('${restaurant.street}')}? has-error">
+									<input type="text" th:field="${restaurant.street}"
+										class="form-control" id="street"
+										th:placeholder="#{restaurant.placeholder.street}" />
+								</div>
+								<div class="form-group col-md-4"
+									th:classappend="${#fields.hasErrors('${restaurant.streetNumber}')}? has-error">
+									<input type="text" th:field="${restaurant.streetNumber}"
+										class="form-control" id="streetnumber"
+										th:placeholder="#{restaurant.placeholder.streetnumber}" />
+								</div>
+
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.street}')} or ${#fields.hasErrors('${restaurant.streetNumber}')}">
+									<div
+										th:if="${#fields.hasErrors('${restaurant.street}')}? has-error"
+										class="alert alert-danger" role="alert"
+										th:errors="${restaurant.street}"></div>
+									<div
+										th:if="${#fields.hasErrors('${restaurant.streetNumber}')}? has-error"
+										class="alert alert-danger" role="alert"
+										th:errors="${restaurant.streetNumber}"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="street"
+								th:text="#{restaurant.label.address}">address</label>*</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.address}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-3"
+									th:classappend="${#fields.hasErrors('${restaurant.zip}')}? has-error">
+									<input type="text" th:field="${restaurant.zip}"
+										class="form-control" id="zip"
+										th:placeholder="#{restaurant.placeholder.zip}" />
+								</div>
+								<div class="form-group col-md-6"
+									th:classappend="${#fields.hasErrors('${restaurant.city}')}? has-error">
+									<input type="text" th:field="${restaurant.city}"
+										class="form-control" id="city"
+										th:placeholder="#{restaurant.placeholder.city}" />
+								</div>
+								<div class="form-group col-md-3"
+									th:classappend="${#fields.hasErrors('${restaurant.country}')}? has-error">
+									<select class="form-control" th:field="${restaurant.country}">
+										<option th:each="country : ${countries}"
+											th:value="${country.countryCode}" th:text="${country.name}"></option>
+									</select>
+								</div>
+
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.zip}')} or ${#fields.hasErrors('${restaurant.city}')} or ${#fields.hasErrors('${restaurant.country}')} or ${geocodingException}">
+									<div
+										th:if="${#fields.hasErrors('${restaurant.zip}')}? has-error"
+										class="alert alert-danger" role="alert"
+										th:errors="${restaurant.zip}"></div>
+									<div
+										th:if="${#fields.hasErrors('${restaurant.city}')}? has-error"
+										class="alert alert-danger" role="alert"
+										th:errors="${restaurant.city}"></div>
+									<div
+										th:if="${#fields.hasErrors('${restaurant.country}')}? has-error"
+										class="alert alert-danger" role="alert"
+										th:errors="${restaurant.country}"></div>
+									<div th:if="${geocodingException}" class="alert alert-danger"
+										role="alert" th:text="${geocodingException}"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="phone"
+								th:text="#{restaurant.label.phone}">phone</label>*</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.phone}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-12"
+									th:classappend="${#fields.hasErrors('${restaurant.phone}')}? has-error">
+									<input type="text" th:field="${restaurant.phone}"
+										class="form-control" id="phone"
+										th:placeholder="#{restaurant.label.phone}" />
+								</div>
+
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.phone}')}? has-error">
+									<div class="alert alert-danger" role="alert"
+										th:errors="${restaurant.phone}"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="email"
+								th:text="#{restaurant.label.email}">email</label>*</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.email}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-12"
+									th:classappend="${#fields.hasErrors('${restaurant.email}')}? has-error">
+									<input type="text" th:field="${restaurant.email}"
+										class="form-control" id="email"
+										th:placeholder="#{restaurant.label.email}" />
+								</div>
+
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.email}')}? has-error">
+									<div class="alert alert-danger" role="alert"
+										th:errors="${restaurant.email}"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="offertimes"
+								th:text="#{restaurant.label.offertimes}">offertimes</label>*</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip"
+								th:title="#{restaurant.tooltip.offertimes}"></span></td>
+							<td>
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.timeSchedules}')}? has-error">
+									<div class="alert alert-danger" role="alert"
+										th:errors="${restaurant.timeSchedules}"></div>
+								</div>
+
+								<div class="form-group col-md-12">
+									<table width="100%">
+										<tr>
+											<td style="width: 120px"><b><label
+													class="control-label" for="day"
+													th:text="#{restaurant.label.day}">day</label></b></td>
+											<td style="width: 50px">&nbsp;</td>
+											<td style="text-align: center;"><b><label
+													class="control-label" for="offerstarttime"
+													th:text="#{restaurant.label.offertimes.offerstarttime}">offerstarttime</label></b></td>
+											<td style="text-align: center;"><b><label
+													class="control-label" for="offerendtime"
+													th:text="#{restaurant.label.offertimes.offerendtime}">offerendtime</label></b></td>
+										</tr>
+
+
+										<tr th:each="timeSchedule,stat : ${restaurant.timeSchedules}">
+											<td th:text="${timeSchedule.dayOfWeek.name}" valign="top"></td>
+											<td valign="top"><div
+													th:if="!${restaurant.timeSchedules[__${stat.index}__].offerStartTime}">
+													<button type="submit" class="btn btn-default"
+														name="addOfferTime" th:value="${stat.index}"
+														aria-label="Left Align">
+														<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+													</button>
+													<!-- </div> -->
+												</div></td>
+											<td colspan="2">
+
+												<table width="100%">
+													<tr>
+														<td><div
+																th:if="${restaurant.timeSchedules[__${stat.index}__].offerStartTime}">
+																<input type="hidden"
+																	th:field="${restaurant.timeSchedules[__${stat.index}__].id}" />
+																<div class='input-group date' style="width: 100%"
+																	th:id="'datetimepickerStartDate' + [__${stat.index}__]">
+																	<input type='text'
+																		th:field="${restaurant.timeSchedules[__${stat.index}__].offerStartTime}"
+																		class="form-control" id="offerStartTime" /> <span
+																		class="input-group-addon"> <span
+																		class="glyphicon glyphicon-calendar"></span>
+																	</span>
+																</div>
+															</div> <span
+															th:if="!${restaurant.timeSchedules[__${stat.index}__].openingTimes}">
+																<span
+																th:if="!${restaurant.timeSchedules[__${stat.index}__].offerStartTime}"
+																style="height: 35px; display: table-cell; vertical-align: middle">
+																	<label class="control-label" for="dayoff"
+																	th:text="#{restaurant.label.dayoff}">day off</label>
+															</span>
+														</span>
+															<div
+																th:if="${restaurant.timeSchedules[__${stat.index}__].openingTimes}">
+																<div
+																	th:if="!${restaurant.timeSchedules[__${stat.index}__].offerStartTime}">
+																	<label class="control-label" for="dayoff"
+																		th:text="#{restaurant.label.offertimes.nooffertime}">no
+																		offer time</label>
+																</div>
+															</div></td>
+														<td><div
+																th:if="${restaurant.timeSchedules[__${stat.index}__].offerEndTime}">
+																<input type="hidden"
+																	th:field="${restaurant.timeSchedules[__${stat.index}__].id}" />
+																<div class='input-group date' style="width: 100%"
+																	th:id="'datetimepickerEndDate' + [__${stat.index}__]">
+																	<input type='text'
+																		th:field="${restaurant.timeSchedules[__${stat.index}__].offerEndTime}"
+																		class="form-control" id="offerEndTime" /> <span
+																		class="input-group-addon"> <span
+																		class="glyphicon glyphicon-calendar"></span>
+																	</span>
+																</div>
+															</div></td>
+
+														<td>
+															<div
+																th:if="${restaurant.timeSchedules[__${stat.index}__].offerStartTime}">
+																<button class="btn btn-default" type="submit"
+																	name="removeOfferTime" th:value="${stat.index}"
+																	aria-label="Left Align">
+																	<span class="glyphicon glyphicon-trash"
+																		aria-hidden="true"></span>
+																</button>
+
+															</div>
+														</td>
+													</tr>
+
+												</table>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="timeschedules"
+								th:text="#{restaurant.label.timeschedules}">timeschedules</label>
+							</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip"
+								th:title="#{restaurant.tooltip.timeschedules}"></span></td>
+							<td>
+								<div class="form-group col-md-12">
+									<table width="100%">
+										<tr>
+											<td style="width: 120px"><b><label
+													class="control-label" for="day"
+													th:text="#{restaurant.label.day}">day</label></b></td>
+											<td style="width: 50px">&nbsp;</td>
+											<td style="text-align: center;"><b><label
+													class="control-label" for="openingtime"
+													th:text="#{restaurant.label.timeschedules.openingtime}">openingtime</label></b></td>
+											<td style="text-align: center;"><b><label
+													class="control-label" for="closingtime"
+													th:text="#{restaurant.label.timeschedules.closingtime}">closingtime</label></b></td>
+										</tr>
+
+
+										<tr th:each="timeSchedule,stat : ${restaurant.timeSchedules}">
+											<input type="hidden"
+												th:field="${restaurant.timeSchedules[__${stat.index}__].dayOfWeek}" />
+											<input type="hidden"
+												th:field="${restaurant.timeSchedules[__${stat.index}__].id}" />
+											<td th:text="${timeSchedule.dayOfWeek.name}" valign="top"></td>
+											<td valign="top">
+												<button type="submit" class="btn btn-default"
+													name="addOpeningTime" th:value="${stat.index}"
+													aria-label="Left Align">
+													<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+												</button>
+											</td>
+											<td colspan="2">
+												<table width="100%">
+
+													<tr
+														style="height: 35px; display: table-cell; vertical-align: middle"
+														th:if="${#lists.isEmpty(timeSchedule.openingTimes)}">
+														<td><span th:if="${timeSchedule.offerStartTime}"><label
+																class="control-label" for="equal"
+																th:text="#{restaurant.label.offertimes.equals.timeschedule}">timeschedule
+																	= offer times</label></span><span
+															th:if="!${timeSchedule.offerStartTime}"><label
+																class="control-label" for="dayoff"
+																th:text="#{restaurant.label.dayoff}">day off</label></span></td>
+														<td></td>
+													</tr>
+
+
+													<tr th:each="openingTime,ot : ${timeSchedule.openingTimes}">
+														<td><input type="hidden"
+															th:field="${restaurant.timeSchedules[__${stat.index}__].openingTimes[__${ot.index}__].id}" />
+															<div class='input-group date' style="width: 100%"
+																th:id="'datetimepickerOpeningTime' + [__${stat.index}__] + [__${ot.index}__]">
+																<input type='text'
+																	th:field="${restaurant.timeSchedules[__${stat.index}__].openingTimes[__${ot.index}__].openingTime}"
+																	class="form-control" id="openingTime" /> <span
+																	class="input-group-addon"> <span
+																	class="glyphicon glyphicon-calendar"></span>
+																</span>
+															</div></td>
+														<td><input type="hidden"
+															th:field="${restaurant.timeSchedules[__${stat.index}__].openingTimes[__${ot.index}__].id}" />
+															<div class='input-group date' style="width: 100%"
+																th:id="'datetimepickerClosingTime' + [__${stat.index}__] + [__${ot.index}__]">
+																<input type='text'
+																	th:field="${restaurant.timeSchedules[__${stat.index}__].openingTimes[__${ot.index}__].closingTime}"
+																	class="form-control" id="closingTime" /> <span
+																	class="input-group-addon"> <span
+																	class="glyphicon glyphicon-calendar"></span>
+																</span>
+															</div></td>
+														<td>
+															<button type="submit" class="btn btn-default"
+																name="removeOpeningTime"
+																th:value="${stat.index} + '.' + ${ot.index}"
+																aria-label="Left Align">
+																<span class="glyphicon glyphicon-trash"
+																	aria-hidden="true"></span>
+															</button>
+
+														</td>
+													</tr>
+												</table>
+
+											</td>
+										</tr>
+									</table>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="url"
+								th:text="#{restaurant.label.url}">url</label></td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.url}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-12"
+									th:classappend="${#fields.hasErrors('${restaurant.url}')}? has-error">
+									<input type="text" th:field="${restaurant.url}"
+										class="form-control" id="url"
+										th:placeholder="#{restaurant.label.url}" />
+								</div>
+
+								<div class="form-group col-md-12"
+									th:if="${#fields.hasErrors('${restaurant.url}')}? has-error">
+									<div class="alert alert-danger" role="alert"
+										th:errors="${restaurant.url}"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="kitchentypes"
+								th:text="#{restaurant.label.kitchentypes}">kitchentypes</label>
+							</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip"
+								th:title="#{restaurant.tooltip.kitchentypes}"></span></td>
+							<td>
+								<div class="form-group col-md-12"
+									th:each="kitchenType : ${kitchenTypes}">
+									<input type="checkbox" th:text=" ${kitchenType.name}"
+										th:field="${restaurant.kitchenTypes}"
+										th:value="${kitchenType.id}" />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="restauranttype"
+								th:text="#{restaurant.label.restauranttype}">restauranttype</label>
+							</td>
+							<td style="width: 15px"><span
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip"
+								th:title="#{restaurant.tooltip.restauranttype}"></span></td>
+							<td><div class="form-group col-md-12">
+									<select class="form-control"
+										th:field="${restaurant.restaurantType}">
+										<option th:each="restaurantType : ${restaurantTypes}"
+											th:value="${restaurantType.id}"
+											th:text="${restaurantType.name}"></option>
+									</select>
+								</div></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="width: 15px"></td>
+							<td>
+								<div class="form-actions">
+									<button type="submit" class="btn btn-success"
+										name="saveRestaurant" th:text="#{button.save}">save</button>
+									<button type="submit" class="btn btn-danger" name="cancel"
+										th:text="#{button.cancel}">cancel</button>
+								</div>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+
+		</form>
+	</div>
+	<br />
+	<br />
+	<script type="text/javascript">
+		$(function() {
+			$("[id^=datetimepicker]").datetimepicker({
+				format : 'HH:mm',
+			});
+		});
+
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title></title>
+</head>
+<body>
+	<nav th:fragment="navbar" class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" th:href="@{/home}"><img
+					th:src="@{/images/findLunch.png}" height="25" /></a>
+			</div>
+			<div class="navbar-collapse collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li role="presentation"
+						th:class="${#httpServletRequest.servletPath}=='/home'? active"><a
+						th:href="@{/home}">Home</a></li>
+					<li sec:authorize="isAuthenticated()"
+						th:class="${#httpServletRequest.servletPath}=='/offer'? active"><a
+						th:href="@{/offer}" th:text="#{menu.label.offer}">offer</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown" sec:authorize="isAuthenticated()"><a
+						href="#" class="dropdown-toggle" data-toggle="dropdown"
+						role="button" aria-haspopup="true" aria-expanded="false"
+						sec:authentication="name">Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a th:href="@{/logout}" th:text="#{menu.label.logout}">Logout</a></li>
+						</ul></li>
+					<li sec:authorize="isAnonymous()"
+						th:class="${#httpServletRequest.servletPath}=='/register'? active"><a
+						th:href="@{/register}"><span class="glyphicon glyphicon-user"></span>
+							<span class="control-label" for="findlunch"
+							th:text="#{menu.label.register}">register</span></a></li>
+					<li sec:authorize="isAnonymous()"
+						th:class="${#httpServletRequest.servletPath}=='/login'? active"><a
+						th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span>
+							<span class="control-label" for="findlunch"
+							th:text="#{menu.label.login}">login</span></a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+
+</body>
+</html>

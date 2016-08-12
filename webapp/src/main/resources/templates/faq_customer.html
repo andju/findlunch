@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{faq.customer.headline}">FAQ Customer</h1>
+		<div>
+			<p th:text="#{faq.paragraph}"></p>
+			<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" th:text='#{faq.h1}'>
+        Was ist FindLunch?</a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse in">
+      <div class="panel-body" th:text='#{faq.cust.t1}'></div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" th:text='#{faq.h2}'>
+        Wie registriere ich mich?</a>
+      </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t2}'></div>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" th:text='#{faq.h3}'>
+        Wie lösche ich meinen Account?</a>
+      </h4>
+    </div>
+    <div id="collapse3" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t3}'></div>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4" th:text='#{faq.h7}'>
+       Was kostet FindLunch?</a>
+      </h4>
+    </div>
+    <div id="collapse4" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t7}'></div>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse5" th:text='#{faq.h21}'>
+         Muss ich mich registrieren?</a>
+      </h4>
+    </div>
+    <div id="collapse5" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t21}'></div>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6" th:text='#{faq.h22}'>
+        Wie kann ich nach einem Angebot suchen? </a>
+      </h4>
+    </div>
+    <div id="collapse6" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t22}'></div>
+    </div>
+  </div>
+   
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" th:text='#{faq.h23}'>
+        Wie kann ich die Angebote filtern? </a>
+      </h4>
+    </div>
+    <div id="collapse7" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t23}'></div>
+    </div>
+  </div> 
+   
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse8" th:text='#{faq.h24}'>
+        Kann ich das Essen direkt in der App bestellen?</a>
+      </h4>
+    </div>
+    <div id="collapse8" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t24}'></div>
+    </div>
+  </div>   
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse9" th:text='#{faq.h25}'>
+        Was ist die Push-Benachrichtigung?</a>
+      </h4>
+    </div>
+    <div id="collapse9" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t25}'></div>
+    </div>
+  </div> 
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse10" th:text='#{faq.h26}'>
+        Wie kann ich eine Benachrichtigung anlegen?</a>
+      </h4>
+    </div>
+    <div id="collapse10" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t26}'></div>
+    </div>
+  </div> 
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse11" th:text='#{faq.h27}'>
+        Ich möchte keine Push-Benachrichtigungen mehr erhalten?</a>
+      </h4>
+    </div>
+    <div id="collapse11" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t27}'></div>
+    </div>
+  </div> 
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse12" th:text='#{faq.h28}'>
+        Wieso erhalte ich Push-Benachrichtungen nach Abmeldung?</a>
+      </h4>
+    </div>
+    <div id="collapse12" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.cust.t28}'></div>
+    </div>
+  </div> 
+  
+</div>
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

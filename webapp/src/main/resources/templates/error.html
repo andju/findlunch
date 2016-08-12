@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes"></head>
+<body>
+	<div th:replace="fragments/navigation :: navbar"></div>
+
+	<div class="container">
+		<h1 th:text="#{error.h1}"></h1>
+		<p th:text="#{error.p1}"></p>
+		<p th:text="#{error.p2}"></p>
+	</div>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

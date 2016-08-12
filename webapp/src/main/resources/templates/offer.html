@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{offer.label}">offer</h1>
+
+		<div th:if="${param.invalid_id}" class="alert alert-danger"
+			role="alert" th:text="#{invalid.offerId}">invalid.offerId</div>
+		<div th:if="${param.success}" class="alert alert-success" role="alert"
+			th:text="#{success.offer.saved}">success.offer.saved</div>
+		<div th:if="${param.deleted}" class="alert alert-success" role="alert"
+			th:text="#{success.offer.deleted}">success.offer.deleted</div>
+
+		<br /> <a th:href="@{/offer/add}"><button class="btn btn-success">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			</button></a> <br />
+
+		<div class="table-responsive">
+			<table class="table table-hover">
+					<tr>
+						<th><label class="control-label" for="title"
+							th:text="#{offer.label.title}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{offer.label.description}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{offer.label.price}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{offer.label.preparationTime}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{offer.label.startDate}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{offer.label.endDate}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.monday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.tuesday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.wednesday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.thursday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.friday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.satturday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{days.label.sunday.short}">label</label></th>
+						<th><label class="control-label" for="title"
+							th:text="#{label.action}">label</label></th>
+					</tr>
+
+				<div th:each="offer, stat: *{offers}">
+					<tr
+						th:if="${#dates.format(#dates.createNow(), 'yyyyMMdd')} ge ${#dates.format(offer.startDate, 'yyyyMMdd')} and ${#dates.format(#dates.createNow(), 'yyyyMMdd')} le ${#dates.format(offer.endDate, 'yyyyMMdd')}">
+						<td th:text="*{offer.title}"></td>
+						<td th:text="*{offer.description}"></td>
+						<td><span
+							th:text="${#numbers.formatDecimal(offer.price, 1, 'POINT', 2, 'COMMA')}">10.00</span>
+							&euro;</td>
+						<td th:text="*{offer.preparationTime}"></td>
+						<td th:text="${#dates.format(offer.startDate, 'dd.MM.yyyy')}"></td>
+						<td th:text="${#dates.format(offer.endDate, 'dd.MM.yyyy')}"></td>
+						<td th:each="dayOfWeek, status : ${dayOfWeeks}"
+							th:with="checkboxChecked=${false}"><input type="checkbox"
+							th:checked="${#lists.contains(offer.dayOfWeeks, dayOfWeek)}"
+							onclick="return false" /></td>
+						<td><a th:href="@{/offer/edit/{id}(id=*{offer.id})}"><button
+									class="btn btn-default">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</button></a>
+							<button class="btn btn-default"
+								th:attr="data-href=@{/offer/delete/{id}(id=*{offer.id})}"
+								data-toggle="modal" data-target="#confirm-delete">
+								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+							</button></td>
+					</tr>
+					<tr
+						th:if="${#dates.format(#dates.createNow(), 'yyyyMMdd')} lt ${#dates.format(offer.startDate, 'yyyyMMdd')} or ${#dates.format(#dates.createNow(), 'yyyyMMdd')} gt ${#dates.format(offer.endDate, 'yyyyMMdd')}">
+						<td style="color: #C0C0C0;" th:text="*{offer.title}"></td>
+						<td style="color: #C0C0C0;" th:text="*{offer.description}"></td>
+						<td style="color: #C0C0C0;"><span
+							th:text="${#numbers.formatDecimal(offer.price, 1, 'POINT', 2, 'COMMA')}"
+							style="color: #C0C0C0;">10.00</span> &euro;</td>
+						<td style="color: #C0C0C0;" th:text="*{offer.preparationTime}"></td>
+						<td style="color: #C0C0C0;"
+							th:text="${#dates.format(offer.startDate, 'dd.MM.yyyy')}"></td>
+						<td style="color: #C0C0C0;"
+							th:text="${#dates.format(offer.endDate, 'dd.MM.yyyy')}"></td>
+						<td th:each="dayOfWeek, status : ${dayOfWeeks}"
+							th:with="checkboxChecked=${false}"><input type="checkbox"
+							th:checked="${#lists.contains(offer.dayOfWeeks, dayOfWeek)}"
+							th:disabled="${true}" onclick="return false" /></td>
+						<td><a th:href="@{/offer/edit/{id}(id=*{offer.id})}"><button
+									class="btn btn-default">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"
+										style="color: #C0C0C0;"></span>
+								</button></a>
+							<button class="btn btn-default"
+								th:attr="data-href=@{/offer/delete/{id}(id=*{offer.id})}"
+								data-toggle="modal" data-target="#confirm-delete">
+								<span class="glyphicon glyphicon-trash" aria-hidden="true"
+									style="color: #C0C0C0;"></span>
+							</button></td>
+					</tr>
+				</div>
+			</table>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						th:text="#{delete.label.title}">Confirm Delete</h4>
+				</div>
+
+				<div class="modal-body">
+					<p th:text="#{delete.label.offer.message}">delete message</p>
+					<p th:text="#{delete.label.attention}">attention message</p>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						th:text="#{button.cancel}">Cancel</button>
+					<a class="btn btn-danger btn-ok" th:text="#{button.delete}">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<script>
+		$('#confirm-delete').on(
+				'show.bs.modal',
+				function(e) {
+					$(this).find('.btn-ok').attr('href',
+							$(e.relatedTarget).data('href'));
+
+					$('.debug-url').html(
+							'Delete URL: <strong>'
+									+ $(this).find('.btn-ok').attr('href')
+									+ '</strong>');
+				});
+	</script>
+
+
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

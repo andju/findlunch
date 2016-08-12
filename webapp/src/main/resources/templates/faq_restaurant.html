@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{faq.restaurant.headline}">FAQ Anbieter</h1>
+		<div>
+			<p th:text="#{faq.paragraph}"></p>
+			<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1" th:text='#{faq.h1}'>
+        Was ist FindLunch?</a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse in">
+      <div class="panel-body" th:text='#{faq.t1}'> </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" th:text='#{faq.h2}'>
+         </a>
+      </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t2}'> </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" th:text='#{faq.h3}'>
+        Wie kann ich meinen Account deaktivieren?</a>
+      </h4>
+    </div>
+    <div id="collapse3" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t3}'> </div>
+    </div>
+  </div>
+    <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse4" th:text='#{faq.h4}'>
+        </a>
+      </h4>
+    </div>
+    <div id="collapse4" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t4}'> </div>
+    </div>
+  </div>  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse5" th:text='#{faq.h5}'>
+        </a>
+      </h4>
+    </div>
+    <div id="collapse5" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t5}'></div>
+    </div>
+  </div>  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse6" th:text='#{faq.h6}'>
+         </a>
+      </h4>
+    </div>
+    <div id="collapse6" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t6}'> </div>
+    </div>
+  </div> 
+ <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" th:text='#{faq.h7}'>
+         </a>
+      </h4>
+    </div>
+    <div id="collapse7" class="panel-collapse collapse">
+      <div class="panel-body" th:text='#{faq.t7}'> </div>
+    </div>
+  </div>  
+  
+</div>  
+<p th:text="#{faq.customer}"></p>
+			<a th:href="@{/faq_customer}" th:text="#{label.faq_customer}"></a>
+</div>
+		</div>
+		
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

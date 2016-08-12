@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{privacy.headline}">Datenschutzerkl&auml;rung</h1>
+		<div>
+			<p th:text="#{privacy.paragraph}"></p>
+
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

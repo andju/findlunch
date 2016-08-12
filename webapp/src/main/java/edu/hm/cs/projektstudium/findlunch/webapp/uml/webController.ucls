@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.10" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.RegisterController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/RegisterController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="166" width="304" x="3147" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.HomeController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/HomeController.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="41" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.OfferDetailController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/OfferDetailController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="148" width="251" x="2538" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.AboutController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/AboutController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="1959" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.RestaurantController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/RestaurantController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="238" width="304" x="1868" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.FaqCustomerController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/FaqCustomerController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="1685" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.GeneralErrorController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/GeneralErrorController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="1411" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.LoginController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/LoginController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="863" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.FaqRestaurantController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/FaqRestaurantController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="589" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.OfferController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/OfferController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="112" width="251" x="2233" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.PrivacyController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/PrivacyController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="1137" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.controller.TermController" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/controller/TermController.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="76" width="234" x="315" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="13" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/UserRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="3147" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="14" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/KitchenTypeRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="1868" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="15" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.CountryRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/CountryRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="2152" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="16" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/RestaurantRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="2436" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="17" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/OfferRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="2233" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="18" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/UserTypeRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="2863" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="19" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/DayOfWeekRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="2720" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="20" language="java" 
+    name="edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantTypeRepository" project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/repositories/RestaurantTypeRepository.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="58" width="244" x="1584" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="21" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomOfferValidator" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/model/validation/CustomOfferValidator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="112" width="264" x="2538" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" 
+    name="edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomRestaurantValidator" project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/model/validation/CustomRestaurantValidator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="94" width="264" x="1280" y="521"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomUserValidator" 
+    project="webapp" 
+    file="/webapp/src/main/java/edu/hm/cs/projektstudium/findlunch/webapp/model/validation/CustomUserValidator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="112" width="264" x="3147" y="243"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="24">    
+    <bendpoint x="3441" y="243"/>    
+    <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
+      <attribute id="25" name="userRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="26" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="27">    
+    <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
+      <attribute id="28" name="customUserValidator"/>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="31" name="restaurantTypeRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="32" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="33">    
+    <bendpoint x="2507" y="243"/>    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="34" name="restaurantRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="35" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="36">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="37" name="dayOfWeekRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="38" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="39">    
+    <end type="SOURCE" refId="10" navigable="false" variant="ASSOCIATION">      
+      <attribute id="40" name="offerRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="41" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="42">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="43" name="restaurantRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="44" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="45">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="46" name="customRestaurantValidator"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="48">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="49" name="kitchenTypeRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="51">    
+    <bendpoint x="2202" y="243"/>    
+    <end type="SOURCE" refId="10" navigable="false" variant="ASSOCIATION">      
+      <attribute id="52" name="dayOfWeekRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="53" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="54">    
+    <end type="SOURCE" refId="23" navigable="false" variant="ASSOCIATION">      
+      <attribute id="55" name="userRepository"/>      
+      <multiplicity id="56" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="57">    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="58" name="customOfferValidator"/>      
+      <multiplicity id="59" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="60">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="61" name="userRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="62" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="63">    
+    <end type="SOURCE" refId="5" navigable="false" variant="ASSOCIATION">      
+      <attribute id="64" name="countryRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="65" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="66">    
+    <bendpoint x="2832" y="243"/>    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="67" name="dayOfWeekRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="68" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="69">    
+    <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
+      <attribute id="70" name="userTypeRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="71" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="72">    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="73" name="offerRepository">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="74" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <association id="75">    
+    <end type="SOURCE" refId="21" navigable="false" variant="ASSOCIATION">      
+      <attribute id="76" name="dayOfWeekRepository"/>      
+      <multiplicity id="77" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="false" multiplicity="false"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="false" package="false" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="false"/>
+</class-diagram>

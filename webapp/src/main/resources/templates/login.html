@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{login.label}">login</h1>
+
+		<div th:if="${param.error}" class="alert alert-danger" role="alert"
+			th:text="#{invalid.usernameOrPassword}">invalid.usernameOrPassword</div>
+		<div th:if="${param.logout}" class="alert alert-success" role="alert"
+			th:text="#{success.logoff}">success.logoff</div>
+
+
+		<form name="f" th:action="@{/login}" method="post"
+			class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="username"
+					th:text="#{login.label.username}">username</label>
+
+				<div class="col-sm-10">
+					<input type="email" class="form-control" id="username"
+						name="username"
+						th:placeholder="|#{login.label.username} #{login.label.username2}|"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="pwd"
+					th:text="#{login.label.password}">password</label>
+				<div class="col-sm-10">
+					<input type="password" class="form-control" id="password"
+						name="password" th:placeholder="#{login.label.password}"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default"
+						th:text="#{login.button.login}">login</button>
+					<br />
+					<br />
+					<div>
+						<span style="color: #C0C0C0;" th:text="#{login.register}"></span>
+						<a th:href="@{/register}"><span class="glyphicon glyphicon-user"
+							style="color: #C0C0C0;"></span> <span class="control-label"
+							style="color: #C0C0C0;" for="findlunch"
+							th:text="#{menu.label.register}">register</span></a>
+					</div>
+
+				</div>
+			</div>
+		</form>
+
+
+	</div>
+
+	<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

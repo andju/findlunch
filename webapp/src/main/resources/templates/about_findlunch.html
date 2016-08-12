@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{about.headline}">Über FindLunch</h1>
+		<div>
+			<p th:text="#{about.paragraph.1}"></p>
+			<p th:text="#{about.paragraph.2}"></p>
+			<p th:text="#{about.paragraph.3}"></p>
+			
+			<a	th:href="@{/faq_restaurant}" th:text="#{label.faq_restaurant}"></a>
+			<p th:text="#{about.paragraph.4}"> </p>
+			<a	th:href="@{/faq_customer}" th:text="#{label.faq_customer}"></a>
+			
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
