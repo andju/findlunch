@@ -1,0 +1,18 @@
+<resources>
+    <item name="ic_search_black" type="drawable">@drawable/ic_search_black</item>
+    <item name="ic_perm_identity_black" type="drawable">@drawable/ic_perm_identity_black</item>
+    <item name="ic_lock_open_black" type="drawable">@drawable/ic_lock_open_black</item>
+    <item name="ic_email_black" type="drawable">@drawable/ic_email_black</item>
+    <item name="ic_phone_black" type="drawable">@drawable/ic_phone_black</item>
+    <item name="ic_euro_symbol_black" type="drawable">@drawable/ic_euro_symbol_black</item>
+    <item name="ic_schedule_black" type="drawable">@drawable/ic_schedule_black</item>
+    <item name="ic_star_black" type="drawable">@drawable/ic_star_black</item>
+    <item name="ic_star_border_black" type="drawable">@drawable/ic_star_border_black</item>
+    <item name="ic_open_in_browser" type="drawable">@drawable/ic_open_in_browser</item>
+    <item name="ic_alarm_add_black" type="drawable">@drawable/ic_alarm_add_black</item>
+    <item name="ic_add_alert_black" type="drawable">@drawable/ic_add_alert_black</item>
+    <item name="ic_add_alert_white" type="drawable">@drawable/ic_add_alert_white</item>
+    <item name="ic_filter_list_white" type="drawable">@drawable/ic_filter_list_white</item>
+    <item name="ic_refresh_white" type="drawable">@drawable/ic_refresh_white</item>
+    <item name="ic_settings_white" type="drawable">@drawable/ic_settings_white</item>
+</resources>

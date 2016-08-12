@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.UserRegistrationFragment">
+
+    <TextView
+        android:id="@+id/view_info_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/info_text_login_logout"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <EditText
+        android:id="@+id/edit_login_username"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/view_info_login"
+        android:hint="@string/edit_message_username"/>
+    <EditText
+        android:id="@+id/edit_login_password"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/edit_login_username"
+        android:hint="@string/edit_message_password"/>
+    <Button
+        android:id="@+id/buttonLoginUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/edit_login_password"
+        android:text="@string/button_login_user"/>
+
+    <RelativeLayout
+        android:id="@+id/view_login_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/dialog_margin"
+        android:layout_below="@id/buttonLoginUser">
+
+        <TextView
+            android:id="@+id/text_new_to_findlunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/text_new_to_findlunch" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/text_new_to_findlunch">
+            <ImageView
+                android:id="@+id/image_login_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_perm_identity_black"
+                android:contentDescription="@string/register_logo_description"/>
+            <TextView
+                android:id="@+id/text_login_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/image_login_register"
+                android:layout_toRightOf="@id/image_login_register"
+                android:layout_centerVertical="true"
+                android:text="@string/text_register" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>
