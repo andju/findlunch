@@ -54,7 +54,7 @@ To start the application, navigate to "Run" and select "run 'App'".
 ### Using a custom Webapp
 
 The Android app gives the ability to define host and port for the connection with the findlunch Webapp in a configuration file named "connection.txt", 
-that is located on the external storage of your Android device and must contain the following information:
+that is located on the external storage of your Android device. The file must contain the following information:
 
 	host=findlunch.biz.tm
 	port=8444
