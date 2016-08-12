@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search_black"
+            android:title="@string/nav_search" />
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_star_black"
+            android:visible="false"
+            android:title="@string/nav_favourites" />
+        <item
+            android:id="@+id/nav_pushes"
+            android:icon="@drawable/ic_add_alert_black"
+            android:visible="false"
+            android:title="@string/nav_pushes" />
+        <item
+            android:id="@+id/nav_register"
+            android:icon="@drawable/ic_perm_identity_black"
+            android:title="@string/nav_register" />
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_lock_open_black"
+            android:title="@string/nav_login" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_lock_outline_black"
+            android:title="@string/nav_logout" />
+    </group>
+
+    <item android:title="@string/nav_on_the_web">
+        <menu>
+            <item
+                android:id="@+id/nav_faq"
+                android:icon="@drawable/ic_open_in_browser"
+                android:title="@string/nav_faq" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_open_in_browser"
+                android:title="@string/nav_about" />
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_contact">
+        <menu>
+            <item
+                android:id="@+id/nav_contact_support"
+                android:icon="@drawable/ic_email_black"
+                android:title="@string/nav_contact_support" />
+        </menu>
+    </item>
+
+</menu>

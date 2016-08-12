@@ -1,0 +1,167 @@
+<resources>
+    <string name="app_name">FindLunch</string>
+    <string name="info_text">Finde Mittagsangebote in deiner Umgebung</string>
+    <string name="message_not_empty">darf nicht leer sein!</string>
+    <string name="message_not_valid">hat kein gültiges Format!</string>
+    <string name="message_not_equal">stimmt nicht überein!</string>
+    <string name="info_text_registration">Registrierung</string>
+    <string name="info_text_login_logout">Anmeldung</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_search">Suchen</string>
+    <string name="nav_login">Anmelden</string>
+    <string name="nav_logout">Abmelden</string>
+    <string name="nav_register">Registrieren</string>
+    <string name="nav_favourites">Favoriten</string>
+    <string name="nav_pushes">Push-Benachrichtigungen</string>
+    <string name="nav_on_the_web">Im Web</string>
+    <string name="nav_faq">Häufige Fragen (FAQ)</string>
+    <string name="nav_about">Über FindLunch</string>
+    <string name="nav_contact">Kontakt</string>
+    <string name="nav_contact_support">App-Support kontaktieren</string>
+
+    <!-- textual description of the context for screen readers -->
+    <string name="nav_header_logo_description">App Logo</string>
+    <string name="phone_logo_description">Anbieter anrufen</string>
+    <string name="email_logo_description">E-Mail an Anbieter schreiben</string>
+    <string name="preparationtime_logo_description">Zubereitungszeit</string>
+    <string name="price_logo_description">Preis</string>
+    <string name="favourite_logo_description">Favorit</string>
+    <string name="register_logo_description">Anmelden</string>
+    <string name="delete_logo_description">Löschen</string>
+    <string name="price_logo_weekdays">Wochentage</string>
+
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_refresh">Aktualisieren</string>
+
+    <!-- Common Strings -->
+    <string name="text_meters">Meter</string>
+    <string name="text_raduis">Umkreis</string>
+    <string name="text_searchaddress">Adresse für Suche</string>
+    <string name="text_please_wait">Bitte warten.</string>
+    <string name="text_loading_data">Lade Daten</string>
+    <string name="text_loading_restaurants">Lade Restaurants</string>
+    <string name="text_loading_daysofweek">Lade Wochentage</string>
+    <string name="text_loading_offers">Lade Angebote</string>
+    <string name="text_loading_addresses">Lade Adressen</string>
+    <string name="text_loading_user_registration">Sende Registrierung</string>
+    <string name="text_loading_user_login">Anmeldung</string>
+    <string name="text_loading_favourite_registration">Registriere Favorit</string>
+    <string name="text_loading_push_registration">Registriere Push-Benachrichtigung</string>
+    <string name="text_finished_push_registration">Push-Benachrichtigung erfolgreich registriert</string>
+    <string name="text_error_push_registration">Fehler beim registrieren der Push-Benachrichtigung</string>
+    <string name="text_loading_push_overview">Lade Push-Benachrichtigungen</string>
+    <string name="text_not_found_push_overview">Keine Push-Benachrichtigungen verfügbar</string>
+    <string name="text_error_push_overview">Fehler beim Abrufen der Push-Benachrichtigungen</string>
+    <string name="text_error_push_delete">Fehler beim Löschen der Push-Benachrichtigung</string>
+    <string name="text_loading_push_delete">Lösche Push-Benachrichtigung</string>
+    <string name="text_login_push_dialog">Bitte anmelden um Push-Benachrichtigungen zu nutzen.</string>
+    <string name="text_no_gcm_token">App konnte nicht für Push-Dienst angemeldet werden.</string>
+    <string name="text_loading_favourite_unregistration">Lösche Favorit</string>
+    <string name="text_no_network_connection">Keine Netzwerkverbindung verfügbar!</string>
+    <string name="text_rest_request_failed">Abruf der Daten fehlgeschlagen!</string>
+    <string name="text_address_information_wrong">Adresse falsch oder unvollständig!</string>
+    <string name="text_no_restaurants_found">Keine Restaurants gefunden. Bitte Radius erhöhen oder Position ändern.</string>
+    <string name="text_no_offers_found">Keine Angebote gefunden.</string>
+    <string name="text_no_offertime">keine Mittagszeiten.</string>
+    <string name="text_abbreviation_minutes">Min.</string>
+    <string name="text_currency">€</string>
+    <string name="text_maximum_price">Maximaler Angebotspreis</string>
+    <string name="text_all">alle</string>
+    <string name="text_support_email_subject">Supportanfrage</string>
+    <string name="text_support_email_text"></string>
+
+
+    <!-- Strings for interaction -->
+    <string name="url_path_faq">/faq_customer</string>
+    <string name="url_path_about">/about_findlunch</string>
+    <string name="url_path_terms">/terms</string>
+    <string name="url_path_data_privacy">/privacy</string>
+    <string name="email_contact">support@findlunch.biz</string>
+
+    <!-- Strings of main fragment -->
+    <string name="text_view_header_topic">Standort</string>
+    <string name="edit_message_street">Straße</string>
+    <string name="edit_message_street_number">Hausnummer</string>
+    <string name="edit_message_zip">Postleitzahl</string>
+    <string name="view_message_radius">Radius (in Metern)</string>
+    <string name="button_find_offers">Angebote finden</string>
+    <string name="title_filter">Filter</string>
+    <string name="title_push">Push-Benachrichtigung anlegen</string>
+
+    <!-- Strings of item fragment -->
+    <string name="text_offer_time">Mittagszeiten:</string>
+    <string name="text_restaurant_type">Typ:</string>
+    <string name="text_kitchen_type">Art der Küche:</string>
+    <string name="text_hour">Uhr</string>
+    <string name="text_distance">Entfernung:</string>
+
+    <!-- Strings of the registration fragment -->
+    <string name="edit_message_username">Benutzername (E-Mail-Adresse)</string>
+    <string name="edit_message_password">Passwort</string>
+    <string name="edit_message_password_repeated">Passwort bestätigen</string>
+    <string name="button_register_user">Registrieren</string>
+    <string name="text_registration_successfully">Registrierung erfolgreich!</string>
+    <string name="text_registration_failed_username_invalid">Benutzername ungültig!</string>
+    <string name="text_registration_failed_password_invalid">Passwort entspricht nicht den Passwortrichtlinien (mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen)</string>
+    <string name="text_registration_failed_username_exists">Benutzername existiert bereits!</string>
+    <string name="text_terms_conditions">Mit dem Klick auf "Registrieren" bestätigen Sie, dass Sie mit den %1$s und den %2$s von FindLunch einverstanden sind.</string>
+    <string name="text_data_privacy_statement">Datenschutzbestimmungen</string>
+    <string name="text_terms_of_use">Nutzungsbedingungen</string>
+
+    <!-- Strings of the login fragment -->
+    <string name="button_login_user">Anmelden</string>
+    <string name="text_new_to_findlunch">Neu bei FindLunch?</string>
+    <string name="text_register">Registieren</string>
+    <string name="text_login_successful">Anmeldung erfolgreich!</string>
+    <string name="text_login_failed_uauthorized">Anmeldung fehlgeschlagen. Benutzername oder Passwort ungültig!</string>
+    <string name="text_login_failed">Anmeldung fehlgeschlagen!</string>
+    <string name="text_logout_successful">Abmeldung erfolgreich!</string>
+    <string name="text_logout_failed_not_logged_in">Benutzer ist nicht angemeldet. Abmeldung fehlgeschlagen!</string>
+    <string name="text_favourite_registration_failed_restaurant_id_unknown">Restaurant ID unbekannt!</string>
+
+    <!-- Strings of the Push-Service -->
+    <string name="text_push_title">FindLunch: Heutige Angebote</string>
+    <string name="text_push_subtitle">Es gibt Angebote in Ihrer Nähe!</string>
+
+    <!-- Strings of the logout fragment -->
+    <string name="text_logout">Abmeldung</string>
+    <string name="text_ask_logout">Möchten Sie sich wirklich abmelden?</string>
+
+    <!-- The name of the Tabs of TabView on results fragment -->
+    <string name="tabList">Liste</string>
+    <string name="tabMap">Karte</string>
+
+    <!-- Preselected default value -->
+    <string name="distance_range_default">2000</string>
+
+    <!-- Array to choose a distance from -->
+    <string-array name="distance_range_array">
+        <item>200</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>2000</item>
+        <item>3000</item>
+    </string-array>
+
+    <!-- Array with strings for filter dialog -->
+    <string-array name="favourites_only_array">
+        <item>alle Anbieter</item>
+        <item>Favoriten</item>
+    </string-array>
+    <!-- String for comparison that has to be equal with only favourites in the array above -->
+    <string name="favourites_only">Favoriten</string>
+    <!-- String for comparison that has to be equal with all restaurants in the array above -->
+    <string name="all_restaurants">alle Anbieter</string>
+
+    <string name="weekday_mo">Montag</string>
+    <string name="weekday_tu">Dienstag</string>
+    <string name="weekday_we">Mittwoch</string>
+    <string name="weekday_th">Donnerstag</string>
+    <string name="weekday_fr">Freitag</string>
+    <string name="weekday_sa">Samstag</string>
+    <string name="weekday_su">Sonntag</string>
+
+</resources>

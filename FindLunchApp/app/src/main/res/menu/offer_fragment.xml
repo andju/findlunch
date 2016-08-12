@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:findlunch="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_filter_offers"
+        android:icon="@drawable/ic_filter_list_white"
+        android:title="@string/title_filter"
+        findlunch:showAsAction="ifRoom"  />
+    <item
+        android:id="@+id/action_refresh_offers"
+        android:icon="@drawable/ic_refresh_white"
+        android:orderInCategory="100"
+        android:title="@string/action_refresh"
+        findlunch:showAsAction="ifRoom" />
+</menu>

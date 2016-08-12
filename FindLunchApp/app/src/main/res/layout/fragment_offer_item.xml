@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/text_margin" >
+
+    <ImageView
+        android:id="@+id/offerPhoto"
+        android:layout_width="80dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/nav_header_logo_description"/>
+
+    <TextView
+        android:id="@+id/offerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/text_margin"
+        android:paddingEnd="@dimen/text_margin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/offerPhoto"
+        android:layout_toStartOf="@id/offerPhoto"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/offerDescription"
+        android:paddingRight="@dimen/text_margin"
+        android:paddingEnd="@dimen/text_margin"
+        android:layout_below="@+id/offerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/offerPhoto"
+        android:layout_toStartOf="@id/offerPhoto"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/iconPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/offerDescription"
+        android:src="@drawable/ic_euro_symbol_black"
+        android:contentDescription="@string/price_logo_description"/>
+
+    <TextView
+        android:id="@+id/offerPrice"
+        android:paddingRight="@dimen/text_margin_large"
+        android:paddingEnd="@dimen/text_margin_large"
+        android:paddingLeft="@dimen/text_margin_half"
+        android:paddingStart="@dimen/text_margin_half"
+        android:layout_below="@id/offerDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iconPrice"
+        android:layout_toEndOf="@id/offerPrice"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <ImageView
+        android:id="@+id/iconPreparationTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/offerDescription"
+        android:layout_toRightOf="@id/offerPrice"
+        android:layout_toEndOf="@id/offerPrice"
+        android:src="@drawable/ic_schedule_black"
+        android:contentDescription="@string/preparationtime_logo_description" />
+
+    <TextView
+        android:id="@+id/offerPreparationTime"
+        android:paddingRight="@dimen/text_margin"
+        android:paddingEnd="@dimen/text_margin"
+        android:paddingLeft="@dimen/text_margin_half"
+        android:paddingStart="@dimen/text_margin_half"
+        android:layout_below="@id/offerDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iconPreparationTime"
+        android:layout_toEndOf="@id/iconPreparationTime"
+        android:layout_toLeftOf="@id/offerPhoto"
+        android:layout_toStartOf="@id/offerPhoto"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+</RelativeLayout>

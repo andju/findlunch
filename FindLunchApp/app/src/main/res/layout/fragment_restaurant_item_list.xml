@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list"
+    android:name="edu.hm.cs.projektstudium.findlunch.androidtechtest.ItemFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/text_margin"
+    app:layoutManager="LinearLayoutManager"
+    tools:context=".fragment.RestaurantItemFragment"
+    tools:listitem="@layout/fragment_restaurant_item" />
