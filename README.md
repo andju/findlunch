@@ -1,3 +1,5 @@
+**Project has moved to: [CCWI/findlunch](https://github.com/CCWI/findlunch)** 
+
 # FindLunch
 This client server based application allows restaurants to register offers (e.g. for lunch) and helps customer to find these via their smartphone (based on their location).
 
