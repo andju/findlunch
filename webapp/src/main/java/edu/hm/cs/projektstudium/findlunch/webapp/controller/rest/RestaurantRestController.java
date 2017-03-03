@@ -23,9 +23,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 import edu.hm.cs.projektstudium.findlunch.webapp.distance.DistanceCalculator;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.comparison.RestaurantDistanceComparator;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 
 /**
@@ -38,6 +40,10 @@ public class RestaurantRestController {
 	/** The restaurant repository. */
 	@Autowired
 	private RestaurantRepository restaurantRepo;
+	
+	/** The points repository. */
+	@Autowired
+	private PointsRepository pointsRepository;
 
 	/** The logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(RestaurantRestController.class);
@@ -80,6 +86,17 @@ public class RestaurantRestController {
 			for (Restaurant favorite : favorites) {
 				if (restaurant.getId() == favorite.getId()) {
 					restaurant.setFavorite(true);
+				}
+			}
+		}
+		
+		//add current points
+		List<Points> pointsList = pointsRepository.findByCompositeKey_User_Id(authenticatedUser.getId());
+		
+		for (Restaurant restaurant : restaurantList) {
+			for(Points points : pointsList){
+				if(restaurant.getId() == points.getRestaurant().getId()){
+					restaurant.setActuallPoints(points.getPoints());
 				}
 			}
 		}

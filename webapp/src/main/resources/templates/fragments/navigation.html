@@ -24,6 +24,15 @@
 					<li sec:authorize="isAuthenticated()"
 						th:class="${#httpServletRequest.servletPath}=='/offer'? active"><a
 						th:href="@{/offer}" th:text="#{menu.label.offer}">offer</a></li>
+					<li sec:authorize="isAuthenticated()"
+						th:class="${#httpServletRequest.servletPath}=='/reservations'? active"><a
+						th:href="@{/reservations}" th:text="#{menu.label.reservations}">Reservations</a></li>
+					<li sec:authorize="hasAuthority('Anbieter')"
+						th:class="${#httpServletRequest.servletPath}=='/bill'? active"><a
+						th:href="@{/bill}" th:text="#{menu.label.bill}">Bill</a></li>
+					<li sec:authorize="hasAuthority('Betreiber')"
+						th:class="${#httpServletRequest.servletPath}=='/booking'? active"><a
+						th:href="@{/booking}" th:text="#{menu.label.bill}">Bill</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown" sec:authorize="isAuthenticated()"><a

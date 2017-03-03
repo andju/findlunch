@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes"></head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{reservations.label}">daily bussiness</h1>
+
+		<div th:if="${param.success}" class="alert alert-success"
+			th:text="#{success.reservations.confirmed}" role="alert">success.offer.confirmed</div>
+		<div th:if="${param.selectReservation}" class="alert alert-danger"
+			role="alert" th:text="#{invalid.selectReservation}">invalid.offerId</div>
+		<!-- <br />  -->
+		<h2 th:text="#{reservations.label.normal}">normal reservations</h2>
+		<input type="text" id="searchReservationTable"
+			th:placeholder="#{reservations.placeholder.search}"
+			class="form-control input-lg"></input>
+		<!-- <br />  -->
+		<form action="#" th:object="${wrapper}" method="post">
+		<div style="height: 190px; overflow: auto;">
+			<table class="table table-hover" id="reservationTable">
+				<thead>
+					<tr>
+						<th th:text="#{reservations.label.customername}">name</th>
+						<th th:text="#{reservations.label.food}">food</th>
+						<th th:text="#{reservations.label.amount}">amount</th>
+						<th th:text="#{reservations.label.datetime}">date with time</th>
+						<th th:text="#{reservations.label.price}">price</th>
+						<th th:text="#{reservations.label.donation}">customer donation</th>
+						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
+						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
+						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
+						<th th:text="#{reservations.label.choice}">reservation selection</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="reservation, stat: *{reservations}">				
+						<div th:switch="${reservation.isUsedPoints()}">
+							<div th:case="false">
+								<td th:text="${reservation.getUser().getUsername()}"></td>
+								<td th:text="${reservation.getOffer().getTitle()}"></td>
+								<td th:text="${reservation.getAmount()}"></td>
+								<td th:text="${#dates.format(reservation.reservationTime, 'HH:mm')}"></td> 
+								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
+								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
+								<td>
+									<input type="checkbox" th:field="*{reservations[__${stat.index}__].confirmed}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
+								</td>			
+							</div>
+							 <div th:case="true">
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" /> 
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].confirmed}" /> 
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
+						</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<button type="submit" class="btn btn-success" th:text="#{reservations.button.confirm}" name="confrim" style="float: right; margin-right: 25px;"></button>
+		</form>
+		
+		<br />
+		
+		<h2 th:text="#{reservations.label.free}">free reservations</h2>
+		<input type="text" id="searchReservationTable2"
+			th:placeholder="#{reservations.placeholder.search}"
+			class="form-control input-lg"></input>
+		<br/>
+		<form action="#" th:object="${wrapper}" method="post">
+		<div style="height: 190px; overflow: auto;">
+			<table class="table table-hover" id="reservationTable2">
+				<thead>
+					<tr>
+						<th th:text="#{reservations.label.customername}">name</th>
+						<th th:text="#{reservations.label.food}">food</th>
+						<th th:text="#{reservations.label.amount}">amount</th>
+						<th th:text="#{reservations.label.datetime}">date with time</th>
+						<!-- <th th:text="#{reservations.label.price}">price</th> -->
+						<th th:text="#{reservations.label.donation}">customer donation</th>
+						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
+						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
+						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
+						<th th:text="#{reservations.label.choice}">reservation selection</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="reservation, stat: *{reservations}">				
+						<div th:switch="${reservation.isUsedPoints()}">
+							<div th:case="true">
+								<td th:text="${reservation.getUser().getUsername()}"></td>
+								<td th:text="${reservation.getOffer().getTitle()}"></td>
+								<td th:text="${reservation.getAmount()}"></td>
+								<td th:text="${#dates.format(reservation.reservationTime, 'HH:mm')}"></td> 
+								<!-- <td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> -->
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> <!-- reservation.getDonation() + reservation.getTotalPrice() -->
+								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
+								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
+								<td>
+									<input type="checkbox" th:field="*{reservations[__${stat.index}__].confirmed}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
+								</td>			
+							</div>
+						<div th:case="false">
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" /> 
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].confirmed}" /> 
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
+						</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<button type="submit" class="btn btn-success" th:text="#{reservations.button.confirm}" name="confrimFreeReservation" style="float: right; margin-right: 25px;"></button>
+		</form>
+	</div>
+
+	<script th:inline="javascript" type="text/javascript">
+		/*<![CDATA[*/
+		var $rows = $('#reservationTable tbody tr');
+		$('#searchReservationTable').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+
+		var $rows2 = $('#reservationTable2 tbody tr');
+		$('#searchReservationTable2').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows2.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+		/*]]>*/
+	</script>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

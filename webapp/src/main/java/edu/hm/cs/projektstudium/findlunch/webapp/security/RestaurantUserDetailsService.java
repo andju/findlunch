@@ -23,7 +23,8 @@ public class RestaurantUserDetailsService implements UserDetailsService{
 	 */
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
-
+		if(username.equals("owner@owner.com")) return userRepository.findByUsernameAndUserType_name(username,"Betreiber");
+			
 		return userRepository.findByUsernameAndUserType_name(username,"Anbieter");
 	}
 }

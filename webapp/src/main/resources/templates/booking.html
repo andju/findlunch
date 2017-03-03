@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes"></head>
+<body>
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+
+		<h1 th:text="#{booking.label.finance}"></h1>
+		<div th:if="${param.notExistingBill}" class="alert alert-danger"
+			role="alert" th:text="#{booking.notExistingBill}">restaurant.required</div>
+		<div th:if="${param.success}" class="alert alert-success" role="alert"
+			th:text="#{success.booking.confirmed}">restaurant.required</div>
+
+		<div>
+			<form action="#" th:object="${bookingResult}" method="post">
+
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>
+								<h2 th:text="#{booking.label.claims}"></h2>
+								<table class="table">
+									<tbody>
+										<tr>
+											<td><label class="control-label"
+												th:text="#{booking.claim.all}">claim all</label></td>
+											<td style="width: 15px"><span
+												class="glyphicon glyphicon-question-sign"
+												data-placement="left" data-toggle="tooltip"
+												th:title="#{booking.tooltip.sumOfClaim}"></span></td>
+											<td>
+												<div class="form-group" style="font-weight: bold">
+													<span
+														th:text="${#numbers.formatDecimal(bookingResult.allClaim, 1, 'POINT', 2, 'COMMA')}">
+													</span> &euro;
+												</div>
+											</td>
+										</tr>
+
+										<tr>
+											<td><label class="control-label"
+												th:text="#{booking.claim.paid}">booking claim paid</label></td>
+											<td style="width: 15px"><span
+												class="glyphicon glyphicon-question-sign"
+												data-placement="left" data-toggle="tooltip"
+												th:title="#{booking.tooltip.paidClaim}"></span></td>
+											<td>
+												<div class="form-group" style="font-weight: bold">
+													<span
+														th:text="${#numbers.formatDecimal(bookingResult.paidClaim, 1, 'POINT', 2, 'COMMA')}">
+													</span> &euro;
+												</div>
+											</td>
+										</tr>
+
+										<tr>
+											<td><label class="control-label"
+												th:text="#{booking.claim.notPaid}">booking claim
+													notPaid</label></td>
+											<td style="width: 15px"><span
+												class="glyphicon glyphicon-question-sign"
+												data-placement="left" data-toggle="tooltip"
+												th:title="#{booking.tooltip.notPaidClaim}"></span></td>
+											<td>
+												<div class="form-group" style="font-weight: bold">
+													<span
+														th:text="${#numbers.formatDecimal(bookingResult.notPaidClaim, 1, 'POINT', 2, 'COMMA')}">
+													</span> &euro;
+												</div>
+											</td>
+										</tr>
+
+										<tr>
+											<td><label class="control-label"
+												th:text="#{booking.label.startPeriodOfPerformance}"></label></td>
+											<td style="width: 15px"><span
+												class="glyphicon glyphicon-question-sign"
+												data-placement="left" data-toggle="tooltip"
+												th:title="#{booking.tooltip.startDate}"></span></td>
+											<td>
+												<div class="form-group">
+													<div class='input-group date'
+														th:id="datetimepickerStartDate">
+														<input type='text' th:field="*{startDate}"
+															class="form-control" id="startDate" /> <span
+															class="input-group-addon"> <span
+															class="glyphicon glyphicon-calendar"></span>
+														</span>
+													</div>
+												</div>
+											</td>
+										</tr>
+
+										<tr>
+											<td><label class="control-label"
+												th:text="#{booking.label.endPeriodOfPerformance}"></label></td>
+											<td style="width: 15px"><span
+												class="glyphicon glyphicon-question-sign"
+												data-placement="left" data-toggle="tooltip"
+												th:title="#{booking.tooltip.endDate}"></span></td>
+											<td>
+												<div class='input-group date' th:id="datetimepickerEndDate">
+													<input type='text' th:field="*{endDate}"
+														class="form-control" id="endDate" /> <span
+														class="input-group-addon"> <span
+														class="glyphicon glyphicon-calendar"></span>
+													</span>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td style="width: 15px"></td>
+											<td>
+												<button type="submit" class="btn btn-success"
+													th:text="#{booking.button.calculate}" name="claim"
+													style="float: right;"></button>
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+							</td>
+							<td>
+								<h2 th:text="#{booking.label.accounts}">Bill</h2> 
+								<input type="text" id="searchCurrentBalance"
+								th:placeholder="#{reservations.placeholder.searchCurrentBalance}"
+								class="form-control input-lg"></input>
+								<div style="height: 270px; overflow: auto;">
+									<table class="table table-hover" id="tabelCurrentBalance">
+										<thead>
+											<tr>
+												<th th:text="#{booking.label.customerId}">billNumber</th>
+												<th th:text="#{booking.label.balance}">startDate</th>
+												<th th:text="#{booking.label.accountNumber}">billNumber</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="result, stat: ${accountResult}">
+												<div th:switch="${result.getCustomerId()}">
+													<td th:case="0" th:text="-----"></td>
+													<td th:case="*" th:text="${result.getCustomerId()}"></td>
+												</div>
+												
+												<td><span
+													th:text="${#numbers.formatDecimal(result.getSumOfAmount(), 1, 'POINT', 2, 'COMMA')}"></span>
+													&euro;</td>
+												<td th:text="${result.getAccountNumber()}"></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</form>
+		</div>
+
+		<table class="table">
+			<tbody>
+				<tr>
+					<td class="col-md-7">
+						<h2 th:text="#{bill.label.notpayed}">Bill</h2> <input type="text"
+						id="searchNotPaidBillsTable"
+						th:placeholder="#{reservations.placeholder.searchNotPaid}"
+						class="form-control input-lg"></input>
+
+						<form action="#" th:object="${notPaidBillsWrapper}" method="post">
+							<div style="height: 190px; overflow: auto;">
+								<table class="table table-hover" id="notPaidBillsTable">
+									<thead>
+										<tr>
+											<th th:text="#{booking.label.billnumber}">billNumber</th>
+											<th th:text="#{booking.label.customerId}">customerId</th>
+											<th th:text="#{booking.label.totalPrice}">billNumber</th>
+											<th th:text="#{booking.label.startDate}">startDate</th>
+											<th th:text="#{booking.label.endDate}">endDate</th>
+											<th th:text="#{booking.label.download}">download</th>
+											<th th:text="#{booking.label.select}">select</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr th:each="bill, stat: *{bills}">
+											<td th:text="${bill.getBillNumber()}"></td>
+											<td th:text="${bill.getRestaurant().getCustomerId()}"></td>
+											<td><span
+												th:text="${#numbers.formatDecimal(bill.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"></span>
+												&euro;</td>
+											<td
+												th:text="${#dates.format(bill.getStartDate(), 'dd.MM.yyyy')}"></td>
+											<td
+												th:text="${#dates.format(bill.getEndDate(), 'dd.MM.yyyy')}"></td>
+											<td><a
+												th:href="@{/booking/{billNumber}(billNumber=${bill.billNumber})}"><button
+														type="button" class="btn btn-success">
+														<span class="glyphicon glyphicon-download-alt"></span>
+													</button></a></td>
+											<td><input type="checkbox"
+												th:field="*{bills[__${stat.index}__].paid}" /> <input
+												type="hidden" th:field="*{bills[__${stat.index}__].id}" /></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<button type="submit" class="btn btn-success"
+								th:text="#{booking.button.confirm}" name="confrim"
+								style="float: right;"></button>
+						</form>
+					</td>
+					<td class="col-md-5">
+						<h2 th:text="#{bill.label.payed}">Bill</h2> <input type="text"
+						id="searchPaidBillsTable"
+						th:placeholder="#{reservations.placeholder.searchPaid}"
+						class="form-control input-lg"></input>
+						<form action="#" th:object="${paidBillsWrapper}" method="post">
+							<div style="height: 190px; overflow: auto;">
+								<table class="table table-hover" id="paidBillsTable">
+									<thead>
+										<tr>
+											<th th:text="#{bill.label.billnumber}">billNumber</th>
+											<th th:text="#{bill.label.startDate}">startDate</th>
+											<th th:text="#{bill.label.endDate}">endDate</th>
+											<!-- <th th:text="#{bill.label.paid}">paid</th> -->
+											<th th:text="#{bill.label.download}">download</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="bill, stat: *{bills}">
+											<td th:text="${bill.getBillNumber()}"></td>
+											<td
+												th:text="${#dates.format(bill.getStartDate(), 'dd.MM.yyyy')}"></td>
+											<td
+												th:text="${#dates.format(bill.getEndDate(), 'dd.MM.yyyy')}"></td>
+											<!-- <td th:text="${bill.isPaid()}"></td> -->
+											<td><a
+												th:href="@{/booking/{billNumber}(billNumber=${bill.billNumber})}"><button
+														type="button" class="btn btn-success">
+														<span class="glyphicon glyphicon-download-alt"></span>
+													</button></a></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</form>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+	</div>
+	<script type="text/javascript">
+		var $rows = $('#notPaidBillsTable tbody tr');
+		$('#searchNotPaidBillsTable').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+
+		
+		var $rows2 = $('#paidBillsTable tbody tr');
+		$('#searchPaidBillsTable').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows2.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+		
+
+		var $rows3 = $('#tabelCurrentBalance tbody tr');
+		$('#searchCurrentBalance').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows3.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+
+		
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+
+		
+		
+		$(function() {
+			$('#datetimepickerStartDate').datetimepicker({
+				locale : 'de'
+			});
+			$('#datetimepickerEndDate').datetimepicker({
+				locale : 'de'
+			});
+			$("#datetimepickerStartDate").on(
+					"dp.change",
+					function(e) {
+						$('#datetimepickerEndDate').data("DateTimePicker")
+								.minDate(e.date);
+					});
+			$("#datetimepickerEndDate").on(
+					"dp.change",
+					function(e) {
+						$('#datetimepickerStartDate').data("DateTimePicker")
+								.maxDate(e.date);
+					});
+		});
+	</script>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

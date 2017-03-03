@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -150,7 +151,7 @@ public class Restaurant implements Serializable {
 	/** The admins. */
 	// bi-directional many-to-one association to User
 	@JsonIgnore
-	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "restaurant",fetch=FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<User> admins;
 	
 	
@@ -166,9 +167,45 @@ public class Restaurant implements Serializable {
 	@JsonView(RestaurantView.RestaurantRest.class)
 	private int distance;
 	
+	/** Is favorite restaurant.*/
 	@Transient
 	@JsonView(RestaurantView.RestaurantRest.class)
 	private boolean isFavorite;
+
+	/** The points of restaurant.*/
+	@OneToMany(mappedBy="compositeKey.restaurant", cascade= CascadeType.ALL)
+	private List<Points>  restaurantPoints;
+	
+	/** The actual point.*/
+	@Transient
+	@JsonView(RestaurantView.RestaurantRest.class)
+	private int actualPoints;
+	
+	/** The reservations.*/
+	@OneToMany(mappedBy="restaurant")
+	List<Reservation> reservation;
+	
+	/** The uuid of the restaurant.*/
+	private String restaurantUuid;
+
+	/** The qr-code in bytes.*/
+	@Lob
+	private byte[] qrUuid;
+	
+	/** The qr-code in base64.*/
+	@Transient
+	private String base64Encoded;
+	
+	/** The customer id.*/
+	private int customerId;
+	
+	/** The donations of the restaurant.*/
+	@OneToMany(mappedBy="restaurant", fetch = FetchType.EAGER)
+	private List<DonationPerMonth> donations;
+	
+	/** The bills of the restaurant.*/
+	@OneToMany(mappedBy="restaurant")
+	private List<Bill> bills;
 
 	/**
 	 * Instantiates a new restaurant.
@@ -622,5 +659,160 @@ public class Restaurant implements Serializable {
 	public void setFavorite(boolean isFavorite) {
 		this.isFavorite = isFavorite;
 	}
+	
+	/**
+	 * Gets points of restaurant.
+	 * @return List of points
+	 */
+	public List<Points> getRestaurantPoints(){
+		return restaurantPoints;
+	}
+	
+	/**
+	 * Sets the points of restaurant.
+	 * @param restaurantPoints List of points to set
+	 */
+	public void setRestaurantPoints(List<Points> restaurantPoints){
+		this.restaurantPoints = restaurantPoints;
+	}
+	
+	/**
+	 * Gets the actual point (transient).
+	 * @return current points
+	 */
+	public int getActuallPoints() {
+		return actualPoints;
+	}
 
+	/**
+	 * Sets the acutalPoints.
+	 * @param actuallPoints actualPoints to set
+	 */
+	public void setActuallPoints(int actuallPoints) {
+		this.actualPoints = actuallPoints;
+	}
+	
+	/**
+	 * Gets the qr-code uuid as byte array.
+	 * @return the qr-code as a byte array
+	 */
+	public byte[] getQrUuid() {
+		return qrUuid;
+	}
+
+	/**
+	 * Sets the qr-code
+	 * @param qrUuid bytes to set
+	 */
+	public void setQrUuid(byte[] qrUuid) {
+		this.qrUuid = qrUuid;
+	}
+	
+	/**
+	 * Gets the uuid from restaurant.
+	 * @return Uuid form restaurant
+	 */
+	public String getRestaurantUuid() {
+		return restaurantUuid;
+	}
+
+	/**
+	 * Sets the uuid from restaurant
+	 * @param restaurantUuid Uuid to set
+	 */
+	public void setRestaurantUuid(String restaurantUuid) {
+		this.restaurantUuid = restaurantUuid;
+	}
+	
+	/**
+	 * Gets the base64 encoded qr-code
+	 * @return encoded qr-code
+	 */
+	public String getBase64Encoded() {
+		return base64Encoded;
+	}
+	
+	/**
+	 * Sets the base64 encoded qr-code.
+	 * @param base64Encoded the base64 encoded code
+	 */
+	public void setBase64Encoded(String base64Encoded) {
+		this.base64Encoded = base64Encoded;
+	}
+	
+	/**
+	 * Gets the donations from a restaurant.
+	 * @return the donations
+	 */
+	public List<DonationPerMonth> getDonations() {
+		return donations;
+	}
+	
+	/**
+	 * Sets the donations from a restaurant.
+	 * @param donations List of donations to set
+	 */
+	public void setDonations(List<DonationPerMonth> donations) {
+		this.donations = donations;
+	}
+	
+	/**
+	 * Add a new donationPerMonth.
+	 * @param donationPerMonth donation to add
+	 * @return added donation
+	 */
+	public DonationPerMonth addDonationPerMonth(DonationPerMonth donationPerMonth) {
+		getDonations().add(donationPerMonth);
+		donationPerMonth.setRestaurant(this);
+
+		return donationPerMonth;
+	}
+
+	/**
+	 * Gets the bills from a restaurant.
+	 * @return bills of the restaurant
+	 */
+	public List<Bill> getBills() {
+		return bills;
+	}
+
+	/**
+	 * Sets the bills from a restaurant.
+	 * @param bills Bills to set
+	 */
+	public void setBills(List<Bill> bills) {
+		this.bills = bills;
+	}
+
+	/**
+	 * Gets the customer id from a restaurant.
+	 * @return cusomerId from restaurant
+	 */
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	/**
+	 * Sets the customerId from a restaurant.
+	 * @param customerId CustomerId to set
+	 */
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	/**
+	 * Gets the reservations.
+	 * @return the reservations
+	 */
+	public List<Reservation> getReservation() {
+		return reservation;
+	}
+
+	/**
+	 * Sets the reservations.
+	 * @param reservation the reservations
+	 */
+	public void setReservation(List<Reservation> reservation) {
+		this.reservation = reservation;
+	}
 }

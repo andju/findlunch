@@ -82,6 +82,9 @@ public class SecurityConfig {
 					.antMatchers(HttpMethod.PUT, "/api/register_favorite/**")
 					.antMatchers(HttpMethod.DELETE, "/api/unregister_favorite/**")
 					.antMatchers(HttpMethod.GET, "/api/restaurants")
+					.antMatchers(HttpMethod.POST, "/api/register_reservation")
+					.antMatchers(HttpMethod.PUT, "/api/confirm_reservation/**")
+					.antMatchers(HttpMethod.GET, "/api/get_points")
 				.and().httpBasic().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}
@@ -99,7 +102,7 @@ public class SecurityConfig {
 		@Autowired
 		@Qualifier("restaurantUserDetailsService")
 		private RestaurantUserDetailsService restaurantUserDetailsService;
-
+	
 		/** The password encoder. */
 		@Autowired
 		private BCryptPasswordEncoder passwordEncoder;
@@ -139,10 +142,10 @@ public class SecurityConfig {
 							"/faq_restaurant", "/about_findlunch", "/css/**", "/api/**", "/js/**", "/fonts/**",
 							"/images/**")
 					.permitAll()
+					.antMatchers("/booking/**").hasAuthority("Betreiber")
 					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()
 					.logout().and().csrf().disable();
 
 		}
 	}
-
 }

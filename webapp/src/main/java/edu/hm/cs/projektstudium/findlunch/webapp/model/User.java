@@ -83,6 +83,18 @@ public class User implements UserDetails {
 	@JoinColumn(name="user_type_id")
 	private UserType userType;
 	
+	/** The reservations.*/
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
+	private List<Reservation> reservation; 
+	
+	/** The points of the user.*/
+	@OneToMany(mappedBy="compositeKey.user", cascade=CascadeType.ALL)
+	private List<Points> userPoints;
+	
+	/** The account.*/
+	@ManyToOne
+	private Account account;
+	
 	/**
 	 * Instantiates a new user.
 	 */
@@ -296,5 +308,44 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	/**
+	 * Gets the points of the user.
+	 * @return The points of the user
+	 */
+	public List<Points> getAllPoints(){
+		return userPoints;
+	}
+	
+	/**
+	 * Sets the points of the user.
+	 * @param userPoints List of Points to set
+	 */
+	public void setAllPoints(List<Points> userPoints){
+		this.userPoints = userPoints;
+	}
+	
+	/**
+	 * Add Points to an User.
+	 * @param points Points to add
+	 */
+	public void addPoints(Points points){
+		this.userPoints.add(points);
+	}
 
+	/**
+	 * Gets the account of the user.
+	 * @return The account
+	 */
+	public Account getAccount() {
+		return account;
+	}
+
+	/**
+	 * Sets the account of the user.
+	 * @param account The new account to set
+	 */
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 }

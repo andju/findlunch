@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes"></head>
+<body>
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+
+		<h1 th:text="#{bill.label}">Bill</h1>
+		<div th:if="${param.notExistingBill}" class="alert alert-danger"
+			th:text="#{invalid.bill.id}" role="alert">not existing bill</div>
+		<div th:if="${param.accessDenied}" class="alert alert-danger"
+			th:text="#{invalid.bill.access}" role="alert">not existing bill</div>
+		
+		<h2 th:text="#{bill.label.donation}">Donation</h2>
+
+		<form action="#" th:object="${donationPerMonth}" method="post" enctype="multipart/form-data">
+			<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td><label class="control-label" for="amount"
+								th:text="#{bill.label.donationtext}">Donation per Month</label></td>
+							<td style="width: 15px"><span style="padding-top: 7px"
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{restaurant.tooltip.donation}"></span>
+							</td>
+							<td>
+								<div class="form-group col-md-12"
+									th:classappend="${#fields.hasErrors('amount')}? has-error">
+									<input type="text" th:field="*{amount}" class="form-control"
+										id="amount" th:placeholder="#{bill.label.placeholder}"/>
+									<div th:if="${#fields.hasErrors('amount')}? has-error"
+										class="alert alert-danger" role="alert" th:errors="*{amount}">00.00
+										up to 999.99</div>
+								</div>
+								<div>
+									<input type="hidden" th:field="*{id}" /> 
+									<input type="hidden" th:field="*{date}" /> 
+									<input type="hidden" th:field="*{datetimeOfUpdate}"/>
+								</div>
+							</td>
+							<td><button type="submit" class="btn btn-success" 
+										th:text="#{bill.button.save}" name="newDonation"></button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+
+
+
+		<h2 th:text="#{bill.label.notpayed}">Bill</h2>
+		<form th:object="${billsWrapper}">
+		<div style="height: 230px; overflow: auto;">
+			<table class="table table-hover" id="billsTable">
+				<thead>
+					<tr>
+						<th th:text="#{bill.label.billnumber}">billNumber</th>
+						<th th:text="#{bill.label.billTotalPrice}">billAmount</th>
+						<th th:text="#{bill.label.startDate}">startDate</th>
+						<th th:text="#{bill.label.endDate}">endDate</th>
+						<th th:text="#{bill.label.download}">download</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="bill, stat: *{bills}">
+						<div th:switch="${bill.isPaid()}">
+							<div th:case="false">				
+								<td th:text="${bill.getBillNumber()}"></td>
+								<td><span th:text="${#numbers.formatDecimal(bill.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td th:text="${#dates.format(bill.getStartDate(), 'dd.MM.yyyy')}"></td>
+								<td th:text="${#dates.format(bill.getEndDate(), 'dd.MM.yyyy')}"></td>
+								<td>
+									<a
+									th:href="@{/bill/{id}(id=${bill.id})}"><button
+											type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span></button></a>
+								</td>
+							</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+		</form>
+		
+		
+				<h2 th:text="#{bill.label.payed}">Bill</h2>
+		<form th:object="${billsWrapper}">
+		<div style="height: 230px; overflow: auto;">
+			<table class="table table-hover" id="billsTable">
+				<thead>
+					<tr>
+						<th th:text="#{bill.label.billnumber}">billNumber</th>
+						<th th:text="#{bill.label.billTotalPrice}">billAmount</th>
+						<th th:text="#{bill.label.startDate}">startDate</th>
+						<th th:text="#{bill.label.endDate}">endDate</th>
+						<th th:text="#{bill.label.download}">download</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="bill, stat: *{bills}">
+						<div th:switch="${bill.isPaid()}">
+							<div th:case="true">					
+								<td th:text="${bill.getBillNumber()}"></td>
+								<td><span th:text="${#numbers.formatDecimal(bill.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td th:text="${#dates.format(bill.getStartDate(), 'dd.MM.yyyy')}"></td>
+								<td th:text="${#dates.format(bill.getEndDate(), 'dd.MM.yyyy')}"></td>
+								<td>
+									<a
+									th:href="@{/bill/{id}(id=${bill.id})}"><button
+											type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span></button></a>
+								</td>
+							</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+		</form>
+
+
+
+
+
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

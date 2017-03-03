@@ -91,6 +91,15 @@ public class Offer {
 	@JsonView(OfferView.OfferRest.class)
 	private OfferPhoto defaultPhoto;
 	
+	/** The reservations.*/
+	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
+	List<Reservation> reservation;
+	
+	/** The needed point*/
+	@JsonView(OfferView.OfferRest.class)
+	@Min(value=1, message="{offer.neededPoints.invalidMinValue}")
+	private int neededPoints;
+	
 	/**
 	 * Gets the default photo.
 	 *
@@ -349,6 +358,22 @@ public class Offer {
 		offerPhoto.setOffer(null);
 
 		return offerPhoto;
+	}
+	
+	/**
+	 * Gets the neededPoints for an offer.
+	 * @return The needed points
+	 */
+	public int getNeededPoints() {
+		return neededPoints;
+	}
+	
+	/**
+	 * Sets the new needed points for an offer.
+	 * @param neededPoints The needed points to set
+	 */
+	public void setNeededPoints(int neededPoints) {
+		this.neededPoints = neededPoints;
 	}
 
 }

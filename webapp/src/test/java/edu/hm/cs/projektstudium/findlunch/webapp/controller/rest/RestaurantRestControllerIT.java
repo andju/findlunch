@@ -1,9 +1,17 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -22,6 +30,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.parsing.Parser;
@@ -30,8 +45,13 @@ import com.jayway.restassured.response.Response;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.App;
 import edu.hm.cs.projektstudium.findlunch.webapp.distance.DistanceCalculator;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Account;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Bill;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Country;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DonationPerMonth;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.KitchenType;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.RestaurantType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
@@ -113,6 +133,8 @@ public class RestaurantRestControllerIT {
 	
 	/** The restaurant name **/
 	public static final String RESTAURANT_ZIP = "12345";
+	
+	public static final String RESTAURANT_UUID = "5b36b3e3-054d-41b9-be3c-19fcece09f";
 	  
 	/**
 	 * Run before each test.
@@ -1072,6 +1094,7 @@ public class RestaurantRestControllerIT {
 		//dummy id
 		r.setId(i);
 		r.setName(RESTAURANT_NAME + i);
+		r.setCustomerId(i);
 		r.setCity(RESTAURANT_CITY);
 		r.setCountry(countryRepo.findAll().get(0));
 		r.setEmail(RESTAURANT_EMAIL + i);
@@ -1082,9 +1105,21 @@ public class RestaurantRestControllerIT {
 		r.setStreetNumber(RESTAURANT_STREETNUMBER + i);
 		r.setUrl(RESTAURANT_URL + i);
 		r.setZip(RESTAURANT_ZIP);
+		r.setRestaurantUuid(RESTAURANT_UUID +i);
+		try {
+			r.setQrUuid(createQRCode(r.getRestaurantUuid()));
+		} catch (WriterException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		r.setLocationLatitude(locationLatitude);
 		r.setLocationLongitude(locationLongitude);
 		r.setTimeSchedules(new ArrayList<TimeSchedule>());
+		r.setReservation(new ArrayList<Reservation>());
+		r.setBills(new ArrayList<Bill>());
+		r.setDonations(new ArrayList<DonationPerMonth>());
+		r.setRestaurantPoints(new ArrayList<Points>());
 		return r;
 	}
 	
@@ -1100,6 +1135,7 @@ public class RestaurantRestControllerIT {
 		u.setPassword(passwordEncoder.encode("admin"));
 		u.setPasswordconfirm("admin");
 		u.setUserType(userTypeRepository.findByName("Anbieter"));
+		u.setAccount(new Account());
 		return u;
 	}
 	
@@ -1145,6 +1181,42 @@ public class RestaurantRestControllerIT {
 		
 		return restaurantsWithinDatabase;
 		
+	}
+	
+	/**
+	 * Create a new QR-Code
+	 * @param qrCodeData Data for the QR-Code
+	 * @return Image in Byte
+	 * @throws WriterException
+	 * @throws IOException
+	 */
+	private byte[] createQRCode(String qrCodeData) throws WriterException, IOException{
+		File dir = new File("QRCodes");
+		if(!dir.exists()){
+			dir.mkdir();
+		}
+		 
+		String filePath = "QRCodes/"+qrCodeData+".png";
+		String charset = "UTF-8"; // or "ISO-8859-1"
+		Map<EncodeHintType, Object> hintMap = new HashMap<EncodeHintType, Object>();
+		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+		
+		//create the QR-Code and safe it
+		String information = new String(qrCodeData.getBytes(charset), charset);
+		BitMatrix matrix = new MultiFormatWriter().encode(information, BarcodeFormat.QR_CODE, 250, 250, hintMap);
+		MatrixToImageWriter.writeToFile(matrix, filePath.substring(filePath.lastIndexOf('.') + 1), new File(filePath));
+		
+		//convert to byte
+		BufferedImage bm = ImageIO.read(new File(filePath));
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bm, "png", baos);
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		File file = new File(filePath);
+		file.delete();
+		
+		return imageInByte;
 	}
 	
 }

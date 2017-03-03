@@ -1,13 +1,22 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -28,8 +37,16 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.GeocodingApiRequest;
 import com.google.maps.model.GeocodingResult;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Account;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.OpeningTime;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
@@ -37,6 +54,8 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.RestaurantType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomRestaurantValidator;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AccountRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AccountTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CountryRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeRepository;
@@ -86,6 +105,14 @@ public class RestaurantController {
 	/** The message source. */
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private AccountTypeRepository accountTypeRepository;
+	
+	@Autowired
+	private AccountRepository accountRepository;
+	
+
 
 	/** The logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(RestaurantController.class);
@@ -117,6 +144,7 @@ public class RestaurantController {
 			model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 			model.addAttribute("restaurantTypes", getRestaurantTypes());
 			model.addAttribute("countries", countryRepository.findAll());
+			
 			return "restaurant";
 		}
 	}
@@ -137,7 +165,7 @@ public class RestaurantController {
 
 		return result;
 	}
-
+	
 	/**
 	 * Gets the new restaurant.
 	 *
@@ -145,6 +173,23 @@ public class RestaurantController {
 	 */
 	private Restaurant getNewRestaurant() {
 		Restaurant restaurant = new Restaurant();
+		
+		//set the customer Id of the restaurant
+		restaurant.setCustomerId(generateId());
+		
+		String qrCodeData = UUID.randomUUID().toString();
+		restaurant.setRestaurantUuid(qrCodeData);
+		
+		//create a QR-code for the restaurant
+		try {
+			restaurant.setQrUuid(createQRCode(qrCodeData));
+		} catch (WriterException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		setBase64(restaurant);
 
 		// add TimeSchedule entry for each day of week
 		ArrayList<TimeSchedule> times = new ArrayList<TimeSchedule>();
@@ -216,6 +261,8 @@ public class RestaurantController {
 			restaurant.addTimeSchedule(t);
 		}
 		
+		setBase64(restaurant);
+		
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -264,6 +311,7 @@ public class RestaurantController {
 	public String addOpeningTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
+		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -325,7 +373,8 @@ public class RestaurantController {
 			OpeningTime toRemove = t.getOpeningTimes().get(openingTimeId);
 			t.removeOpeningTime(toRemove);
 		}
-
+		
+		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
 		return "restaurant";
 	}
@@ -348,6 +397,7 @@ public class RestaurantController {
 	public String removeOfferTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
+		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -383,6 +433,7 @@ public class RestaurantController {
 	public String addOfferTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
+		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -418,6 +469,7 @@ public class RestaurantController {
 	public String saveRestaurant(@Valid final Restaurant restaurant, BindingResult bindingResult, final Model model, Principal principal, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
+		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -451,6 +503,17 @@ public class RestaurantController {
 		User u = userRepository.findOne(authenticatedUser.getId());
 		u.setAdministratedRestaurant(restaurant);
 		restaurant.addAdmin(u);
+		
+		//
+		Account account = accountRepository.findByUsers(restaurant.getAdmins());
+		if(account == null){
+			account = new Account();
+			account.setAccountType(accountTypeRepository.findOne(2));
+			account.addUser(u);
+			account.setAccountNumber(generateId());
+			accountRepository.save(account);
+		}
+		//
 
 		restaurantRepository.save(restaurant);
 		
@@ -558,5 +621,65 @@ public class RestaurantController {
 		}
 		return null;
 	}
+	
+	/**
+	 * Set base 64 for img
+	 * @param restaurant
+	 */
+	private void setBase64(Restaurant restaurant){
+		String base64Encoded = Base64.getEncoder().encodeToString(restaurant.getQrUuid()); 
+		restaurant.setBase64Encoded(base64Encoded);
+	}
+	
+	/**
+	 * Create a new QR-Code
+	 * @param qrCodeData Data for the QR-Code
+	 * @return Image in Byte
+	 * @throws WriterException
+	 * @throws IOException
+	 */
+	private byte[] createQRCode(String qrCodeData) throws WriterException, IOException{
+		File dir = new File("QRCodes");
+		if(!dir.exists()){
+			dir.mkdir();
+		}
+		 
+		String filePath = "QRCodes/"+qrCodeData+".png";
+		String charset = "UTF-8"; // or "ISO-8859-1"
+		Map<EncodeHintType, Object> hintMap = new HashMap<EncodeHintType, Object>();
+		hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+		
+		//create the QR-Code and safe it
+		String information = new String(qrCodeData.getBytes(charset), charset);
+		BitMatrix matrix = new MultiFormatWriter().encode(information, BarcodeFormat.QR_CODE, 250, 250, hintMap);
+		MatrixToImageWriter.writeToFile(matrix, filePath.substring(filePath.lastIndexOf('.') + 1), new File(filePath));
+		
+		//convert to byte
+		BufferedImage bm = ImageIO.read(new File(filePath));
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(bm, "png", baos);
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		File file = new File(filePath);
+		file.delete();
+		
+		return imageInByte;
+	}
+	
+	/**
+	 * Generate a unique id. Used to generate a random customerId and accountNumber.
+	 * @return unique Integer
+	 */
+	//See Stackoverflow: http://stackoverflow.com/questions/12659572/how-to-generate-a-random-9-digit-number-in-java
+	private int generateId(){
+        long timeSeed = System.nanoTime();
+        double randSeed = Math.random() * 1000; // random number generation
+        long midSeed = (long) (timeSeed * randSeed);	// mixing up the time and rand number.
+        												// variable timeSeed will be unique
+                                                    	// variable rand will  ensure no relation between the numbers
+        String rN = Long.toString(midSeed).substring(0, 9);
+        return Integer.parseInt(rN);
+    }
 
 }

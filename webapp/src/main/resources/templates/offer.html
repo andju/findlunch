@@ -30,6 +30,8 @@
 						<th><label class="control-label" for="title"
 							th:text="#{offer.label.price}">label</label></th>
 						<th><label class="control-label" for="title"
+							th:text="#{offer.label.neededPoints}">label</label></th>
+						<th><label class="control-label" for="title"
 							th:text="#{offer.label.preparationTime}">label</label></th>
 						<th><label class="control-label" for="title"
 							th:text="#{offer.label.startDate}">label</label></th>
@@ -61,6 +63,7 @@
 						<td><span
 							th:text="${#numbers.formatDecimal(offer.price, 1, 'POINT', 2, 'COMMA')}">10.00</span>
 							&euro;</td>
+						<td th:text="*{offer.neededPoints}"></td>
 						<td th:text="*{offer.preparationTime}"></td>
 						<td th:text="${#dates.format(offer.startDate, 'dd.MM.yyyy')}"></td>
 						<td th:text="${#dates.format(offer.endDate, 'dd.MM.yyyy')}"></td>

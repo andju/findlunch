@@ -37,4 +37,11 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Serializ
 	 * @return the list of Restaurants which have one of the given KitchenTypes
 	 */
 	List<Restaurant> findByKitchenTypes_idIn(List<Integer> kitchenTypes);
+	
+	/**
+	 * Find a Restaurant by its Restaurant uuid.
+	 * @param restaurantUuid Uuid of the Restaurant
+	 * @return The restaurant
+	 */
+	Restaurant findByRestaurantUuid(String restaurantUuid);
 }
