@@ -8,6 +8,7 @@ The web application is based on several technologies:
   * Spring MVC
   * Thymeleaf Template Engine
   * Bootstrap
+  * iText PDF
   
 ### Import into eclipse
 
