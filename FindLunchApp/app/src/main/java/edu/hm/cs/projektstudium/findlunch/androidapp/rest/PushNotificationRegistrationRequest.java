@@ -37,7 +37,7 @@ public class PushNotificationRegistrationRequest extends AuthenticatedRequest<Pu
      */
     public PushNotificationRegistrationRequest(RequestReason requestReason, String userName, String password, PushNotification pushNotification, ConnectionInformation connectionInformation, OnHttpRequestFinishedCallback context) {
         super(requestReason, context, ((Context) context).getResources().getString(R.string.text_loading_push_registration), connectionInformation, userName, password);
-        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/register_push";
+        requestUrl = "http://" +  requestHost + ":" + requestPort + "/api/register_push";
         // include push notification to register in requestEntity
         requestEntity = new HttpEntity<Object>(pushNotification, requestHeaders);
     }

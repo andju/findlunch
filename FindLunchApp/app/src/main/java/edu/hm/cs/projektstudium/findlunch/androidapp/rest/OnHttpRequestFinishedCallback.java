@@ -87,4 +87,20 @@ public interface OnHttpRequestFinishedCallback {
      * @param requestResponse the request response
      */
     void onRestPushNotificationDeleteFinished(Request<PushNotificationDeleteStatus> requestResponse);
+
+    /**
+     * Method that is invoked
+     * in {@link HttpRequestTask},
+     * when a {@link ReservationRegistrationRequest} returns.
+     * @param requestResponse the request response
+     */
+    void onRestReservationRegistrationFinished(Request<ReservationRegistrationStatus> requestResponse);
+
+    /**
+     * Method that is invoked
+     * in {@link HttpRequestTask},
+     * when a {@link ReservationConfirmRequest}
+     * @param requestResponse the request response
+     */
+    void onRestReservationConfirmFinished(Request<ReservationConfirmStatus> requestResponse);
 }

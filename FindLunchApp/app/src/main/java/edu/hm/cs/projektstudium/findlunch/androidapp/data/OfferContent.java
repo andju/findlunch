@@ -177,4 +177,44 @@ public class OfferContent {
         }
         return null;
     }
+
+    /**
+     * Gets the restaurant id.
+     * @return The id from restaurant
+     */
+    public int getRestaurantId(){
+        return restaurantId;
+    }
+
+    /**
+     * Gets the offer.
+     * @param position the position of the offer
+     * @return the offer
+     */
+    public Offer getOffer(int position) {
+        return getOffers().get(position);
+    }
+
+    /**
+     * Gets the needed points.
+     * @param position The position
+     * @return The needed points as String
+     */
+    public String getNeededPoints(int position) {
+        List<Offer> offers = getOffers();
+        Offer offer;
+        StringBuilder result = new StringBuilder();
+
+        if (offers != null) {
+            offer = offers.get(position);
+
+            if (offer != null) {
+                result.append(String.valueOf(offer.getNeededPoints()));
+                result.append(" ");
+                result.append(context.getResources().getString(R.string.text_needed_points));
+            }
+        }
+
+        return result.toString();
+    }
 }

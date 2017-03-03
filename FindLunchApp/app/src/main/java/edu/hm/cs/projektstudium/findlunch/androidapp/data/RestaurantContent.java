@@ -445,4 +445,13 @@ public class RestaurantContent {
     private void setContext(Context context) {
         this.context = context;
     }
+
+    /**
+     * The current points of the user.
+     * @param position the position
+     * @return actual points
+     */
+    public String getActualPoints(int position){
+        return context.getResources().getString(R.string.text_actual_points) + " " + getItems().get(position).getActualPoints();
+    }
 }

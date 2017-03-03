@@ -30,6 +30,17 @@
             android:title="@string/nav_logout" />
     </group>
 
+    <item
+        android:id="@+id/nav_bonusPoints"
+        android:title="@string/text_bonus_program">
+        <menu>
+            <item
+                android:id="@+id/nav_get_points"
+                android:icon="@drawable/ic_open_in_browser"
+                android:title="@string/text_bonus_points_get" />
+        </menu>
+    </item>
+
     <item android:title="@string/nav_on_the_web">
         <menu>
             <item

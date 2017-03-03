@@ -11,6 +11,7 @@ public class ConnectionInformationFindlunch extends ConnectionInformation {
      * Instantiates a new Connection information findLunch.
      */
     public ConnectionInformationFindlunch() {
-        super("findlunch.biz.tm", 8443);
+        super("10.28.57.62", 8080);
     }
+
 }

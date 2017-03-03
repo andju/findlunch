@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.hm.cs.projektstudium.findlunch.androidapp.R;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.OfferContent;
@@ -48,12 +50,13 @@ public class OfferItemRecyclerViewAdapter extends RecyclerView.Adapter<OfferItem
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.mTitleView.setText(mValues.getTitle(position));
         holder.mDescriptionView.setText(mValues.getDescription(position));
         holder.mPriceView.setText(mValues.getPrice(position));
         holder.mPreparationTime.setText(mValues.getPreparationTime(position));
+        holder.mNeededPoints.setText(mValues.getNeededPoints(position));
 
         // get the default photo
         Bitmap offerPhoto = mValues.getDefaultPhoto(position);
@@ -67,7 +70,7 @@ public class OfferItemRecyclerViewAdapter extends RecyclerView.Adapter<OfferItem
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onOfferListFragmentInteraction();
+                    mListener.onOfferListFragmentInteraction(holder, mValues);
                 }
             }
         });
@@ -107,6 +110,8 @@ public class OfferItemRecyclerViewAdapter extends RecyclerView.Adapter<OfferItem
          */
         public final ImageView mOfferPhoto;
 
+        public final TextView mNeededPoints;
+
         /**
          * Instantiates a new View holder.
          *
@@ -120,6 +125,7 @@ public class OfferItemRecyclerViewAdapter extends RecyclerView.Adapter<OfferItem
             mPriceView = (TextView) view.findViewById(R.id.offerPrice);
             mPreparationTime = (TextView) view.findViewById(R.id.offerPreparationTime);
             mOfferPhoto = (ImageView) view.findViewById(R.id.offerPhoto);
+            mNeededPoints = (TextView) view.findViewById(R.id.offerNeededPoints);
         }
 
         @Override

@@ -91,6 +91,49 @@ public class Restaurant {
     private boolean isFavorite;
 
     /**
+     * The actual points.
+     */
+    private int actualPoints;
+
+    /**
+     * The restaurant uuid.
+     */
+    private String restaurantUuid;
+
+    /**
+     * Gets the actual points.
+     * @return The actual points
+     */
+    public int getActualPoints() {
+        return actualPoints;
+    }
+
+    /**
+     * Sets the actual points.
+     * @param actualPoints The actual points
+     */
+    @SuppressWarnings("unused")
+    public void setActualPoints(int actualPoints) {
+        this.actualPoints = actualPoints;
+    }
+
+    /**
+     * Gets the restaurant uuid.
+     * @return The uuid from the restaurant
+     */
+    public String getRestaurantUuid() {
+        return restaurantUuid;
+    }
+
+    /**
+     * Sets the uuid form the restaurant.
+     * @param restaurantUuid The uuid
+     */
+    public void setRestaurantUuid(String restaurantUuid) {
+        this.restaurantUuid = restaurantUuid;
+    }
+
+    /**
      * Gets id.
      *
      * @return the id

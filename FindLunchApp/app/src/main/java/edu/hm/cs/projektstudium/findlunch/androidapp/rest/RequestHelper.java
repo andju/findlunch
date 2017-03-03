@@ -9,6 +9,8 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.geocoding.Geometry;
 import edu.hm.cs.projektstudium.findlunch.androidapp.geocoding.GoogleGeoCodeResponse;
 import edu.hm.cs.projektstudium.findlunch.androidapp.geocoding.Results;
 import edu.hm.cs.projektstudium.findlunch.androidapp.geocoding.Type;
+import edu.hm.cs.projektstudium.findlunch.androidapp.model.Reservation;
+import edu.hm.cs.projektstudium.findlunch.androidapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.androidapp.network.ConnectionInformation;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.PushNotification;
@@ -331,5 +333,40 @@ public class RequestHelper {
             }
         }
         return matchingResult;
+    }
+
+    /**
+     * Method that creates and executes
+     * a {@link ReservationRegistrationRequest}.
+     * @param context The context
+     * @param reservation The reservation
+     * @param connectionInformation The connection information
+     * @param userName The username
+     * @param password The password of the user
+     */
+    public void requestReservationRegistration(OnHttpRequestFinishedCallback context, Reservation reservation, ConnectionInformation connectionInformation, String userName, String password){
+        Request request = new ReservationRegistrationRequest(context,reservation,connectionInformation,userName,password);
+
+        // create a request task
+        HttpRequestTask requestTask = new HttpRequestTask((Context) context);
+        // execute the request
+        requestTask.execute(request);
+    }
+
+    /**
+     * Method that creates and executes
+     * a {@link ReservationConfirmRequest}.
+     * @param context The context
+     * @param restaurant The restaurant
+     * @param connectionInformation The connection information
+     * @param userName the user
+     * @param password the password
+     */
+    public void requestReservationConfirm(OnHttpRequestFinishedCallback context, Restaurant restaurant, ConnectionInformation connectionInformation, String userName, String password){
+        Request request = new ReservationConfirmRequest(context, restaurant, connectionInformation, userName, password);
+
+        HttpRequestTask requestTask = new HttpRequestTask((Context) context);
+
+        requestTask.execute(request);
     }
 }

@@ -1,0 +1,193 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:context="edu.hm.cs.projektstudium.findlunch.androidapp.fragment.ReservationFragment">
+
+    <View
+        android:id="@+id/lineSeperator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/text_margin_half"
+        android:background="@android:color/darker_gray" />
+
+    <RelativeLayout
+        android:id="@+id/reservationAmountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin_half"
+        android:layout_below="@+id/lineSeperator"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/reservationDecreaseAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin_half"
+            android:layout_alignLeft="@+id/reservationDecreaseDonation"
+            android:layout_alignStart="@+id/reservationDecreaseDonation"
+            android:src="@drawable/ic_decrease_amount_black"
+            android:contentDescription="@string/text_reservation_reduce_amount"/>
+
+        <LinearLayout
+            android:id="@+id/amountLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_reservation_amount"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size" />
+
+            <TextView
+                android:id="@+id/reservationAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="3"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/reservationIncreaseAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_margin_half"
+            android:layout_alignRight="@+id/reservationIncreaseDonation"
+            android:layout_alignEnd="@+id/reservationIncreaseDonation"
+            android:src="@drawable/ic_increase_amount_black"
+            android:contentDescription="@string/text_reservation_increase_amount"/>
+
+
+        <ImageView
+            android:id="@+id/reservationDecreaseDonation"
+            android:layout_below="@+id/reservationDecreaseAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/text_margin_large"
+            android:layout_marginEnd="@dimen/text_margin_large"
+            android:layout_toLeftOf="@+id/donationLayout"
+            android:layout_toStartOf="@+id/donationLayout"
+
+            android:src="@drawable/ic_decrease_donation_black"
+            android:contentDescription="@string/text_reservation_decrease_donation"/>
+
+        <LinearLayout
+            android:id="@+id/donationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/amountLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_reservation_sum"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size" />
+
+                <TextView
+                    android:id="@+id/reservationPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_euro_symbol_black"
+                    android:contentDescription="@string/text_reservation_euro_description"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_reservation_donation"
+                    android:textSize="@dimen/text_size"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/reservationDonation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_euro_symbol_black"
+                    android:contentDescription="@string/text_reservation_euro_description"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/reservationIncreaseDonation"
+            android:layout_below="@+id/reservationIncreaseAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin_large"
+            android:layout_marginStart="@dimen/text_margin_large"
+            android:layout_toRightOf="@+id/donationLayout"
+            android:layout_toEndOf="@+id/donationLayout"
+
+            android:src="@drawable/ic_increase_donation_black"
+            android:contentDescription="@string/text_reservation_increase_donation"/>
+
+    </RelativeLayout>
+
+
+    <!-- Buttons -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/reservationAmountLayout"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/reservationButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reservationAmountLayout"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/reservationPointsBuy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_reservation_use_points"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/reservationBuy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_reservation"
+            android:textAllCaps="false" />
+    </LinearLayout>
+</RelativeLayout>

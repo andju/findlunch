@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import edu.hm.cs.projektstudium.findlunch.androidapp.R;
 import edu.hm.cs.projektstudium.findlunch.androidapp.activity.MainActivity;
 import edu.hm.cs.projektstudium.findlunch.androidapp.adapter.OfferItemRecyclerViewAdapter;
+import edu.hm.cs.projektstudium.findlunch.androidapp.data.OfferContent;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.RestaurantAndLocationProvider;
 
 /**
@@ -215,7 +216,7 @@ public class OfferItemFragment extends Fragment {
          * when an item gets selected.
          *
          */
-        void onOfferListFragmentInteraction();
+        void onOfferListFragmentInteraction(RecyclerView.ViewHolder holder, OfferContent mValues);
 
         /**
          * Method that is invoked

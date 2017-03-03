@@ -32,6 +32,7 @@
     <string name="register_logo_description">Anmelden</string>
     <string name="delete_logo_description">Löschen</string>
     <string name="price_logo_weekdays">Wochentage</string>
+    <string name="neededPoints_logo_description">benötigte Punkte</string>
 
     <string name="action_settings">Einstellungen</string>
     <string name="action_refresh">Aktualisieren</string>
@@ -72,6 +73,9 @@
     <string name="text_all">alle</string>
     <string name="text_support_email_subject">Supportanfrage</string>
     <string name="text_support_email_text"></string>
+    <string name="text_needed_points">benötigte Punkte</string>
+    <string name="text_loading_reservation_registration">Sende die Bestellung</string>
+    <string name="text_loading_reservation_confirm">Bestätige die Bestellung</string>
 
 
     <!-- Strings for interaction -->
@@ -97,6 +101,7 @@
     <string name="text_kitchen_type">Art der Küche:</string>
     <string name="text_hour">Uhr</string>
     <string name="text_distance">Entfernung:</string>
+    <string name="text_actual_points">Punkte Stand:</string>
 
     <!-- Strings of the registration fragment -->
     <string name="edit_message_username">Benutzername (E-Mail-Adresse)</string>
@@ -163,5 +168,30 @@
     <string name="weekday_fr">Freitag</string>
     <string name="weekday_sa">Samstag</string>
     <string name="weekday_su">Sonntag</string>
+
+    <!-- String for Bonus program-->
+    <string name="text_get_bonuspoints_successful">Sie haben Ihre Punkte erhalten</string>
+    <string name="text_fail_to_get_bonus_points">Die Bestätigung ist fehlgeschlagen!</string>
+    <string name="text_try_to_scann">Scannen Sie den QR-Code</string>
+    <string name="text_scanner_closed">QR-Code Scanner wurde geschlossen</string>
+
+    <!-- String for Reservation-->
+    <string name="text_reservation_successful">Reservierung war erfolgreich</string>
+    <string name="text_reservation_fail">Reservierung ist fehlgeschlagen</string>
+    <string name="text_reservation_reduce_amount">Menge reduzieren</string>
+    <string name="text_reservation_amount">Menge: </string>
+    <string name="text_reservation_increase_amount">Menge erhöhen</string>
+    <string name="text_reservation_decrease_donation">Spende reduzieren</string>
+    <string name="text_reservation_sum">Betrag: </string>
+    <string name="text_reservation_euro_description">Euro</string>
+    <string name="text_reservation_donation">Spende: </string>
+    <string name="text_reservation_increase_donation">Spende erhöhen</string>
+    <string name="button_reservation_use_points">Punkte einlösen</string>
+    <string name="button_reservation">Bestellen</string>
+    <string name="text_bonus_program">Bonusprogramm</string>
+    <string name="text_bonus_points_get">Punkte Sammeln</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

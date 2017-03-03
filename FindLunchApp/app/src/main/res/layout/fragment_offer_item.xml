@@ -90,6 +90,30 @@
         android:layout_toEndOf="@id/iconPreparationTime"
         android:layout_toLeftOf="@id/offerPhoto"
         android:layout_toStartOf="@id/offerPhoto"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:textAppearance="?attr/textAppearanceListItem"/>
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/iconNeededPoints"
+        android:layout_below="@+id/iconPreparationTime"
+        android:src="@drawable/ic_needed_points_black"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/neededPoints_logo_description"
+        />
+
+    <TextView
+        android:id="@+id/offerNeededPoints"
+        android:layout_below="@+id/offerPrice"
+        android:paddingLeft="@dimen/text_margin_half"
+        android:paddingStart="@dimen/text_margin_half"
+        android:paddingRight="@dimen/text_margin_half"
+        android:paddingEnd="@dimen/text_margin_half"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iconNeededPoints"
+        android:layout_toEndOf="@id/iconNeededPoints"
+        android:textAppearance="?attr/textAppearanceListItem"
+        />
+    </RelativeLayout>

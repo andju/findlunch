@@ -33,6 +33,29 @@ public class Offer {
     private OfferPhoto defaultPhoto;
 
     /**
+     * The needed Points.
+     */
+    private int neededPoints;
+
+    /**
+     * Gets the needed points.
+     *
+     * @return the needed points
+     */
+    public int getNeededPoints() {
+        return neededPoints;
+    }
+
+    /**
+     * Sets the needed points.
+     * @param neededPoints The points to set
+     */
+    @SuppressWarnings("unused")
+    public void setNeededPoints(int neededPoints) {
+        this.neededPoints = neededPoints;
+    }
+
+    /**
      * Sets id.
      *
      * @param id the id
@@ -135,5 +158,14 @@ public class Offer {
     @SuppressWarnings("unused")
     public void setDefaultPhoto(OfferPhoto defaultPhoto) {
         this.defaultPhoto = defaultPhoto;
+    }
+
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public int getId(){
+        return id;
     }
 }

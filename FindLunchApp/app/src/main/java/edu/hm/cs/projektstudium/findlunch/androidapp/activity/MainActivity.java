@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -30,17 +31,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import edu.hm.cs.projektstudium.findlunch.androidapp.R;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.DayOfWeekContent;
-import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserLocationContent;
+import edu.hm.cs.projektstudium.findlunch.androidapp.data.OfferContent;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.RestaurantAndLocationProvider;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.RestaurantContent;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserContent;
+import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserLocationContent;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserLoginContent;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserLoginCredentials;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserRegistrationContent;
@@ -49,6 +56,7 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.MainFragment;
 import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.OfferItemFragment;
 import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.PushOverviewFragment;
 import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.PushRegistrationDialogFragment;
+import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.ReservationFragment;
 import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.RestaurantFragment;
 import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.RestaurantItemFragment;
 import edu.hm.cs.projektstudium.findlunch.androidapp.fragment.RestaurantMapFragment;
@@ -65,6 +73,7 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.KitchenType;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.androidapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.androidapp.network.ConnectionInformation;
@@ -82,6 +91,10 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.rest.RequestHelper;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.RequestReason;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.RequestResult;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.RequestResultDetail;
+import edu.hm.cs.projektstudium.findlunch.androidapp.rest.ReservationConfirmRequest;
+import edu.hm.cs.projektstudium.findlunch.androidapp.rest.ReservationConfirmStatus;
+import edu.hm.cs.projektstudium.findlunch.androidapp.rest.ReservationRegistrationRequest;
+import edu.hm.cs.projektstudium.findlunch.androidapp.rest.ReservationRegistrationStatus;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.UserLoginRequest;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.UserLoginStatus;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.UserRegistrationRequest;
@@ -107,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         UserLoginFragment.OnLoginUserFragmentInteractionListener,
         PushOverviewFragment.OnPushOverviewFragmentInteractionListener,
         OnHttpRequestFinishedCallback,
-        RestaurantAndLocationProvider {
+        RestaurantAndLocationProvider,ReservationFragment.OnReservationFragmentInteractionListener {
 
     /**
      * The Request helper.
@@ -344,12 +357,14 @@ public class MainActivity extends AppCompatActivity
                     MenuItem logoutItem = navigationView.getMenu().findItem(R.id.nav_logout);
                     MenuItem registerItem = navigationView.getMenu().findItem(R.id.nav_register);
                     MenuItem pushOverviewItem = navigationView.getMenu().findItem(R.id.nav_pushes);
+                    MenuItem bonusPointItem = navigationView.getMenu().findItem(R.id.nav_bonusPoints);
 
                     if(userLoginCredentials.isLoggedIn()) {
                         loginItem.setVisible(false);
                         registerItem.setVisible(false);
                         logoutItem.setVisible(true);
                         pushOverviewItem.setVisible(true);
+                        bonusPointItem.setVisible(true);
                         ViewHelper.makeVisibleOnUpdate(userNameTextView, userLoginCredentials.getUserName());
                     } else {
                         loginItem.setVisible(true);
@@ -357,6 +372,7 @@ public class MainActivity extends AppCompatActivity
                         logoutItem.setVisible(false);
                         pushOverviewItem.setVisible(false);
                         userNameTextView.setVisibility(View.GONE);
+                        bonusPointItem.setVisible(false);
                     }
                 }
             }
@@ -473,6 +489,18 @@ public class MainActivity extends AppCompatActivity
         setHeaderFooterVisibility(false, R.id.headerPushOverview);
     }
 
+    @Override
+    public void onReservationFragmentGetsActive() {
+        setHeaderFooterVisibility(true, R.id.headerOffer);
+        setHeaderFooterVisibility(true, R.id.headerReservationOffer);
+    }
+
+    @Override
+    public void onReservationFragmentGetsInactive() {
+        setHeaderFooterVisibility(false, R.id.headerOffer);
+        setHeaderFooterVisibility(false, R.id.headerReservationOffer);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -526,6 +554,9 @@ public class MainActivity extends AppCompatActivity
                         getString(R.string.text_support_email_subject),
                         getString(R.string.text_support_email_text));
                 break;
+            case R.id.nav_get_points:
+                scanQRCode();
+                break;
         }
 
         if(fragment != null) {
@@ -540,6 +571,55 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * Open the QR-Scanner go get the points.
+     */
+    private void scanQRCode(){
+        messageHelper.printToastMessage(getResources().getString(R.string.text_try_to_scann));
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+        integrator.setPrompt("Scan");
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(false);
+        integrator.initiateScan();
+        integrator.setOrientationLocked(false);
+    }
+
+    @Override
+    public void onRestReservationConfirmFinished(Request<ReservationConfirmStatus> requestResponse) {
+        if(requestResponse instanceof ReservationConfirmRequest){
+            RequestResult requestResult = requestResponse.getRequestResult();
+
+            if(requestResult == RequestResult.SUCCESS){
+                messageHelper.printToastMessage(getResources().getString(R.string.text_get_bonuspoints_successful));
+            }
+            else{
+                messageHelper.printToastMessage(getResources().getString(R.string.text_fail_to_get_bonus_points));
+            }
+            changeFragment(new MainFragment(), false);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null){
+            if(result.getContents() == null){
+                messageHelper.printToastMessage(getResources().getString(R.string.text_scanner_closed));
+            }
+            else{
+                //Toast.makeText(this, result.getContents(),Toast.LENGTH_LONG).show();
+                Restaurant restaurant = new Restaurant();
+                restaurant.setRestaurantUuid(result.getContents());
+                requestHelper.requestReservationConfirm(this,restaurant,connectionInformation, userLoginCredentials.getUserName(), userLoginCredentials.getPassword());
+            }
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    /**
      * Opens the given path of the
      * FindLunch page in the default browser.
      *
@@ -550,7 +630,7 @@ public class MainActivity extends AppCompatActivity
                 webHelper.constructUrl(
                         connectionInformation.getHost(),
                         connectionInformation.getPort(),
-                        path, true));
+                        path, false));
     }
 
     /**
@@ -601,6 +681,7 @@ public class MainActivity extends AppCompatActivity
         ImageView emailView = (ImageView) findViewById(R.id.emailImageView);
         ImageView favouriteView = (ImageView) findViewById(R.id.favouriteImageView);
 
+
         if (restaurantNameView != null) {
             restaurantNameView.setText(restaurantContent.getName(restaurantListPosition));
         }
@@ -628,7 +709,113 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+        TextView actualPointsView = (TextView) findViewById(R.id.headerOfferActualPoints);
+        if(userLoginCredentials.isLoggedIn()){
+            if (actualPointsView != null) {
+                actualPointsView.setText(restaurantContent.getActualPoints(restaurantListPosition));
+                actualPointsView.setVisibility(View.VISIBLE);
+            }
+        } else{
+            if(actualPointsView != null)
+                actualPointsView.setVisibility(View.GONE);
+        }
+
         setOfferHeaderFavouriteIcon(restaurantListPosition, favouriteView);
+    }
+
+
+    /**
+     * Sets the header for the Reservation Fragment.
+     * @param restaurantId The restaurant id
+     * @param offerListPosition The position from the offer
+     */
+    public void setReservationHeaderTopic(final int restaurantId, final int offerListPosition){
+        ImageView offerPhotoView = (ImageView) findViewById(R.id.offerPhoto);
+        TextView offerTitleView = (TextView) findViewById(R.id.offerTitle);
+        TextView offerDescriptionView = (TextView) findViewById(R.id.offerDescription);
+        TextView offerPriceView = (TextView) findViewById(R.id.offerPrice);
+        TextView offerPreparationTimeView = (TextView) findViewById(R.id.offerPreparationTime);
+        TextView offerNeededPointsView = (TextView) findViewById(R.id.offerNeededPoints);
+
+        OfferContent offerContent = getRestaurantContent().getOfferContent(restaurantId);
+
+        if(offerPhotoView != null)
+            offerPhotoView.setImageBitmap(offerContent.getDefaultPhoto(offerListPosition));
+
+        if(offerTitleView != null)
+            offerTitleView.setText(offerContent.getTitle(offerListPosition));
+
+        if(offerDescriptionView != null)
+            offerDescriptionView.setText(offerContent.getDescription(offerListPosition));
+
+        if(offerPriceView != null)
+            offerPriceView.setText(offerContent.getPrice(offerListPosition));
+
+        if(offerPreparationTimeView != null)
+            offerPreparationTimeView.setText(offerContent.getPreparationTime(offerListPosition));
+
+        if(offerNeededPointsView != null)
+            offerNeededPointsView.setText(offerContent.getNeededPoints(offerListPosition));
+    }
+
+    /**
+     * Gets the Offer for the Reservation.
+     * @param restaurantId The restaurant id
+     * @param offerListPosition The position from the offer
+     * @return The offer
+     */
+    public Offer getOfferForAReservation(int restaurantId, int offerListPosition){
+        OfferContent offerContent = getRestaurantContent().getOfferContent(restaurantId);
+        return offerContent.getOffer(offerListPosition);
+    }
+
+    /**
+     *Updates the need points to for the reservation.
+     */
+    public void updatePointsToBuy(){
+        final Button reservationPointsBuyView = (Button) findViewById(R.id.reservationPointsBuy);
+        final TextView headerOfferActualPointsView = (TextView) findViewById(R.id.headerOfferActualPoints);
+        final TextView offerNeededPointsView = (TextView) findViewById(R.id.offerNeededPoints);
+        final TextView amountView = (TextView) findViewById(R.id.reservationAmount);
+
+
+        int actualPoints = Integer.parseInt(headerOfferActualPointsView.getText().toString().replace("Punkte Stand: ",""));
+        int neededPoints = Integer.parseInt(offerNeededPointsView.getText().toString().replace(" benötigte Punkte",""));
+        int amount = Integer.parseInt(amountView.getText().toString());
+
+        if (actualPoints >= neededPoints * amount) {
+            reservationPointsBuyView.setVisibility(View.VISIBLE);
+        } else {
+            reservationPointsBuyView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onReservationFragmentInteraction(int restaurantId, int offerListPosition, Reservation reservation) {
+        OfferContent offerContent = getRestaurantContent().getOfferContent(restaurantId);
+        Offer offer = offerContent.getOffer(offerListPosition);
+        reservation.setOffer(offer);
+        requestHelper.requestReservationRegistration(this,reservation, connectionInformation,  userLoginCredentials.getUserName(), userLoginCredentials.getPassword());
+    }
+
+    @Override
+    public void onReservationUsePointsFragmentInteraction(int restaurantId, int offerListPosition, Reservation reservation){
+        OfferContent offerContent = getRestaurantContent().getOfferContent(restaurantId);
+        Offer offer = offerContent.getOffer(offerListPosition);
+        reservation.setOffer(offer);
+        requestHelper.requestReservationRegistration(this,reservation, connectionInformation,  userLoginCredentials.getUserName(), userLoginCredentials.getPassword());
+    }
+
+    @Override
+    public void refreshRestaurant(int restaurantId) {
+        onRestaurantFragmentRefreshRestaurants();
+        onOfferFragmentRefreshOffers(restaurantId);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onBackPressed();
+            }
+        }, 1000);
     }
 
     /**
@@ -799,8 +986,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onOfferListFragmentInteraction() {
+    public void onOfferListFragmentInteraction(RecyclerView.ViewHolder holder, OfferContent mvlaues) {
         // method invoked, when the user clicks on an offer
+        int selectedOffer = holder.getAdapterPosition();
+        if(userLoginCredentials.isLoggedIn()) {
+            ReservationFragment fragment = ReservationFragment.newInstance(mvlaues.getRestaurantId(), selectedOffer);
+            changeFragment(fragment, true);
+        }
+        else {
+            UserLoginFragment userLoginFragment = new UserLoginFragment();
+            changeFragment(userLoginFragment, true);
+        }
     }
 
     @Override
@@ -943,6 +1139,21 @@ public class MainActivity extends AppCompatActivity
                 case FAILED_REST_REQUEST_FAILED:
                     messageHelper.printToastMessage(getResources().getString(R.string.text_rest_request_failed));
                     break;
+            }
+        }
+    }
+
+    @Override
+    public void onRestReservationRegistrationFinished(Request<ReservationRegistrationStatus> requestResponse) {
+        //ReservationRegistrationRequest reservationRegistrationRequestResponse;
+
+        if(requestResponse instanceof ReservationRegistrationRequest){
+            RequestResult requestResult = requestResponse.getRequestResult();
+            if(requestResult == RequestResult.SUCCESS){
+                messageHelper.printToastMessage(getResources().getString(R.string.text_reservation_successful));
+            }
+            else{
+                messageHelper.printToastMessage(getResources().getString(R.string.text_reservation_fail));
             }
         }
     }
@@ -1481,5 +1692,4 @@ public class MainActivity extends AppCompatActivity
         // open the filter dialog fragment
         openFilterDialogFragment(true);
     }
-
 }

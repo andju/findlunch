@@ -41,7 +41,7 @@ public class OfferRequest extends Request<Offer> {
         super(requestReason, context, ((Context) context).getResources().getString(R.string.text_loading_offers), connectionInformation);
         this.parameters.put(PARAMETER_RESTAURANT_ID, restaurantId);
         this.restaurantId = restaurantId;
-        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/offers?restaurant_id={restaurant_id}";
+        requestUrl = "http://" +  requestHost + ":" + requestPort + "/api/offers?restaurant_id={restaurant_id}";
     }
 
     @Override
