@@ -34,6 +34,7 @@ The Android application is based on the following technologies:
   * Google Play services Maps
   * Google Play services GCM
   * Google Maps Android API utility library
+  * ZXing Android Embedded
   
 ### Import into Android Studio
 
