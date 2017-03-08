@@ -17,6 +17,7 @@
 		<integration-tests.skip>true</integration-tests.skip>
 		<!-- STANDALONE TOMCAT CONFIG: For standalone tomcat deployment set correct version of the tomcat to use -->
 		<!-- <tomcat.version>8.0.20</tomcat.version> -->
+		<!--<tomcat.version>8.0.36</tomcat.version>-->
 	</properties>
 
 	<parent>
@@ -33,7 +34,12 @@
    				     <scope>provided</scope>
    			 </dependency>
    		-->
-		 
+
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.5.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

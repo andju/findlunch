@@ -72,6 +72,12 @@
 						<td></td>
 						<td></td>
 						<td>
+
+							<div class="g-recaptcha" data-sitekey="0000000000000000000000000000000000000000"></div>
+							<div class="alert alert-danger" role="alert"
+								 th:if="${#fields.hasErrors('captcha')}" th:errors="*{captcha}"></div>
+							<br />
+
 							<div class="form-actions">
 								<button type="submit" class="btn btn-success"
 									name="saveRegister" th:text="#{register.button.save}">save</button>

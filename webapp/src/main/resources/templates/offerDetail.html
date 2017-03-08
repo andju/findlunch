@@ -181,6 +181,8 @@
 						</td>
 						<td>
 							<div class="form-group col-md-8">
+								<div th:if="${blockedFileUpload}" class="alert alert-danger"
+									 role="alert" th:text="#{offer.upload.blockedFileUpload}"></div>
 								<div th:if="${invalidPicture}" class="alert alert-danger"
 									role="alert" th:text="#{offer.upload.invalidFileType}"></div>
 								<div class="fileinput fileinput-new" data-provides="fileinput">
@@ -241,6 +243,11 @@
 					</tr>
 				</table>
 			</div>
+
+			<input type="hidden"
+				   th:name="${_csrf.parameterName}"
+				   th:value="${_csrf.token}" />
+
 		</form>
 	</div>
 	<br />

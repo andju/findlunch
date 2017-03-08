@@ -1,7 +1,12 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
-import javax.servlet.http.HttpServletRequest;
-
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.CaptchaController;
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.NotificationController;
+import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomUserValidator;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomUserValidator;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * The Class RegisterUserRestController. The class is responsible for handling
@@ -25,6 +26,10 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository
  */
 @RestController
 public class RegisterUserRestController {
+
+	/** The request. */
+	@Autowired
+	private HttpServletRequest request;
 
 	/** The user repository. */
 	@Autowired
@@ -52,9 +57,32 @@ public class RegisterUserRestController {
 	@RequestMapping(path = "/api/register_user", method = RequestMethod.POST)
 	public ResponseEntity<Integer> registerUser(@RequestBody(required = true) User user, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
-		
+
+		if (user.getCaptcha() == null || user.getCaptcha().getAnswer() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"The Captcha: " + " was empty."));
+			// Todo Ggf. Architekturdokument_public.pdf entsprechend neuem Statuscode anpassen
+			NotificationController.sendMessageToTelegram("The CAPTCHA wasn't solved correctly in the mobile application."
+					+ "The Captcha answer was: Empty" + " The IP of the user was: " + getClientIP());
+			return new ResponseEntity<>(4, HttpStatus.CONFLICT);
+		}
+
+		//if (user.getCaptcha() == null || user.getCaptcha().getAnswer() == null) {
+			if (!CaptchaController.verifyCaptcha(user.getCaptcha(), getClientIP())) {
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),
+						"The Captcha: " +
+								user.getCaptcha().getAnswer() + " was not solved correctly." +
+								" Token: " + user.getCaptcha().getImageToken()));
+				// Todo Ggf. Architekturdokument_public.pdf entsprechend neuem Statuscode anpassen
+				NotificationController.sendMessageToTelegram("The CAPTCHA wasn't solved correctly in the mobile application."
+						+ "The Captcha answer was: " + user.getCaptcha().getAnswer() + " The token was: "
+						+ user.getCaptcha().getImageToken() + " The IP of the user was: " + getClientIP());
+				return new ResponseEntity<>(4, HttpStatus.CONFLICT);
+			}
+		//}
+
 		if (userRepository.findByUsername(user.getUsername()) != null) {
-			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user with username " + user.getUsername() + " could not be found in the databse."));
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),"The user with username " + user.getUsername() + " could not be found in the databse."));
 			return new ResponseEntity<Integer>(3, HttpStatus.CONFLICT);
 		}
 
@@ -75,6 +103,20 @@ public class RegisterUserRestController {
 
 		return new ResponseEntity<Integer>(0, HttpStatus.OK);
 
+	}
+
+	/**
+	 * This method gets the client's IP-address and pays attention for the X-Forwarded-For header which could
+	 * identify a proxy user. See for example: https://tools.ietf.org/html/rfc7239
+	 *
+	 * @return the client's IP-address
+	 */
+	private String getClientIP() {
+		final String xffHeader = request.getHeader("X-Forwarded-For");
+		if (xffHeader == null){
+			return request.getRemoteAddr();
+		}
+		return xffHeader.split(",")[0];
 	}
 
 }

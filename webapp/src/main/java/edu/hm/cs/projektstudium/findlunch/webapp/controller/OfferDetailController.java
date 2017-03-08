@@ -1,33 +1,5 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.Base64;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.imgscalr.Scalr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.OfferPhoto;
@@ -37,13 +9,48 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomOfferVal
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.security.FileUploadRestrictorHelper;
+import org.imgscalr.Scalr;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import java.util.Base64;
+import java.util.List;
 
 /**
  * The class is responsible for handling http calls related to the offer details view.
  */
 @Controller
-public class OfferDetailController {
-	
+public class OfferDetailController implements HandlerExceptionResolver {
+
+	/**
+	 * The logger object.
+	 */
+	@Autowired
+	private FileUploadRestrictorHelper fileUploadRestrictorHelper;
+
 	/** The offer repository. */
 	@Autowired
 	private OfferRepository offerRepository;
@@ -236,7 +243,22 @@ public class OfferDetailController {
 		User authenticatedUser = (User) ((Authentication)principal).getPrincipal();
 		
 		String imageFormat = resolveImageFormat(file.getContentType());
-		
+
+		fileUploadRestrictorHelper.uploadAttempt(request.getRemoteAddr(), session.getId());
+		session.setAttribute("blockedFileUpload", fileUploadRestrictorHelper.isBlocked(request.getRemoteAddr(),
+				session.getId()));
+		if (Boolean.parseBoolean(session.getAttribute("blockedFileUpload").toString())) {
+			model.addAttribute("blockedFileUpload", true);
+			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+			model.addAttribute("restaurant",
+					restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
+			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
+
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"FileUploadLimit reached"));
+			return "offerDetail";
+		}
+
 		if (!file.getContentType().startsWith("image") || imageFormat.equals("")) {
 			model.addAttribute("invalidPicture", true);
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
@@ -269,6 +291,46 @@ public class OfferDetailController {
 		model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		return "offerDetail";
+	}
+
+	/**
+	 * In order to prevent information disclosure this method was added. Without this method a full stack trace
+	 * was shown to the user when a file bigger than the defined multipart.maxFileSize was sent by the user.
+	 * This stack trace could reveal some sensitive information to a potential attacker.
+	 * This is a quite unclean approach but shows the problematic.
+	 *
+	 * @param httpServletRequest the HttpServletRequest
+	 * @param httpServletResponse the HttpServletResponse
+	 * @param o an Object
+	 * @param ex an Exception
+     *
+	 * @return a defined ModelAndView
+	 */
+	@ResponseBody
+	public ModelAndView resolveException(final HttpServletRequest httpServletRequest,
+										 final HttpServletResponse httpServletResponse, final Object o,
+										 final Exception ex) {
+		if (ex instanceof MultipartException) {
+			final ModelAndView modelAndView = new ModelAndView("filesize_error");
+			NotificationController.sendMessageToTelegram("Someone tried to upload a file bigger than ten megabyte."
+					+ " The IP-address was: " + httpServletRequest.getRemoteAddr() + " The session-ID was: "
+					+ httpServletRequest.getSession().getId());
+			ex.printStackTrace();
+			return modelAndView;
+		}
+
+		// Spring-Security has to handle this exception.
+		if (ex instanceof AccessDeniedException) {
+			return null;
+		}
+
+		/*NotificationController.sendMessageToTelegram("Exception in OfferDetailController."
+				+ " The IP-address was: " + httpServletRequest.getRemoteAddr() + " The session-ID was: "
+				+ httpServletRequest.getSession().getId());
+		return new ModelAndView("error");*/
+		ex.printStackTrace();
+		// If it is not a MultipartException, the exception should be handled by something else and not this method.
+		return null;
 	}
 	
 	/**

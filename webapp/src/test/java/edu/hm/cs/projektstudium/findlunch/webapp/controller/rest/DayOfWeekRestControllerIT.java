@@ -1,7 +1,12 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
-import java.util.List;
-
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.response.Response;
+import edu.hm.cs.projektstudium.findlunch.webapp.App;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,14 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.Response;
-
-import edu.hm.cs.projektstudium.findlunch.webapp.App;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
+import java.util.List;
 
 /**
  * The Class DayOfWeekRestControllerIT.
