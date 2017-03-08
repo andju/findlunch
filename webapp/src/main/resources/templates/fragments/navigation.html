@@ -31,7 +31,17 @@
 						role="button" aria-haspopup="true" aria-expanded="false"
 						sec:authentication="name">Dropdown <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a th:href="@{/logout}" th:text="#{menu.label.logout}">Logout</a></li>
+							<li>
+								<!-- When the CSRF-protection is enabled we have to send the logout request
+									 through POST together with the token. -->
+								<!-- See: https://docs.spring.io/spring-security/site/docs/current/reference/html/csrf.html#csrf-logout
+									 for further information. -->
+								<form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+									<input type="submit" value="Logout"/>
+								</form>
+								<a th:text="#{menu.label.logout}" href="javascript:document.logoutForm.submit()"
+								   role="menuitem"> Logout</a>
+							</li>
 						</ul></li>
 					<li sec:authorize="isAnonymous()"
 						th:class="${#httpServletRequest.servletPath}=='/register'? active"><a

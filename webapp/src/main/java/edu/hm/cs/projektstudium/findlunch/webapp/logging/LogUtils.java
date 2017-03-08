@@ -1,12 +1,11 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.logging;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Class LogUtils - Utilities for the Logger
@@ -65,7 +64,7 @@ public class LogUtils {
 		for(String key : request.getParameterMap().keySet()) {
 			
 			if(!parameterToIgnore.contains(key))
-			builder.append(key + " : " + (request.getParameter(key) != ""? request.getParameter(key): "[[empty]]") + " ");
+			builder.append(key + " : " + (!"".equals(request.getParameter(key)) ? request.getParameter(key): "[[empty]]") + " ");
 			
 		}
 		

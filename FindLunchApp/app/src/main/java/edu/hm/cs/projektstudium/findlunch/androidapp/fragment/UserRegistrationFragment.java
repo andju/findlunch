@@ -1,6 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.androidapp.fragment;
 
 import android.content.Context;
+import android.lib.recaptcha.ReCaptcha;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,12 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Map;
 
 import edu.hm.cs.projektstudium.findlunch.androidapp.R;
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserRegistrationContent;
+import edu.hm.cs.projektstudium.findlunch.androidapp.model.Captcha;
 import edu.hm.cs.projektstudium.findlunch.androidapp.validation.UserRegistrationFragmentContentValidator;
 import edu.hm.cs.projektstudium.findlunch.androidapp.validation.ValidationError;
 import edu.hm.cs.projektstudium.findlunch.androidapp.view.DebouncedOnClickListener;
@@ -31,13 +36,29 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.view.DebouncedOnClickListen
  * {@link OnRegisterUserFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class UserRegistrationFragment extends Fragment {
+public class UserRegistrationFragment extends Fragment implements ReCaptcha.OnShowChallengeListener, ReCaptcha.OnVerifyAnswerListener  {
+
+    // Todo Public Key anpassen
+    /**
+     * The public key used for reCaptcha.
+     */
+    private static final String PUBLIC_KEY = "0000000000000000000000000000000000000000";
 
     /**
      * The listener whose implementation of {@link OnRegisterUserFragmentInteractionListener}
      * gets called on interaction.
      */
     private OnRegisterUserFragmentInteractionListener mListener;
+
+    /**
+     * The reCaptcha object.
+     */
+    private static ReCaptcha reCaptcha;
+
+    /**
+     * A progress bar object.
+     */
+    private ProgressBar progress;
 
     /**
      * Instantiates a new Main fragment.
@@ -57,6 +78,25 @@ public class UserRegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // inflate the view
         View view = inflater.inflate(R.layout.fragment_user_registration, container, false);
+
+        // Set required reCaptcha parts
+        this.reCaptcha = (ReCaptcha)view.findViewById(R.id.recaptcha);
+        this.progress  = (ProgressBar)view.findViewById(R.id.progressBar);
+
+        view.findViewById(R.id.captcha).setOnClickListener((new DebouncedOnClickListener(1500) {
+            @Override
+            public void onDebouncedClick(View v) {
+                onButtonPressed(v);
+            }
+        }));
+        view.findViewById(R.id.reload).setOnClickListener((new DebouncedOnClickListener(1500) {
+            @Override
+            public void onDebouncedClick(View v) {
+                onButtonPressed(v);
+            }
+        }));
+
+        this.showChallenge();
 
         // find the register button by id
         Button buttonRegisterUser = (Button) view.findViewById(R.id.buttonRegisterUser);
@@ -134,17 +174,28 @@ public class UserRegistrationFragment extends Fragment {
             View view = getView();
             // Check which button was pressed
             switch (v.getId()) {
+
+                // Reload the Captcha
+                case R.id.reload:
+                    this.showChallenge();
+                    break;
+
                 case R.id.buttonRegisterUser:
                     if (view != null) {
                         // Get the views for access to the information entered
                         TextView usernameTextView = (TextView) view.findViewById(R.id.edit_username);
                         TextView passwordTextView = (TextView) view.findViewById(R.id.edit_password);
                         TextView passwordRepeatedTextView = (TextView) view.findViewById(R.id.edit_password_repeated);
+                        // Captcha
+                        final TextView captchaTextView = (TextView) view.findViewById(R.id.captcha);
 
                         // get the user input
                         String username = usernameTextView.getText().toString().trim();
                         String password = passwordTextView.getText().toString().trim();
                         String passwordRepeated = passwordRepeatedTextView.getText().toString().trim();
+                        // Captcha
+                        final String answer = captchaTextView.getText().toString();
+                        final Captcha captcha = new Captcha(answer, reCaptcha.getImageToken());
 
                         // create a validator for the user input
                         UserRegistrationFragmentContentValidator validator = new UserRegistrationFragmentContentValidator();
@@ -157,7 +208,8 @@ public class UserRegistrationFragment extends Fragment {
                         UserRegistrationContent userRegistrationContent = new UserRegistrationContent(
                                 username,
                                 password,
-                                passwordRepeated);
+                                passwordRepeated,
+                                captcha);
 
                         // check for validity
                         validator.validate(userRegistrationContent, error);
@@ -165,6 +217,7 @@ public class UserRegistrationFragment extends Fragment {
                         if (!error.hasErrors()) {
                             // Call the callback method implemented by the activity
                             mListener.onUserRegistrationFragmentInteraction(userRegistrationContent);
+                            this.showChallenge();
 
                         } else {
                             errorStrings = error.getErrors();
@@ -216,6 +269,11 @@ public class UserRegistrationFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onAnswerVerified(boolean success) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -238,4 +296,27 @@ public class UserRegistrationFragment extends Fragment {
 
         void onUserRegistrationFragmentOpenLinkInteraction(String path);
     }
+
+    @Override
+    public void onChallengeShown(final boolean shown) {
+        this.progress.setVisibility(View.GONE);
+
+        if (shown) {
+            // The Captcha should be shown successfully
+            this.reCaptcha.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(this.getContext(), "Failure loading Captcha", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showChallenge() {
+        // While the Captcha is downloading a progress bar should be shown
+        this.progress.setVisibility(View.VISIBLE);
+        this.reCaptcha.setVisibility(View.GONE);
+
+        this.reCaptcha.setLanguageCode("de");
+        this.reCaptcha.showChallengeAsync(PUBLIC_KEY, this);
+    }
+
+
 }

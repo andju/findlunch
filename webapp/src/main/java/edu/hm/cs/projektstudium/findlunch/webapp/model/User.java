@@ -1,28 +1,15 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -52,6 +39,12 @@ public class User implements UserDetails {
 	/** The username. */
 	@NotBlank(message="{user.usernameEmpty}")
 	private String username;
+
+	/**
+	 * A user object has a Captcha object.
+	 */
+	@Transient
+	private Captcha captcha;
 
 	/** The favorites. */
 	//bi-directional many-to-many association to Restaurant
@@ -295,6 +288,15 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	/**
+	 * Gets the Captcha object.
+	 *
+	 * @return the Captcha object
+	 */
+	public Captcha getCaptcha() {
+		return captcha;
 	}
 
 }
