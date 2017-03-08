@@ -22,31 +22,88 @@
     <EditText
         android:id="@+id/edit_password"
         android:inputType="textPassword"
-        android:singleLine="true"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:layout_below="@id/edit_username"
         android:hint="@string/edit_message_password"/>
+
+    <android.lib.recaptcha.ReCaptcha
+        android:id="@+id/recaptcha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:layout_below="@+id/edit_password_repeated"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:inputType="text"
+        android:hint="@string/edit_message_captcha"
+        android:id="@+id/captcha"
+        android:layout_below="@+id/recaptcha"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
     <EditText
         android:id="@+id/edit_password_repeated"
         android:inputType="textPassword"
         android:singleLine="true"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_below="@id/edit_password"
-        android:hint="@string/edit_message_password_repeated"/>
-    <TextView
-        android:id="@+id/text_terms_conditions"
-        android:layout_width="match_parent"
+        android:hint="@string/edit_message_password_repeated"
+        android:layout_below="@+id/edit_password"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edit_password_repeated"
-        android:paddingTop="@dimen/dialog_margin"
-        android:paddingBottom="@dimen/dialog_margin" />
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/buttonRegisterUser"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <Button
         android:id="@+id/buttonRegisterUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/text_terms_conditions"
-        android:text="@string/button_register_user"/>
+        android:text="@string/button_register_user"
+        android:layout_below="@+id/text_terms_conditions"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Captcha neu laden"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reload"
+        android:layout_below="@+id/captcha"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/text_terms_conditions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dialog_margin"
+        android:paddingBottom="@dimen/dialog_margin"
+        android:layout_below="@+id/reload"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

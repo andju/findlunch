@@ -22,14 +22,21 @@ public class User {
     private String password;
 
     /**
+     * The Captcha object
+     */
+    private Captcha captcha;
+
+    /**
      * Instantiates a new User.
      *
      * @param username        the username
      * @param password        the password
+     * @param captcha         the Captcha
      */
-    public User(String username, String password) {
+    public User(String username, String password, final Captcha captcha) {
         this.username = username;
         this.password = password;
+        this.captcha = captcha;
     }
 
     /**
@@ -56,6 +63,16 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    /**
+     * Gets the Captcha.
+     *
+     * @return the Captcha object
+     */
+    public Captcha getCaptcha() {
+        return captcha;
+    }
+
 
     /**
      * Gets id.

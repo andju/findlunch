@@ -7,5 +7,6 @@ package edu.hm.cs.projektstudium.findlunch.androidapp.rest;
  * a user registration request.
  */
 public enum UserRegistrationStatus {
-    SUCCESS, FAILED_USERNAME_INVALID, FAILED_PASSWORD_INVALID, FAILED_USERNAME_EXISTS
+    SUCCESS, FAILED_USERNAME_INVALID, FAILED_PASSWORD_INVALID, FAILED_USERNAME_EXISTS,
+    FAILED_CAPTCHA_WRONG
 }
