@@ -33,7 +33,7 @@ public class UserLoginRequest extends AuthenticatedRequest<UserLoginStatus> {
     public UserLoginRequest(OnHttpRequestFinishedCallback context,
                             String userName, String password, ConnectionInformation connectionInformation) {
         super(RequestReason.SEARCH, context, ((Context) context).getResources().getString(R.string.text_loading_user_login), connectionInformation, userName, password);
-        requestUrl = "http://" +  requestHost + ":" + requestPort + "/api/login_user";
+        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/login_user";
     }
 
     @Override

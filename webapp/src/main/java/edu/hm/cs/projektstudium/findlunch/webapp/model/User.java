@@ -53,6 +53,12 @@ public class User implements UserDetails {
 	@NotBlank(message="{user.usernameEmpty}")
 	private String username;
 
+	/**
+	 * A user object has a Captcha object.
+	 */
+	@Transient
+	private Captcha captcha;
+
 	/** The favorites. */
 	//bi-directional many-to-many association to Restaurant
 	@ManyToMany(fetch=FetchType.EAGER)
@@ -348,4 +354,13 @@ public class User implements UserDetails {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
+	/**
+	 * Gets the Captcha object.
+	 *
+	 * @return the Captcha object
+	 */
+	public Captcha getCaptcha() {
+		return captcha;
+	}
+
 }

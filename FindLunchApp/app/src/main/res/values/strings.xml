@@ -107,7 +107,9 @@
     <string name="edit_message_username">Benutzername (E-Mail-Adresse)</string>
     <string name="edit_message_password">Passwort</string>
     <string name="edit_message_password_repeated">Passwort bestätigen</string>
+    <string name="edit_message_captcha">Captcha eingeben</string>
     <string name="button_register_user">Registrieren</string>
+    <string name="text_registration_failed_captcha_invalid">Captcha falsch! Bitte nochmals versuchen.</string>
     <string name="text_registration_successfully">Registrierung erfolgreich!</string>
     <string name="text_registration_failed_username_invalid">Benutzername ungültig!</string>
     <string name="text_registration_failed_password_invalid">Passwort entspricht nicht den Passwortrichtlinien (mind. 5 Zeichen, 1 Großbuchstabe, 1 Kleinbuchstabe, 1 Zahl, 1 Sonderzeichen)</string>

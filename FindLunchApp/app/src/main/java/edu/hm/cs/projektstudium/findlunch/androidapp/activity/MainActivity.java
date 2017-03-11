@@ -69,6 +69,7 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.interaction.EmailHelper;
 import edu.hm.cs.projektstudium.findlunch.androidapp.interaction.KeyboardHelper;
 import edu.hm.cs.projektstudium.findlunch.androidapp.interaction.PhoneHelper;
 import edu.hm.cs.projektstudium.findlunch.androidapp.interaction.WebHelper;
+import edu.hm.cs.projektstudium.findlunch.androidapp.model.Captcha;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.KitchenType;
 import edu.hm.cs.projektstudium.findlunch.androidapp.model.Offer;
@@ -1226,6 +1227,13 @@ public class MainActivity extends AppCompatActivity
                                     button, getResources().getString(
                                             R.string.text_registration_failed_username_exists));
                             break;
+                        case FAILED_CAPTCHA_WRONG:
+                            // message captcha was not solved correctly
+                            messageHelper.printSnackbarMessage(
+                                    button, getResources().getString(
+                                            R.string.text_registration_failed_captcha_invalid));
+                            break;
+
                     }
                 }
             }
@@ -1566,7 +1574,7 @@ public class MainActivity extends AppCompatActivity
 
         // create push notification to register.
         PushNotification pushNotification = new PushNotification(userLoginCredentials.getGcmToken(), pushTitle, userContent.getLatitude(), userContent.getLongitude(), userContent.getDistance(),
-                new User(userLoginCredentials.getUserName(), userLoginCredentials.getPassword()), daysOfWeek, kitchenTypes);
+                new User(userLoginCredentials.getUserName(), userLoginCredentials.getPassword(), new Captcha()), daysOfWeek, kitchenTypes);
 
         requestHelper.requestPushRegistration(
                 RequestReason.SEARCH,
@@ -1591,7 +1599,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onUserRegistrationFragmentInteraction(UserRegistrationContent contents) {
         keyboardHelper.closeKeyboard(this);
-        User user = new User(contents.getUserName(), contents.getPassword());
+        User user = new User(contents.getUserName(), contents.getPassword(), contents.getCaptcha());
         requestHelper.requestUserRegistration(
                 user,
                 connectionInformation,

@@ -44,7 +44,7 @@ public class ReservationRegistrationRequest extends AuthenticatedRequest<Reserva
     public ReservationRegistrationRequest(OnHttpRequestFinishedCallback context, Reservation reservation, ConnectionInformation connectionInformation, String userName, String password){
         super(RequestReason.SEARCH, context, ((Context) context).getResources().getString(R.string.text_loading_reservation_registration), connectionInformation,userName,password);
         this.reservation = reservation;
-        requestUrl = "http://" + requestHost + ":" + requestPort + "/api/register_reservation";
+        requestUrl = "https://" + requestHost + ":" + requestPort + "/api/register_reservation";
 
         requestEntity = new HttpEntity<Object>(reservation, requestHeaders);
     }

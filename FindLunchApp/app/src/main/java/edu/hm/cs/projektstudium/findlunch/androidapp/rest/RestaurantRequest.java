@@ -51,7 +51,7 @@ public class RestaurantRequest extends AuthenticatedRequest<Restaurant> {
         this.parameters.put(PARAMETER_LATITUDE, latitude);
         this.parameters.put(PARAMETER_LONGITUDE, longitude);
         this.parameters.put(PARAMETER_RADIUS, radius);
-        requestUrl = "http://" +  requestHost + ":" + requestPort + "/api/restaurants?latitude={latitude}&longitude={longitude}&radius={radius}";
+        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/restaurants?latitude={latitude}&longitude={longitude}&radius={radius}";
     }
 
     @Override

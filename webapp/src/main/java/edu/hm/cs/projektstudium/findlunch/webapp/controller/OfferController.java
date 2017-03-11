@@ -1,11 +1,10 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class is responsible for handling http calls related to offer overview page.

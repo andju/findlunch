@@ -1,8 +1,11 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomUserValidator;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.security.RestaurantUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +18,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomUserValidator;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.security.RestaurantUserDetailsService;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * The class is responsible for handling http calls when registering a user.
  */
 @Controller
 public class RegisterController {
+
+	/** The request. */
+	@Autowired
+	private HttpServletRequest request;
 
 	/** The user repository. */
 	@Autowired
@@ -83,6 +86,16 @@ public class RegisterController {
 	@RequestMapping(method = RequestMethod.POST, path = { "/register" }, params = { "saveRegister" })
 	public String saveRegister(@Valid final User user, BindingResult bindingResult, final Model model, HttpServletRequest request) {
 
+		// Verify the Captcha
+		final String captchaResponse = request.getParameter("g-recaptcha-response");
+		if (!CaptchaController.verifyCaptchaV2(captchaResponse, getClientIP())) {
+			NotificationController.sendMessageToTelegram("The CAPTCHA wasn't solved correctly on the website."
+					+ " The Captcha response was: "
+					+ ("".equals(captchaResponse) ? "Empty" : captchaResponse)
+					+ " The IP of the user was: " + getClientIP());
+			bindingResult.rejectValue("captcha", "captcha.captchaIncorrect");
+		}
+
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		// Checks not handled by Hibernate annotations
 		customUserValidator.validate(user, bindingResult);
@@ -137,6 +150,20 @@ public class RegisterController {
 		SecurityContextHolder.getContext().setAuthentication(token);
 		LOGGER.info("User with username: " + user.getUsername() + " has been successfully authenticated after registering. Session: " + request.getSession().getId());
 
+	}
+
+	/**
+	 * This method gets the client's IP-address and pays attention for the X-Forwarded-For header which could
+	 * identify a proxy user. See for example: https://tools.ietf.org/html/rfc7239
+	 *
+	 * @return the client's IP-address
+	 */
+	private String getClientIP() {
+		final String xffHeader = request.getHeader("X-Forwarded-For");
+		if (xffHeader == null){
+			return request.getRemoteAddr();
+		}
+		return xffHeader.split(",")[0];
 	}
 
 }

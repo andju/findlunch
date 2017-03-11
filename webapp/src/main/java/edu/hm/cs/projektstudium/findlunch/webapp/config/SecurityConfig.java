@@ -1,5 +1,8 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.config;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.security.ConsumerUserDetailsService;
+import edu.hm.cs.projektstudium.findlunch.webapp.security.CsrfAccessDeniedHandler;
+import edu.hm.cs.projektstudium.findlunch.webapp.security.RestaurantUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import edu.hm.cs.projektstudium.findlunch.webapp.security.ConsumerUserDetailsService;
-import edu.hm.cs.projektstudium.findlunch.webapp.security.RestaurantUserDetailsService;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 /**
  * This class is responsible for configuring the Spring Security context.
@@ -56,6 +57,9 @@ public class SecurityConfig {
 		@Override
 		public void configure(AuthenticationManagerBuilder auth) throws Exception {
 
+			// The framework should not erase potential sensitive data from an object.
+			auth.eraseCredentials(false);
+
 			auth.userDetailsService(consumerUserDetailsService).passwordEncoder(passwordEncoder);
 
 		}
@@ -74,7 +78,23 @@ public class SecurityConfig {
 		 **/
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable().requestMatchers()
+			http
+					// Change the sent server name.
+					.headers().addHeaderWriter(new StaticHeadersWriter("Server", "Unbekannter Webserver")).and()
+					// Add an elementary Content-Security-Policy-Report-Only-header with a reporting URL.
+					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only",
+					"default-src 'self' script-src 'self' 'unsafe-inline' " +
+							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;" +
+							"; report-uri /api/csp-report-uri"))
+					.and()
+					.csrf().disable().requestMatchers()
+					// Add a Content-Security-Policy-violation-report-endpoint
+					// The CSRF-protection should be disabled as it is a POST-request.
+					// Otherwise a CSRF-token exception will be sent.
+					.antMatchers(HttpMethod.POST, "/api/csp-report-uri")
+
+					.antMatchers(HttpMethod.POST, "/api/register_user")
+
 					.antMatchers(HttpMethod.GET, "/api/login_user")
 					.antMatchers(HttpMethod.POST, "/api/register_push")
 					.antMatchers(HttpMethod.GET, "/api/get_push")
@@ -119,7 +139,12 @@ public class SecurityConfig {
 		/** Configures where to look for users during authentication process **/
 		@Override
 		public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+			// The framework should not erase potential sensitive data from an object.
+			auth.eraseCredentials(false);
+
 			auth.userDetailsService(restaurantUserDetailsService).passwordEncoder(passwordEncoder);
+
 		}
 
 		/*
@@ -137,14 +162,30 @@ public class SecurityConfig {
 		 **/
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests()
+			http
+					// Change the sent server name.
+					.headers().addHeaderWriter(new StaticHeadersWriter("Server", "Unbekannter Webserver")).and()
+					// Add an elementary Content-Security-Policy-header with a reporting URL.
+					// (Google.com has to be added as reCaptcha is loaded from their website(s).)
+					// See: https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website-how-can-i-configure-it-to-work-with-recaptcha
+					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy",
+							"default-src 'self' data:; script-src 'self' 'unsafe-inline' " +
+									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; " +
+									"child-src https://www.google.com/recaptcha/; " +
+									"style-src 'self' data: 'unsafe-inline'" +
+									"; report-uri /api/csp-report-uri")).and()
+					// A custom AccessDeniedHandler in order to handle CSRF-attacks.
+					.exceptionHandling().accessDeniedHandler(new CsrfAccessDeniedHandler()).and()
+					.authorizeRequests()
 					.antMatchers("/", "/login", "/home", "/register", "/privacy", "/terms", "/faq_customer",
 							"/faq_restaurant", "/about_findlunch", "/css/**", "/api/**", "/js/**", "/fonts/**",
 							"/images/**")
 					.permitAll()
 					.antMatchers("/booking/**").hasAuthority("Betreiber")
 					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()
-					.logout().and().csrf().disable();
+					.logout();
+			// The CSRF-protection should be enabled.
+			//.and().csrf().disable();
 
 		}
 	}
