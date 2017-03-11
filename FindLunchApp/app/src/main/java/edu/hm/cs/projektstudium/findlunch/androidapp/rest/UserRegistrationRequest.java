@@ -37,7 +37,7 @@ public class UserRegistrationRequest extends Request<UserRegistrationStatus> {
     public UserRegistrationRequest(OnHttpRequestFinishedCallback context, User user, ConnectionInformation connectionInformation) {
         super(RequestReason.SEARCH, context, ((Context) context).getResources().getString(R.string.text_loading_user_registration), connectionInformation);
         this.user = user;
-        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/register_user";
+        requestUrl = requestProtocol +  requestHost + ":" + requestPort + "/api/register_user";
     }
 
     @Override

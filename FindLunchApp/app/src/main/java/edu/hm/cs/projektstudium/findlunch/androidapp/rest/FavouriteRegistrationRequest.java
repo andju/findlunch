@@ -33,7 +33,7 @@ public class FavouriteRegistrationRequest extends FavouriteRequest {
     public FavouriteRegistrationRequest(OnHttpRequestFinishedCallback context,
                                         String userName, String password, int restaurantId, ConnectionInformation connectionInformation) {
         super(context, ((Context) context).getResources().getString(R.string.text_loading_favourite_registration), connectionInformation, userName, password, restaurantId, true);
-        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/register_favorite/{restaurant_id}";
+        requestUrl = requestProtocol +  requestHost + ":" + requestPort + "/api/register_favorite/{restaurant_id}";
     }
 
     @Override

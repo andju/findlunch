@@ -46,8 +46,7 @@ public class WebHelper {
      * @param https https is used
      * @return the url
      */
-    public String constructUrl(String host, int port, String path,
-                               @SuppressWarnings("SameParameterValue") boolean https) {
+    public String constructUrl(String host, int port, String path, boolean https) {
         StringBuilder result = new StringBuilder();
         if(https) {
             result.append("https://");
