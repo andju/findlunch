@@ -58,3 +58,4 @@ that is located on the external storage of your Android device. The file must co
 
 	host=findlunch.biz.tm
 	port=8444
+	https=true
