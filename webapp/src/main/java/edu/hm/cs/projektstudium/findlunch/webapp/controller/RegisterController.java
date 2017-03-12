@@ -87,6 +87,8 @@ public class RegisterController {
 	public String saveRegister(@Valid final User user, BindingResult bindingResult, final Model model, HttpServletRequest request) {
 
 		// Verify the Captcha
+		//TODO Captcha - get Key from google (https://www.google.com/recaptcha)
+		/*
 		final String captchaResponse = request.getParameter("g-recaptcha-response");
 		if (!CaptchaController.verifyCaptchaV2(captchaResponse, getClientIP())) {
 			NotificationController.sendMessageToTelegram("The CAPTCHA wasn't solved correctly on the website."
@@ -95,6 +97,7 @@ public class RegisterController {
 					+ " The IP of the user was: " + getClientIP());
 			bindingResult.rejectValue("captcha", "captcha.captchaIncorrect");
 		}
+		*/
 
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		// Checks not handled by Hibernate annotations

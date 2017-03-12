@@ -34,7 +34,8 @@ public final class AuthenticationSuccessEventListener
 
         final String userPassword = e.getAuthentication().getCredentials().toString();
 
-        // This is just a conceptual idea and may not be an appropriate approach for a productive system.
+        //TODO use strong password or comment this password checker (This is just a conceptual idea and may not be an appropriate approach for a productive system.)
+        /*
         if (!CustomUserValidator.checkPasswordRules(userPassword)) {
             if (authenticationDetails.getSessionId() != null) {
                 authenticationHelper.loginFailedIpAddressAndSessionId(authenticationDetails.getRemoteAddress(),
@@ -48,5 +49,6 @@ public final class AuthenticationSuccessEventListener
 
             throw new BadCredentialsException("Bad credentials. The password didn't match the password policy");
         }
+        */
     }
 }

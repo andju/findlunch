@@ -58,6 +58,8 @@ public class RegisterUserRestController {
 	public ResponseEntity<Integer> registerUser(@RequestBody(required = true) User user, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 
+		//TODO Captcha - get Key from google (https://www.google.com/recaptcha)
+		/*
 		if (user.getCaptcha() == null || user.getCaptcha().getAnswer() == null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),
 					"The Captcha: " + " was empty."));
@@ -80,6 +82,7 @@ public class RegisterUserRestController {
 				return new ResponseEntity<>(4, HttpStatus.CONFLICT);
 			}
 		//}
+		 */
 
 		if (userRepository.findByUsername(user.getUsername()) != null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),"The user with username " + user.getUsername() + " could not be found in the databse."));
