@@ -46,6 +46,7 @@ import com.jayway.restassured.response.Response;
 import edu.hm.cs.projektstudium.findlunch.webapp.App;
 import edu.hm.cs.projektstudium.findlunch.webapp.distance.DistanceCalculator;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Account;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.AccountType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Bill;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Country;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DonationPerMonth;
@@ -57,6 +58,8 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.RestaurantType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.comparison.RestaurantDistanceComparator;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AccountRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AccountTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CountryRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
@@ -102,6 +105,12 @@ public class RestaurantRestControllerIT {
 	/** Password encoder **/
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	AccountTypeRepository accountTypeRepository;
+	
+	@Autowired
+	AccountRepository accountRepository;
 	
 	/** The Constant RESTAURANT_API. */
 	private static final String RESTAURANT_API = "/api/restaurants";
@@ -1106,6 +1115,7 @@ public class RestaurantRestControllerIT {
 		r.setUrl(RESTAURANT_URL + i);
 		r.setZip(RESTAURANT_ZIP);
 		r.setRestaurantUuid(RESTAURANT_UUID +i);
+		r.setCustomerId(i);
 		try {
 			r.setQrUuid(createQRCode(r.getRestaurantUuid()));
 		} catch (WriterException e) {
@@ -1135,7 +1145,16 @@ public class RestaurantRestControllerIT {
 		u.setPassword(passwordEncoder.encode("admin"));
 		u.setPasswordconfirm("admin");
 		u.setUserType(userTypeRepository.findByName("Anbieter"));
-		u.setAccount(new Account());
+		AccountType accountType = new AccountType();
+		accountType.setName("Kundenkonto");
+		accountTypeRepository.save(accountType);
+		
+		Account account = new Account();
+		account.setAccountNumber(2);
+		account.setAccountType(accountType);
+		accountRepository.save(account);
+		u.setAccount(account);
+		
 		return u;
 	}
 	

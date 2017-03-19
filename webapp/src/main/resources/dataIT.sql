@@ -22,3 +22,16 @@ INSERT IGNORE INTO `findlunchIT`.`restaurant_type` (`id`, `name`) VALUES (4, 'So
 
 INSERT IGNORE INTO `findlunchIT`.`user_type` (`id`,`name`) VALUES (1, "Anbieter");
 INSERT IGNORE INTO `findlunchIT`.`user_type` (`id`,`name`) VALUES (2, "Kunde");
+INSERT IGNORE INTO `findlunch`.`user_type` (`id`,`name`) VALUES (3, "Betreiber");
+
+INSERT IGNORE INTO `findlunch`.`euro_per_point` (`id`,`euro`) VALUES (1, 1.0);
+
+INSERT IGNORE INTO `findlunch`.`minimum_profit` (`id`,`profit`) VALUES (1, 10);
+
+-- account type
+INSERT IGNORE INTO `findlunch`.`account_type` (`id`,`name`) VALUES (1, 'Forderungskonto');
+INSERT IGNORE INTO `findlunch`.`account_type` (`id`,`name`) VALUES (2, 'Kundenkonto');
+
+-- booking reason
+INSERT IGNORE INTO `findlunch`.`booking_reason` (`id`,`reason`) VALUES (1, 'Forderung');
+INSERT IGNORE INTO `findlunch`.`booking_reason` (`id`,`reason`) VALUES (2, 'Einzahlung');
