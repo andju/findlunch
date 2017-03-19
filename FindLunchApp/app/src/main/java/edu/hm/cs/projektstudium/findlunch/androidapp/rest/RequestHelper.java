@@ -95,7 +95,7 @@ public class RequestHelper {
         // create a request
         Request request = new AddressRequest(
                 context, address, "country:DE",
-                new ConnectionInformation("maps.googleapis.com", 443));
+                new ConnectionInformation("maps.googleapis.com", 443, true));
         // create a request task
         HttpRequestTask requestTask = new HttpRequestTask((Context) context);
         // execute the request

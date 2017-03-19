@@ -35,7 +35,7 @@ public class PushNotificationDeleteRequest  extends AuthenticatedRequest<PushNot
      */
     public PushNotificationDeleteRequest(RequestReason requestReason, String userName, String password, int pushNotificationId, ConnectionInformation connectionInformation, OnHttpRequestFinishedCallback context) {
         super(requestReason, context, ((Context) context).getResources().getString(R.string.text_loading_push_delete), connectionInformation, userName, password);
-        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/unregister_push/" + pushNotificationId;
+        requestUrl = requestProtocol +  requestHost + ":" + requestPort + "/api/unregister_push/" + pushNotificationId;
     }
 
     @Override

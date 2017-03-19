@@ -17,6 +17,11 @@ public class ConnectionInformation {
     private int port;
 
     /**
+     * The Https.
+     */
+    private boolean https;
+
+    /**
      * Instantiates a new Connection information.
      */
     public ConnectionInformation() {
@@ -27,10 +32,12 @@ public class ConnectionInformation {
      *
      * @param host the host
      * @param port the port
+     * @param https the https
      */
-    public ConnectionInformation(String host, int port) {
+    public ConnectionInformation(String host, int port, boolean https) {
         this.host = host;
         this.port = port;
+        this.https = https;
     }
 
     /**
@@ -67,5 +74,21 @@ public class ConnectionInformation {
      */
     public void setPort(int port) {
         this.port = port;
+    }
+
+    /**
+     * Gets https.
+     * @return the https
+     */
+    public boolean isHttps() {
+        return https;
+    }
+
+    /**
+     * Sets https.
+     * @param https the https
+     */
+    public void setHttps(boolean https) {
+        this.https = https;
     }
 }

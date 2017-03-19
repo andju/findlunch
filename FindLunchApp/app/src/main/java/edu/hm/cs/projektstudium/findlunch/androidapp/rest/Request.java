@@ -25,6 +25,14 @@ public abstract class Request<T> {
      */
     public static final int TIMEOUT = 10000;
     /**
+     * The constant HTTPS
+     */
+    public static final String HTTPS = "https://";
+    /**
+     * The constant HTTP
+     */
+    public static final String HTTP = "http://";
+    /**
      * The Rest template.
      */
     protected final RestTemplate restTemplate;
@@ -71,6 +79,10 @@ public abstract class Request<T> {
      * The port of the REST API.
      */
     protected final int requestPort;
+    /**
+     * The protocol of the REST API.
+     */
+    protected final String requestProtocol;
 
     /**
      * Instantiates a new Request.
@@ -89,6 +101,8 @@ public abstract class Request<T> {
         this.loadingMessage = loadingMessage;
         this.requestHost = connectionInformation.getHost();
         this.requestPort = connectionInformation.getPort();
+        this.requestProtocol = Boolean.valueOf(
+                connectionInformation.isHttps()).equals(false) ? HTTP : HTTPS;
         restTemplate = new RestTemplate(getSimpleClientHttpRequestFactory());
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     }

@@ -32,7 +32,7 @@ public class PushNotificationOverviewRequest extends AuthenticatedRequest<PushNo
      */
     public PushNotificationOverviewRequest(RequestReason requestReason, String userName, String password, ConnectionInformation connectionInformation, OnHttpRequestFinishedCallback context) {
         super(requestReason, context, ((Context) context).getResources().getString(R.string.text_loading_push_overview), connectionInformation, userName, password);
-        requestUrl = "https://" + requestHost + ":" + requestPort + "/api/get_push";
+        requestUrl = requestProtocol + requestHost + ":" + requestPort + "/api/get_push";
     }
 
     @Override

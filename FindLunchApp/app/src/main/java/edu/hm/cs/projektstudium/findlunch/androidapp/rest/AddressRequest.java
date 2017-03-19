@@ -50,7 +50,7 @@ public class AddressRequest extends Request<GoogleGeoCodeResponse> {
         this.parameters.put(PARAMETER_ADDRESS, address);
         this.parameters.put(PARAMETER_COMPONENTS, components);
         this.parameters.put(PARAMETER_KEY, "AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI");
-        requestUrl = "https://" + requestHost + ":" + requestPort + "/maps/api/geocode/json?address={address}&components={components}&key={key}";
+        requestUrl = requestProtocol + requestHost + ":" + requestPort + "/maps/api/geocode/json?address={address}&components={components}&key={key}";
     }
 
     @Override

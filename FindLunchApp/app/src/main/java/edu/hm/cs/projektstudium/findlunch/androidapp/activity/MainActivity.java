@@ -389,6 +389,8 @@ public class MainActivity extends AppCompatActivity
             Map<String, String> fileContent = storageHelper.readFile("connection.txt");
             String host = fileContent.get("host");
             String port = fileContent.get("port");
+            String https = fileContent.get("https");
+
 
             if(host != null) {
                 messageHelper.printLogMessage(getClass().getName(), "Host from custom configuration: " + host);
@@ -397,6 +399,10 @@ public class MainActivity extends AppCompatActivity
             if(port != null) {
                 messageHelper.printLogMessage(getClass().getName(), "Port from custom configuration: " + port);
                 connectionInformation.setPort(Integer.valueOf(port));
+            }
+            if(https != null) {
+                messageHelper.printLogMessage(getClass().getName(), "Https from custom configuration: " + https);
+                connectionInformation.setHttps(Boolean.valueOf(https));
             }
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -631,7 +637,7 @@ public class MainActivity extends AppCompatActivity
                 webHelper.constructUrl(
                         connectionInformation.getHost(),
                         connectionInformation.getPort(),
-                        path, false));
+                        path, connectionInformation.isHttps()));
     }
 
     /**
@@ -681,7 +687,6 @@ public class MainActivity extends AppCompatActivity
         ImageView phoneView = (ImageView) findViewById(R.id.phoneImageView);
         ImageView emailView = (ImageView) findViewById(R.id.emailImageView);
         ImageView favouriteView = (ImageView) findViewById(R.id.favouriteImageView);
-
 
         if (restaurantNameView != null) {
             restaurantNameView.setText(restaurantContent.getName(restaurantListPosition));
@@ -1700,4 +1705,5 @@ public class MainActivity extends AppCompatActivity
         // open the filter dialog fragment
         openFilterDialogFragment(true);
     }
+
 }

@@ -34,7 +34,7 @@ public class FavouriteUnregistrationRequest extends FavouriteRequest {
     public FavouriteUnregistrationRequest(OnHttpRequestFinishedCallback context,
                                           String userName, String password, int restaurantId, ConnectionInformation connectionInformation) {
         super(context, ((Context) context).getResources().getString(R.string.text_loading_favourite_unregistration), connectionInformation, userName, password, restaurantId, false);
-        requestUrl = "https://" +  requestHost + ":" + requestPort + "/api/unregister_favorite/{restaurant_id}";
+        requestUrl = requestProtocol +  requestHost + ":" + requestPort + "/api/unregister_favorite/{restaurant_id}";
     }
 
     @Override
