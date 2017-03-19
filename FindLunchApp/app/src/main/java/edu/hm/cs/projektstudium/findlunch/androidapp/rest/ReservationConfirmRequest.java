@@ -39,7 +39,7 @@ public class ReservationConfirmRequest extends AuthenticatedRequest<ReservationC
         super(RequestReason.SEARCH, context, ((Context) context).getResources().getString(R.string.text_loading_reservation_confirm), connectionInformation, userName, password);
         this.parameters.put(PARAMETER_RESTAURANT_UUID, restaurant.getRestaurantUuid());
 
-        requestUrl = "https://" + requestHost + ":" + requestPort + "api/confirm_reservation/{restaurantUuid}";
+        requestUrl = requestProtocol + requestHost + ":" + requestPort + "api/confirm_reservation/{restaurantUuid}";
     }
 
 
