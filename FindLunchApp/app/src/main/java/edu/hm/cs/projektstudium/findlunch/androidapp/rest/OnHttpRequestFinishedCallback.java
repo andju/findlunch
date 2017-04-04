@@ -87,4 +87,5 @@ public interface OnHttpRequestFinishedCallback {
      * @param requestResponse the request response
      */
     void onRestPushNotificationDeleteFinished(Request<PushNotificationDeleteStatus> requestResponse);
+
 }

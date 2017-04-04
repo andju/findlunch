@@ -34,7 +34,7 @@ public abstract class Request<T> {
     protected final OnHttpRequestFinishedCallback context;
     /**
      * The Parameters and arguments
-     * of the REST resquest.
+     * of the REST request.
      */
     protected final Map<String, Object> parameters;
     /**
@@ -72,6 +72,7 @@ public abstract class Request<T> {
      */
     protected final int requestPort;
 
+
     /**
      * Instantiates a new Request.
      *
@@ -92,6 +93,8 @@ public abstract class Request<T> {
         restTemplate = new RestTemplate(getSimpleClientHttpRequestFactory());
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     }
+
+
 
     /**
      * Gets simple client http request factory.

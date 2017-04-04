@@ -3,12 +3,16 @@ package edu.hm.cs.projektstudium.findlunch.androidapp.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * The type User login credentials
  * persists and deletes the userName
  * and password of the user and
  * allows to check the login state.
+ *
+ * Extended by Maximilian Haag on 18.02.2017.
+ * Tokens for Amazon SNS and Google Firebase Messaging Services added.
  */
 public class UserLoginCredentials {
 
@@ -33,10 +37,16 @@ public class UserLoginCredentials {
      * The constant PREF_PASSWORD.
      */
     private static final String PREF_PASSWORD = "password";
+
     /**
-     * The constant GCM_TOKEN.
+     * The constant FCM_TOKEN.
      */
-    private static final String PREF_GCM_TOKEN = "gcmToken";
+    private static final String PREF_FCM_TOKEN = "fcmToken";
+
+    /**
+     * The constant SNS_TOKEN.
+     */
+    private static final String PREF_SNS_TOKEN = "snsToken";
 
     /**
      * Instantiates a new User login credentials.
@@ -104,7 +114,9 @@ public class UserLoginCredentials {
         SharedPreferences.Editor editor = getPreferencesEditor();
         editor.remove(PREF_USERNAME);
         editor.remove(PREF_PASSWORD);
-        editor.remove(PREF_GCM_TOKEN);
+
+        editor.remove(PREF_FCM_TOKEN);
+        editor.remove(PREF_SNS_TOKEN);
 
         // Commit the edits!
         editor.commit();
@@ -139,24 +151,45 @@ public class UserLoginCredentials {
     }
 
     /**
-     * Gets gcm token.
+     * Gets fcm token.
      *
-     * @return the gcm token
+     * @return the fcm token
      */
-    public String getGcmToken() {
-        return getPreferences().getString(PREF_GCM_TOKEN, null);
+    public String getFcmToken() {
+        return getPreferences().getString(PREF_FCM_TOKEN, null);
     }
 
     /**
-     * Sets gcm token.
+     * Sets fcm token.
      *
      * @param token the token
      */
-    public void setGcmToken(String token) {
+    public void setFcmToken(String token) {
 
         SharedPreferences.Editor editor = getPreferencesEditor();
-        editor.putString(PREF_GCM_TOKEN, token);
+        editor.putString(PREF_FCM_TOKEN, token);
         editor.commit();
+    }
 
+
+    /**
+     * Gets sns token.
+     *
+     * @return the sns token
+     */
+    public String getSnsToken() {
+        return getPreferences().getString(PREF_SNS_TOKEN, null);
+    }
+
+    /**
+     * Sets sns token.
+     *
+     * @param token the token
+     */
+    public void setSnsToken(String token) {
+
+        SharedPreferences.Editor editor = getPreferencesEditor();
+        editor.putString(PREF_SNS_TOKEN, token);
+        editor.commit();
     }
 }

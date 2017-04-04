@@ -45,9 +45,7 @@ public abstract class AuthenticatedRequest<T> extends Request<T> {
      * @param userName              the user name
      * @param password              the password
      */
-    public AuthenticatedRequest(RequestReason requestReason, OnHttpRequestFinishedCallback context,
-                                String loadingMessage, ConnectionInformation connectionInformation,
-                                String userName, String password) {
+    public AuthenticatedRequest(RequestReason requestReason, OnHttpRequestFinishedCallback context, String loadingMessage, ConnectionInformation connectionInformation, String userName, String password) {
         super(requestReason, context, loadingMessage, connectionInformation);
         this.userName = userName;
         this.password = password;
@@ -61,6 +59,7 @@ public abstract class AuthenticatedRequest<T> extends Request<T> {
         // Add the String message converter
         restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
     }
+
 
     /**
      * Gets restaurant position.

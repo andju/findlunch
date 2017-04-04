@@ -35,11 +35,15 @@ public class PushNotificationOverviewRequest extends AuthenticatedRequest<PushNo
         requestUrl = "https://" + requestHost + ":" + requestPort + "/api/get_push";
     }
 
+
     @Override
     public void performRequest() {
         if (Connectivity.isConnected((Context) context)) {
             try {
+
+                //Send get_push request
                 ResponseEntity<PushNotification[]> responseEntity = restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity, PushNotification[].class, getParameters());
+
                 setResponseData(new ArrayList<>(Arrays.asList(responseEntity.getBody())));
                 setRequestResult(RequestResult.SUCCESS);
             } catch (RestClientException e) {

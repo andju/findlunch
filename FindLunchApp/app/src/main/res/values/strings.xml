@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">FindLunch</string>
     <string name="info_text">Finde Mittagsangebote in deiner Umgebung</string>
     <string name="message_not_empty">darf nicht leer sein!</string>
