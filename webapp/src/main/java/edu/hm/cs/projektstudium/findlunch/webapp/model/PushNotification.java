@@ -19,8 +19,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.PushNotificationView;
 
+
 /**
  * The Class PushNotification.
+ * 
+ * Database entries extended to sns_token and fcm_token for better overview and extension possibilities.
+ * Extended by Maximilian Haag on 06.12.2016.
+ * 
  */
 @Entity
 @Table(name="push_notification")
@@ -38,11 +43,16 @@ public class PushNotification implements Serializable {
 	/** The title. */
 	@JsonView(PushNotificationView.PushNotificationRest.class)
 	private String title;
-
-	/** The gcm token. */
+ 
+	/** The fcm token. */
 	@Lob
-	@Column(name="gcm_token")
-	private String gcmToken;
+	@Column(name="fcm_token")
+	private String fcmToken;
+	
+	/** The sns token. */
+	@Lob
+	@Column(name="sns_token")
+	private String snsToken;
 
 	/** The latitude. */
 	private float latitude;
@@ -134,21 +144,36 @@ public class PushNotification implements Serializable {
 	}
 
 	/**
-	 * Gets the gcm token.
+	 * Gets the fcm token.
 	 *
-	 * @return the gcm token
+	 * @return the fcmToken
 	 */
-	public String getGcmToken() {
-		return this.gcmToken;
+	public String getFcmToken() {
+		return fcmToken;
 	}
 
 	/**
-	 * Sets the gcm token.
+	 * Sets the fcm token.
 	 *
-	 * @param gcmToken the new gcm token
+	 * @param fcmToken the new fcm token
 	 */
-	public void setGcmToken(String gcmToken) {
-		this.gcmToken = gcmToken;
+	public void setFcmToken(String fcmToken) {
+		this.fcmToken = fcmToken;
+	}
+	
+	
+	/**
+	 * @return
+	 */
+	public String getSnsToken() {
+		return snsToken;
+	}
+
+	/**
+	 * @param snsToken
+	 */
+	public void setSnsToken(String snsToken) {
+		this.snsToken = snsToken;
 	}
 
 	/**

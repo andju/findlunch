@@ -40,6 +40,41 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserTypeRepository;
 
 
+
+/*
+
+Tests schreiben JEDES Mal Daten aus dataIT.sql in findlunchIT DB per HibernateJPA:
+country, day_of_week, kitchen_type, restaurant_type, user_type
+
+
+Methoden schreiben extra (auch jedes Mal obwohl nur einzel Tests ausgewählt):
+Kunde,Anbieter,PushMessage...
+
+
+Einzel Push ans Handy:
+
+
+TODO: Performance Test größre anzahl ans handy schicken,  
+-Baut PushMessage
+
+
+testGetSinglePushNotification ok (baut nur Nachricht)
+
+
+
+
+
+
+Ganzes
+@IntegrationTest()
+
+Einzelner Test
+@Test
+
+*/
+
+
+
 /**
  * The Class PushNotificationRestControllerIT.
  */
@@ -96,6 +131,7 @@ public class PushNotificationRestControllerIT {
 	public void setUp() {
 		
 		RestAssured.baseURI="http://localhost";
+		//RestAssured.baseURI="http://findlunch.ddns.net";
 		RestAssured.port=serverPort;
 		
 	}
@@ -630,7 +666,7 @@ public class PushNotificationRestControllerIT {
 
 		Assert.assertEquals(1, savedPushs.size());
 		Assert.assertEquals(savedUser.getId(), savedPushs.get(0).getUser().getId());
-		Assert.assertEquals("TOKEN 1", savedPushs.get(0).getGcmToken());
+		Assert.assertEquals("TOKEN 1", savedPushs.get(0).getFcmToken());
 		Assert.assertEquals(1000, savedPushs.get(0).getRadius());
 		Assert.assertEquals(11.3f, savedPushs.get(0).getLongitude(), 0.0001);
 		Assert.assertEquals(11.2f, savedPushs.get(0).getLatitude(), 0.0001);
@@ -689,7 +725,7 @@ public class PushNotificationRestControllerIT {
 		
 		for(int i=1; i <= savedPushs.size();i++) {
 			Assert.assertEquals(savedUser.getId(), savedPushs.get(i-1).getUser().getId());
-			Assert.assertEquals("TOKEN " + i, savedPushs.get(i-1).getGcmToken());
+			Assert.assertEquals("TOKEN " + i, savedPushs.get(i-1).getFcmToken());
 			Assert.assertEquals("Title " + i, savedPushs.get(i-1).getTitle());
 			Assert.assertEquals(1000 * i, savedPushs.get(i-1).getRadius());
 			Assert.assertEquals(10.3f + i, savedPushs.get(i-1).getLongitude(), 0.0001);
@@ -750,7 +786,7 @@ public class PushNotificationRestControllerIT {
 
 		Assert.assertEquals(1, savedPushs.size());
 		Assert.assertEquals(savedUser.getId(), savedPushs.get(0).getUser().getId());
-		Assert.assertEquals("TOKEN 1", savedPushs.get(0).getGcmToken());
+		Assert.assertEquals("TOKEN 1", savedPushs.get(0).getFcmToken());
 		Assert.assertEquals(1000, savedPushs.get(0).getRadius());
 		Assert.assertEquals(11.3f, savedPushs.get(0).getLongitude(), 0.0001);
 		Assert.assertEquals(11.2f, savedPushs.get(0).getLatitude(), 0.0001);
@@ -810,7 +846,7 @@ public class PushNotificationRestControllerIT {
 		for(int i=1; i <= savedPushs.size();i++) {
 			
 			Assert.assertEquals(savedUser.getId(), savedPushs.get(i-1).getUser().getId());
-			Assert.assertEquals("TOKEN " + i, savedPushs.get(i-1).getGcmToken());
+			Assert.assertEquals("TOKEN " + i, savedPushs.get(i-1).getFcmToken());
 			Assert.assertEquals("Title " + i, savedPushs.get(i-1).getTitle());
 			Assert.assertEquals(1000 * i, savedPushs.get(i-1).getRadius());
 			Assert.assertEquals(10.3f + i, savedPushs.get(i-1).getLongitude(), 0.0001);
@@ -878,7 +914,7 @@ public class PushNotificationRestControllerIT {
 
 		Assert.assertEquals(1, savedPushs.size());
 		Assert.assertEquals(savedUser.getId(), savedPushs.get(0).getUser().getId());
-		Assert.assertEquals("TOKEN 1", savedPushs.get(0).getGcmToken());
+		Assert.assertEquals("TOKEN 1", savedPushs.get(0).getFcmToken());
 		Assert.assertEquals(1000, savedPushs.get(0).getRadius());
 		Assert.assertEquals(11.3f, savedPushs.get(0).getLongitude(), 0.0001);
 		Assert.assertEquals(11.2f, savedPushs.get(0).getLatitude(), 0.0001);
@@ -925,7 +961,7 @@ public class PushNotificationRestControllerIT {
 		
 		for(int i=1; i <= savedPushs.size();i++) {
 			Assert.assertEquals(savedUser.getId(), savedPushs.get(i-1).getUser().getId());
-			Assert.assertEquals("TOKEN " + i, savedPushs.get(i-1).getGcmToken());
+			Assert.assertEquals("TOKEN " + i, savedPushs.get(i-1).getFcmToken());
 			Assert.assertEquals("Title " + i, savedPushs.get(i-1).getTitle());
 			Assert.assertEquals(1000 * i, savedPushs.get(i-1).getRadius());
 			Assert.assertEquals(10.3f + i, savedPushs.get(i-1).getLongitude(), 0.0001);
@@ -1166,7 +1202,7 @@ public class PushNotificationRestControllerIT {
 		p.setRadius(1000 * i);
 		p.setLatitude(10.2f + i);
 		p.setLongitude(10.3f + i);
-		p.setGcmToken("TOKEN " + i);
+		p.setFcmToken("TOKEN " + i);
 		p.setTitle("Title " + i);
 		return p;
 	}
@@ -1202,7 +1238,7 @@ public class PushNotificationRestControllerIT {
 		p.setRadius(1000 * i);
 		p.setLatitude(10.2f + i);
 		p.setLongitude(10.3f + i);
-		p.setGcmToken("TOKEN " + i);
+		p.setFcmToken("TOKEN " + i);
 		p.setTitle("Title " + i);
 		return p;
 	}

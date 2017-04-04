@@ -1,3 +1,5 @@
+--Insert Users and Restaurant value for demo!!!--
+
 INSERT IGNORE INTO `findlunch`.`country` (`country_code`, `name`) VALUES ('DE', 'Deutschland');
 
 INSERT IGNORE INTO `findlunch`.`day_of_week` (`id`, `name`, `day_number`) VALUES (1, 'Montag', 2);
@@ -31,4 +33,4 @@ INSERT IGNORE INTO `findlunch`.`user_type` (`id`,`name`) VALUES (1, "Anbieter");
 INSERT IGNORE INTO `findlunch`.`user_type` (`id`,`name`) VALUES (2, "Kunde");
 
 INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `restaurant_id`,`user_type_id`) VALUES (1, 'admin@admin.com', '$2a$10$Wo0WJitsLCrhuY4LJoOFRO.xfAWvTVuB8ktPZCqx1lFi67XnIimd6', 1, 1);
-INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `restaurant_id`,`user_type_id`) VALUES (2, 'user@user.de', '$2a$10$mkHTGZbKAMRsC54cH6kOYenXTnk4vFOTBQBFYgrQsJ7hkL3oClFSC', null, 2);
+INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `restaurant_id`,`user_type_id`) VALUES (2, 'user@user.de', '$2a$10$mkHTGZbKAMRsC54cH6kOYenXTnk4vFOTBQBFYgrQsJ7hkL3oClFSC', null, 2)

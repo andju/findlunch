@@ -13,6 +13,17 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+
+/*
+AppConfig File
+BEANS
+
+The @Configuration annotation indicates that the class declares one or more @Bean methods. 
+These methods are invoked at runtime by Spring to manage lifecycle of the beans. 
+In our case we have defined @Bean for view resolver for JSP view.
+ */
+
+
 /**
  * This class is responsible for defining necessary beans that are handled by Spring application context. These beans can then be injected to classes which need their functionality.
  */

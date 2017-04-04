@@ -77,13 +77,13 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/com.google.gcm/gcm-server -->
 		<dependency>
 		    <groupId>com.google.gcm</groupId>
 		    <artifactId>gcm-server</artifactId>
 		    <version>1.0.0</version>
 		</dependency>
-		
 
 		<!-- Used for integration testing -->
 		<dependency>
@@ -95,7 +95,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency>		
 	</dependencies>
 
 	<profiles>

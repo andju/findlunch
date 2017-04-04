@@ -27,6 +27,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 
+
 /**
  * The Class OfferRestController. The class is responsible for handling rest
  * calls related to offers

@@ -25,6 +25,15 @@ import edu.hm.cs.projektstudium.findlunch.webapp.App;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 
+
+/*
+Benutzt JUnit facilities
+@RunWith(SpringJUnit4ClassRunner.class)
+
+Rest klar...
+*/
+
+
 /**
  * The Class DayOfWeekRestControllerIT.
  */
