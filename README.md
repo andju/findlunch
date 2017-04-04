@@ -1,60 +1,113 @@
-# FindLunch
-This client server based application allows restaurants to register offers (e.g. for lunch) and helps customer to find these via their smartphone (based on their location).
+### Konfiguration/ReadMe FindLunch
+### Stand: 31.03.2017
+### Maximilian Haag
+### Mail: mhaag@hm.edu
+------------------------------------
+# Beschreibung:
+Bestehendes FindLunch Projekt, erweitert um Google Firebase Cloud Messaging (FCM), sowie Amazon SNS Cloud Messaging (SNS/ADM). Integrierte Klassen zur Ausführung von Messungen für beide Push-Messaging Provider.
 
-## Webapp
-The web application is based on several technologies:
-  * Spring Boot
-  * Spring Data JPA with Hibernate
-  * Spring MVC
-  * Thymeleaf Template Engine
-  * Bootstrap
-  
-### Import into eclipse
+------------------------------------
+## 1. Webserver-Applikation (webapp)
+Basiert auf folgenden Technologien:
+- Spring Boot
+- Spring Data JPA Hibernate
+- Spring MVC
+- Thymeleaf Template Engine
+- Bootstrap
+- Amazon Java SDK 1.11.65
 
-In order to import the project into Eclipse, please follow these steps:
+Benötigt konfigurierte Datenbank (MariaDB etc.) und Webserver.
+Einstellungen in der Spring Suite in "application.properties" (Pfad: src/main/resources).
 
-1. Open Eclipse
-2. Right click on your project explorer and select "Import" --> "Import"
-3. In the following menu select "Maven" --> "Existing Maven Projects"
-4. Select the extracted "webapp" folder and click "Finish"
+### Sonstiges:
+Domain:
+- Voreingestellte Domain: findlunch.de
 
-### Configure application
+SSL:
+- Benötigt signiertes SSL Zertifikat (Projekt beinhaltet SSL.com Zertifikat, gültig bis 08.05.2017).
+- Temporärer Betrieb ohne SSL mit entsprechenden Änderungen möglich.
 
-Before you can start the application please set up the MariaDB database with the database schema.
-Afterwards, please open the "application.properties" file within eclispe (found under src/main/resources) and edit the database and tomcat configuration to match your environment.
+Port:
+- Voreingestellter Port: 22001.
 
-### Run application
+Messung/Laufender Betrieb:
+- Messung getrennt von laufendem Betrieb.
+- Zur Ausführung einer Messung muss der Scheduled Task in "PushNotificationScheduledTask" (dort beschrieben) deaktiviert werden.
+- "PushMeasureBase" im Package "measurement" anpassen und gewünschte Messung aktivieren.
+- Entsprechende merkierte Parameter in "PushMeasureBase" festlegen.
+- Benötigt registrierte bzw. eingetragene PushNotification in Datenbank mit Titel "testpush".
+- PushNotification benötigt Token von entsprechendem, zu messenden Service.
+- Mehrere "testpush" in Datenbank von verschiedenen Usern für skalierte Messung mit mehreren Geräten.
+- Messungen werden in "/MeasureLog.txt" geloggt.
 
-To start the application, right click on the "App" class found within the base package and select "Run as" --> "Java Application"
+Push-Messaging Service Credentials:
+- Credentials für Messung/Live-Betrieb müssen im Ordner: /src/main/ressources angelegt sein (vorkonfiguriert).
 
-## Android App
-The Android application is based on the following technologies:
-  * Spring for Android
-  * Jackson
-  * Google Play services Maps
-  * Google Play services GCM
-  * Google Maps Android API utility library
-  
-### Import into Android Studio
+Firebase + Amazon SNS: LiveOpCredentials.conf und MeasureCredentials.conf
+```sh
+FCM_ID (Serverschlüssel)
+AWS_Client_ID
+AWS_Client_Secret
+AWS_APP_Name
+AWS_Endpoint_Userdata
+```
 
-In order to import the project into Android Studio, please follow these steps:
+Nur Amazon IAM: AwsCredentials.properties
+```sh
+Amazon Access Key:
+accessKey:xxxxxxxxxx
+Amazon Secret Key:
+secretKey:xxxxxxxxxx
 
-1. Open Android Studio
-2. Navigate to "File" and select "Open...".
-3. In the following menu select the extracted "FindLunchApp" folder and click "Ok"
+```
 
-### Clean Project
+### Import in Spring Tool Suite:
+1. File -> Import -> General -> Existing Projects into Workspace
+2. Projektordner auswählen
+3. Finish
 
-Before you start the application, please consider to clean the project to avoid issues. To do this, you have to navigate to "Build" and select "Clean Project". 
+------------------------------------
+## 2. Datenbank (database)
+- Datenbankschema aus /database muss in MariaDB erstellt werden.
+- Datenbankverbindung in Webserver-Applikation per "application.properties" konfigurieren (src/main/resources).
 
-### Run application
+------------------------------------
+## 3. Mobile-Applikation/Android App (FindLunchApp)
+Basiert auf folgenden Technologien:
+- Spring for Android
+- Jackson
+- Google Play services Maps
+- Google Maps Android API utility library
+- Google FCM (Google Firebase Messaging)
+- Amazon SNS (Amazon ADM/SNS Messaging)
 
-To start the application, navigate to "Run" and select "run 'App'". 
+### Sonstiges:
+Messung/Laufender Betrieb:
+- Zur Ausführung einer Messung müssen die entsprechenden Parameter in "MeasureProcessing" im Package "measure" angepasst werden.
+- Für den laufenden Betrieb muss die Messung dort deaktiviert sein.
 
-### Using a custom Webapp
+Push-Messaging Service Credentials:
+- Firebase (direkt von Firebase Portal):
+```sh
+/app/google-services.json
 
-The Android app gives the ability to define host and port for the connection with the findlunch Webapp in a configuration file named "connection.txt", 
-that is located on the external storage of your Android device. The file must contain the following information:
+```
+- Amazon (aus Amazon Dev Portal): 
+```sh
+/app/src/assets/api_key.txt
+```
 
-	host=findlunch.biz.tm
-	port=8444
+### Import in Android Studio:
+1. File -> Open
+2. Mobile_Applikation auswählen -> OK
+
+------------------------------------
+Um Fehler zu vermeiden, bitte vor dem ersten Start einmal "Clean Project" ausführen.
+
+### Repository:
+https://github.com/maxhaag/FindLunch
+
+### Folders:
+- /database
+- /webapp
+- /FindLunchApp
