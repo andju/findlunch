@@ -28,6 +28,9 @@ Afterwards, please open the "application.properties" file within eclispe (found 
 
 To start the application, right click on the "App" class found within the base package and select "Run as" --> "Java Application"
 
+### profiles
+The Webapp give the possibility to create a jar File depend on a given profile ("prod" or "testinstance"). Therefore navigate to "Run as" and select "Maven build..". Afterwards insert as goal "package" and the chosen profile ("prod" or "testinstance") then click the "Run" button.
+
 ## Android App
 The Android application is based on the following technologies:
   * Spring for Android

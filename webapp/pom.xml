@@ -120,15 +120,27 @@
 
 	<profiles>
 		<profile>
-			<id>integration</id>
+			<id>prod</id>
+			<activation>
+            	<activeByDefault>true</activeByDefault>
+       		</activation>
 			<properties>
-				<integration-tests.skip>false</integration-tests.skip>
+				<finalName.append>prod</finalName.append>
+				<integration-tests.skip>true</integration-tests.skip>
+			</properties>
+		</profile>
+		<profile>
+			<id>testinstance</id>
+			<properties>
+				<finalName.append>testinstance</finalName.append>
+				<integration-tests.skip>true</integration-tests.skip>
+				<copy.application-testinstance.properties>true</copy.application-testinstance.properties>
 			</properties>
 		</profile>
 	</profiles>
 
 	<build>
-		<finalName>findLunch-webapp</finalName>
+		<finalName>findLunch-webapp-${finalName.append}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -142,6 +154,30 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<plugin>
+	           <artifactId>maven-antrun-plugin</artifactId>
+	           <executions>
+	           	<execution>
+	           		<phase>prepare-package</phase>
+	           		<goals>
+	           			<goal>run</goal>
+	           		</goals>
+	           		<configuration>
+	           			<target if="copy.application-testinstance.properties">
+	           				<echo message="start to copy testinstance properties"/>
+	           				<delete file="${project.build.outputDirectory}/application.properties"/>
+				            <delete file="${project.build.outputDirectory}/data.sql"/>
+				            <delete file="${project.build.outputDirectory}/schema.sql"/>
+	           				
+	           				<copy file="src/main/resources/application-testinstance.properties" tofile="${project.build.outputDirectory}/application.properties"/>
+				            <copy file="src/main/resources/dataTestinstance.sql" tofile="${project.build.outputDirectory}/data.sql"/>
+				            <copy file="src/main/resources/schemaTestinstance.sql" tofile="${project.build.outputDirectory}/schema.sql"/>
+				            <echo message="finished to copy testinstance properties"/>
+	           			</target>
+	           		</configuration>
+	           	</execution>
+	           </executions>
+	        </plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<executions>
