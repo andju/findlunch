@@ -1,1 +1,46 @@
-## Insert Google Services File ##
+{
+  "project_info": {
+    "project_number": "343682752512",
+    "firebase_url": "https://findlunch-1309.firebaseio.com",
+    "project_id": "findlunch-1309",
+    "storage_bucket": "findlunch-1309.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343682752512:android:e2f9a2460fa10600",
+        "android_client_info": {
+          "package_name": "edu.hm.cs.projektstudium.findlunch.androidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343682752512-p31fo14do7v1hg1u34232smj13rku4du.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "343682752512-cj1a83rb6l4qo6dqk8s9vgonhd1ius85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDa7qzHVlNw5c5slr7D_DqAih6eBb3qB0g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
