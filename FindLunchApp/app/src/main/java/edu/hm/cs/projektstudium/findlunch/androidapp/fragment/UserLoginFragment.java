@@ -18,7 +18,6 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.validation.UserRegistration
 import edu.hm.cs.projektstudium.findlunch.androidapp.validation.ValidationError;
 import edu.hm.cs.projektstudium.findlunch.androidapp.view.DebouncedOnClickListener;
 
-
 /**
  * A {@link Fragment} that allows the
  * user to login with the credentials
@@ -33,6 +32,7 @@ public class UserLoginFragment extends Fragment {
      * The constant ARG_ITEMS_ENABLED.
      */
     private static final String ARG_USERNAME = "userName";
+
 
     /**
      * The constant ARG_ITEMS_ENABLED.
@@ -84,6 +84,7 @@ public class UserLoginFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +107,8 @@ public class UserLoginFragment extends Fragment {
         // Get the text views for userName an password
         TextView usernameTextView = (TextView) view.findViewById(R.id.edit_login_username);
         TextView passwordTextView = (TextView) view.findViewById(R.id.edit_login_password);
+
+
 
         // Get the view that should link to the registration form
         View register = view.findViewById(R.id.view_login_register);
@@ -150,9 +153,10 @@ public class UserLoginFragment extends Fragment {
             TextView usernameTextView = (TextView) view.findViewById(R.id.edit_login_username);
             TextView passwordTextView = (TextView) view.findViewById(R.id.edit_login_password);
 
-            // get the user input
-            String username = usernameTextView.getText().toString().trim();
-            String password = passwordTextView.getText().toString().trim();
+           // get the user input
+           String username = usernameTextView.getText().toString().trim();
+           String password = passwordTextView.getText().toString().trim();
+
 
             // create a validator for the user input
             UserLoginFragmentContentValidator validator = new UserLoginFragmentContentValidator();

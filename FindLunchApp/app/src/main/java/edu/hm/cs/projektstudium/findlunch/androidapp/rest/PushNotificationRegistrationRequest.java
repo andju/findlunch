@@ -1,6 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.androidapp.rest;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.springframework.http.HttpEntity;
@@ -20,7 +21,10 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.model.PushNotification;
 /**
  * Registers a new push notification (through the FindLunch REST API).
  *
- * Created by Andreas Juckel on 12.07.2016.
+ * Using initially push message for database / device update.
+ * Display other message.
+ *
+ * Extended by Maxmilian Haag on 07.02.2017
  */
 public class PushNotificationRegistrationRequest extends AuthenticatedRequest<PushNotificationRegistrationStatus> {
 
@@ -36,8 +40,11 @@ public class PushNotificationRegistrationRequest extends AuthenticatedRequest<Pu
      * @param context               the context
      */
     public PushNotificationRegistrationRequest(RequestReason requestReason, String userName, String password, PushNotification pushNotification, ConnectionInformation connectionInformation, OnHttpRequestFinishedCallback context) {
-        super(requestReason, context, ((Context) context).getResources().getString(R.string.text_loading_push_registration), connectionInformation, userName, password);
+        // 07.02.2017
+        // Message for push registration changed if performing initial database update push.
+        super(requestReason, context, (pushNotification.getTitle().equals("INIT_PUSH"))?("Updating Database..."):(((Context) context).getResources().getString(R.string.text_loading_push_registration)), connectionInformation, userName, password);
         requestUrl = requestProtocol +  requestHost + ":" + requestPort + "/api/register_push";
+
         // include push notification to register in requestEntity
         requestEntity = new HttpEntity<Object>(pushNotification, requestHeaders);
     }

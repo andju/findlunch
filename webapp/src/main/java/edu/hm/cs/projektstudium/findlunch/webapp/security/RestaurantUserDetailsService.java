@@ -12,7 +12,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
  * This class is responsible for getting users with type "Anbieter" for authentication purposes (website).
  */
 @Service("restaurantUserDetailsService")
-public class RestaurantUserDetailsService implements UserDetailsService{
+public class RestaurantUserDetailsService implements UserDetailsService {
 
 	/** The user repository. */
 	@Autowired

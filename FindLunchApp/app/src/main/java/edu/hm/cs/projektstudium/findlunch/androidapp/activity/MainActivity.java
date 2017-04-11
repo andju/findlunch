@@ -80,7 +80,10 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.androidapp.network.ConnectionInformation;
 import edu.hm.cs.projektstudium.findlunch.androidapp.network.ConnectionInformationFindlunch;
 import edu.hm.cs.projektstudium.findlunch.androidapp.permissions.PermissionHelper;
-import edu.hm.cs.projektstudium.findlunch.androidapp.push.GcmRegistrationIntentService;
+import edu.hm.cs.projektstudium.findlunch.androidapp.push.AmazonPushListenerService;
+import edu.hm.cs.projektstudium.findlunch.androidapp.push.AmazonSnsRegHandler;
+import edu.hm.cs.projektstudium.findlunch.androidapp.push.FirebaseTokenReceiver;
+import edu.hm.cs.projektstudium.findlunch.androidapp.push.FirebaseTokenRequest;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.FavouriteRegistrationStatus;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.FavouriteRequest;
 import edu.hm.cs.projektstudium.findlunch.androidapp.rest.OfferRequest;
@@ -182,32 +185,62 @@ public class MainActivity extends AppCompatActivity
     private UserLoginCredentials userLoginCredentials;
 
     /**
-     * Receive the GCM token, after it has been obtained from GCM.
+     * Handler for Amazon SNS registration.
      */
-    private final BroadcastReceiver GcmTokenBroadcastReceiver = new BroadcastReceiver(){
+    private AmazonSnsRegHandler amazonRegHandler;
+
+    /**
+     * Entry for no service.
+     */
+    public static final String NOT_AVAILABLE = "notAvailable";
+
+    /**
+     * Receive the FCM/ADM token, after it has been obtained from Google/Amazon.
+     */
+    private final BroadcastReceiver multiTokenBroadcastReceiver = new BroadcastReceiver(){
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Boolean gcmSuccess = intent.getBooleanExtra("gcmRequestSuccessStatus", false);
-            if (gcmSuccess) {
-                String gcmToken = intent.getStringExtra("gcmToken");
-                userLoginCredentials.setGcmToken(gcmToken);
+
+
+            Boolean fcmSuccess = intent.getBooleanExtra(FirebaseTokenReceiver.FCM_TOKEN_MESSAGE_SUCCESS, false);
+            Boolean admSuccess = intent.getBooleanExtra(AmazonPushListenerService.ADM_TOKEN_MESSAGE_SUCCESS, false);
+
+            userLoginCredentials.setFcmToken(NOT_AVAILABLE);
+            userLoginCredentials.setSnsToken(NOT_AVAILABLE);
+
+            if (fcmSuccess) {
+                String fcmToken = intent.getStringExtra(FirebaseTokenReceiver.FCM_TOKEN_FILTER_EXTRA);
+                Log.e("MainActivity-FCM-BC-Receiver", "Set new Token to User: " + fcmToken);
+                userLoginCredentials.setFcmToken(fcmToken);
+
+                //Initial register token at webserver
+                performInitialPush();
+
+            } else if(admSuccess) {
+                String snsToken = intent.getStringExtra(AmazonPushListenerService.ADM_TOKEN_FILTER_EXTRA);
+                Log.e("MainActivity-FCM-BC-Receiver", "Set new Token to User: " + snsToken);
+                userLoginCredentials.setSnsToken(snsToken);
+
+                //Initial register token at webserver
+                performInitialPush();
+
             } else {
-                messageHelper.printToastMessage(getString(R.string.text_no_gcm_token));
+                Log.e("ADM-BC-Receive", "No new token obtained");
+
             }
         }
     };
 
     /**
-     * List of active push notifications for the user (for the push notification overview).
+     * List of active push notifications for the user (push notification overview).
      */
     private List<PushNotification> activePushNotifications = new ArrayList<>();
 
-    @Override
-    public List<PushNotification> getActivePushNotifications() {
-        return activePushNotifications;
-    }
-
+    /**
+     * Do not display registration push.
+     */
+    private boolean showPushRegToastMsgs = true;
 
     /**
      * The constant INTENT_REST_RESTAURANTS.
@@ -264,6 +297,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public List<PushNotification> getActivePushNotifications() {
+        return activePushNotifications;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -286,7 +324,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.setNavigationItemSelectedListener(this);
         }
 
-        // Place main fragment within frame layout
+        // place main fragment within frame layout
         changeFragment(new MainFragment(), false);
 
         // get an instance of user content, user login credentials and restaurant content
@@ -301,8 +339,6 @@ public class MainActivity extends AppCompatActivity
         readConnectionInformation();
 
         /* Check if the MainActivity was called from a defined Fragment.
-         * intentSource-Codes for Fragments:
-         * 1 - PushListenerService
          */
         Intent i = getIntent();
 
@@ -1264,6 +1300,9 @@ public class MainActivity extends AppCompatActivity
                     requestResponse.getResponseData().size() > 0 ?
                     requestResponse.getResponseData().get(0) : null;
 
+            Log.e("onRestUserLoginFinished", requestResult.toString());
+
+
             if(requestResult == RequestResult.SUCCESS) {
 
                 if(userLoginStatus != null &&
@@ -1277,11 +1316,44 @@ public class MainActivity extends AppCompatActivity
                         // message login successfully
                         messageHelper.printSnackbarMessage(
                                 button, getResources().getString(R.string.text_login_successful));
-                        // Obtain a GCM-Token.
-                        LocalBroadcastManager.getInstance(this).registerReceiver(
-                                GcmTokenBroadcastReceiver, new IntentFilter("gcmTokenMessage"));
-                        Intent intent = new Intent(this, GcmRegistrationIntentService.class);
-                        startService(intent);
+
+
+                        // Obtain a FCM-Token / ADM-Token
+                        IntentFilter fbFilter = new IntentFilter(FirebaseTokenReceiver.FCM_TOKEN_MESSAGE);
+                        IntentFilter admFilter = new IntentFilter(AmazonPushListenerService.ADM_TOKEN_MESSAGE);
+
+                        LocalBroadcastManager.getInstance(this).registerReceiver(multiTokenBroadcastReceiver, fbFilter);
+                        LocalBroadcastManager.getInstance(this).registerReceiver(multiTokenBroadcastReceiver, admFilter);
+
+
+                        if(android.os.Build.MANUFACTURER.equals("Amazon") && (android.os.Build.MODEL.equals("Kindle Fire") || android.os.Build.MODEL.startsWith("Fire") || android.os.Build.MODEL.startsWith("KF"))) {
+                            Log.e("DEBUG", "ADM Device found, using AD Messaging " + android.os.Build.MANUFACTURER + android.os.Build.MODEL);
+
+                            //Start Amazon push listener service
+                            Intent amaIDServ = new Intent(this, AmazonPushListenerService.class);
+                            startService(amaIDServ);
+
+                            //Start Amazon registration handler
+                            amazonRegHandler = new AmazonSnsRegHandler(this);
+
+
+
+                        } else {
+                            Log.e("DEBUG", "Pure Android found, using Google Firebase Messaging " + android.os.Build.MANUFACTURER + android.os.Build.MODEL);
+
+                            //Start Firebase token receiver
+                            Intent intent = new Intent(this, FirebaseTokenReceiver.class);
+                            startService(intent);
+
+
+                            //If no FCM token available, force onTokenRefresh() at FirebaseTokenReceiver
+                            if(userLoginCredentials.getFcmToken() == null) {
+                                Intent delToken = new Intent(this, FirebaseTokenRequest.class);
+                                startService(delToken);
+                            }
+                        }
+
+
                         // open the main fragment
                         changeFragment(new MainFragment(), true);
                         checkLogin();
@@ -1319,6 +1391,34 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+
+
+    /**
+     * Perform initial push for database update.
+     * Webserver ignores initial push, using for token update of current service ADM/FCM.
+     * New/changed device requires database update, performing update by dummy push registration.
+     * Filtered at: PushNotificationRestController on webserver.
+     */
+    public void performInitialPush () {
+
+        showPushRegToastMsgs = false;
+
+        //Dummy registration data for webserver database update.
+        String pushTitle = "INIT_PUSH";
+        boolean[] selectedWeekdays = {true, false, false, false, false, false, false};
+        List<DayOfWeek> daysOfWeek = getDateHelper().convertSelectionToWeekDays(selectedWeekdays);
+        List<KitchenType> kitchenTypes = new ArrayList<>();
+
+        Log.e("DEBUG", userLoginCredentials.getFcmToken());
+        Log.e("DEBUG", userLoginCredentials.getSnsToken());
+
+        PushNotification pushNotification = new PushNotification(userLoginCredentials.getFcmToken(), userLoginCredentials.getSnsToken(), pushTitle, userContent.getLatitude(), userContent.getLongitude(), userContent.getDistance(),
+                new User(userLoginCredentials.getUserName(), userLoginCredentials.getPassword(), new Captcha()), daysOfWeek, kitchenTypes);
+        requestHelper.requestPushRegistration(
+                RequestReason.SEARCH, userLoginCredentials.getUserName(),userLoginCredentials.getPassword(), pushNotification, connectionInformation, this);
+
     }
 
     @Override
@@ -1380,6 +1480,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    /**
+     * No popup at initial database update push.
+     */
     @Override
     public void onRestPushNotificationRegistrationFinished(Request<PushNotificationRegistrationStatus> requestResponse) {
 
@@ -1395,8 +1499,15 @@ public class MainActivity extends AppCompatActivity
 
             if (requestResult == RequestResult.SUCCESS &&
                     pushNotificationRegistrationStatus == PushNotificationRegistrationStatus.SUCCESS) {
-                // displays a message about the creation of the push notification
-                messageHelper.printToastMessage(getResources().getString(R.string.text_finished_push_registration));
+
+                //Do not show first push registration
+                if(showPushRegToastMsgs) {
+                    // displays a message about the creation of the push notification
+                    messageHelper.printToastMessage(getResources().getString(R.string.text_finished_push_registration));
+                }
+                //Now message display at device
+                showPushRegToastMsgs = true;
+
             } else if (requestResult == RequestResult.FAILED && requestResultDetail != null) {
                 // print a toast message if the request failed due to unavailability of a connection
                 switch (requestResultDetail) {
@@ -1543,7 +1654,6 @@ public class MainActivity extends AppCompatActivity
      * Send an intent to notify other fragments that the
      * restaurant request has returned.
      */
-
     @Override
     public void onFilterDialogPositiveClick() {
         // notify the fragments through an intent to update
@@ -1551,10 +1661,27 @@ public class MainActivity extends AppCompatActivity
         sendIntentOfferRequestReturned();
     }
 
+
+
+
+    /**
+     * Both tokens possible at userLoginCredentials.
+     * Register push to webserver database.
+     * Called from "new push message".
+     */
     @Override
     public void onRestaurantFragmentPushNotificationRegistration() {
-        if(userLoginCredentials.getGcmToken() != null &&
-                !userLoginCredentials.getGcmToken().equals("")) {
+
+        //Token
+        String fcmToken = userLoginCredentials.getFcmToken();
+        String snsToken = userLoginCredentials.getSnsToken();
+
+        //Log info
+        Log.e("Main.onRestaurantFragmentPushNotificationRegistration()", "Curr SNS Token " + snsToken);
+        Log.e("Main.onRestaurantFragmentPushNotificationRegistration()", "Curr FCM Token " + fcmToken);
+
+
+        if ((fcmToken !=  null && !fcmToken.equals(NOT_AVAILABLE)) || (snsToken != null && !snsToken.equals(NOT_AVAILABLE))) {
             // open push notification registration dialog
             PushRegistrationDialogFragment pushRegistrationDialogFragment = PushRegistrationDialogFragment.newInstance();
             pushRegistrationDialogFragment.show(getSupportFragmentManager(), "fragment_edit_name");
@@ -1564,6 +1691,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Performing push registration.
+     * Called from PushRegistrationDialogFragment.PushRegistrationDialogInteractionListener
+     */
     @Override
     public void onPushRegistrationDialogPositiveClick(boolean[] selectedWeekdays, String pushTitle) {
 
@@ -1577,13 +1708,14 @@ public class MainActivity extends AppCompatActivity
             kitchenTypes = getRestaurantContent().getFilter().getKitchenTypesSelected();
         }
 
-        // create push notification to register.
-        PushNotification pushNotification = new PushNotification(userLoginCredentials.getGcmToken(), pushTitle, userContent.getLatitude(), userContent.getLongitude(), userContent.getDistance(),
+
+        // 05.12.2016
+        // Generation of new push notification
+        PushNotification pushNotification = new PushNotification(userLoginCredentials.getFcmToken(), userLoginCredentials.getSnsToken(), pushTitle, userContent.getLatitude(), userContent.getLongitude(), userContent.getDistance(),
                 new User(userLoginCredentials.getUserName(), userLoginCredentials.getPassword(), new Captcha()), daysOfWeek, kitchenTypes);
 
         requestHelper.requestPushRegistration(
-                RequestReason.SEARCH,
-                userLoginCredentials.getUserName(),userLoginCredentials.getPassword(), pushNotification, connectionInformation, this);
+                RequestReason.SEARCH, userLoginCredentials.getUserName(),userLoginCredentials.getPassword(), pushNotification, connectionInformation, this);
 
     }
 

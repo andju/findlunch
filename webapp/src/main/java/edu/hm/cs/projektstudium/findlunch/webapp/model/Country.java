@@ -17,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
-
 /**
  * The Class Country.
  */

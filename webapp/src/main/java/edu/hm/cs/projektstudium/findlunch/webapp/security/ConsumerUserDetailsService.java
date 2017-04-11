@@ -12,7 +12,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
  * This class is responsible for getting users with type "Kunde" for authentication purposes (REST).
  */
 @Service("consumerUserDetailsService")
-public class ConsumerUserDetailsService implements UserDetailsService{
+public class ConsumerUserDetailsService implements UserDetailsService {
 
 	/** The user repository. */
 	@Autowired

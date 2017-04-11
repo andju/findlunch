@@ -1,7 +1,9 @@
 package edu.hm.cs.projektstudium.findlunch.androidapp.rest;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import edu.hm.cs.projektstudium.findlunch.androidapp.data.UserContent;
 import edu.hm.cs.projektstudium.findlunch.androidapp.geocoding.AddressComponent;
@@ -127,6 +129,7 @@ public class RequestHelper {
      * @param context           the context
      */
     public void requestPushRegistration(RequestReason requestReason, String userName, String password, PushNotification pushNotification, ConnectionInformation connectionInformation, OnHttpRequestFinishedCallback context) {
+
         // create a request
         Request request = new PushNotificationRegistrationRequest(requestReason, userName, password, pushNotification, connectionInformation, context);
         // create a request task

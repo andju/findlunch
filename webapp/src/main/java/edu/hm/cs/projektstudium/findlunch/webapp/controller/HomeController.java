@@ -12,6 +12,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 
 /**
  * The class is responsible for handling http calls related to the main page (home) of the website..
+ * Root / relinks to /home.
  */
 @Controller
 public class HomeController {

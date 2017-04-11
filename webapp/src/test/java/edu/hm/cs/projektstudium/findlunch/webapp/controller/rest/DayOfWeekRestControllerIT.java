@@ -23,6 +23,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
 
+
+/*
+Benutzt JUnit facilities
+@RunWith(SpringJUnit4ClassRunner.class)
+
+Rest klar...
+*/
+
+
 /**
  * The Class DayOfWeekRestControllerIT.
  */

@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:amazon="http://schemas.amazon.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.hm.cs.projektstudium.findlunch.androidapp">
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="15" />
+
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <permission android:name="edu.hm.cs.projektstudium.findlunch.androidapp.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="edu.hm.cs.projektstudium.findlunch.androidapp.permission.C2D_MESSAGE" />
 
+    <!-- This permission ensures that no other application can intercept your ADM messages.
+   "[YOUR PACKAGE NAME]" is your package name as defined in your <manifest> tag. -->
+    <permission
+        android:name="edu.hm.cs.projektstudium.findlunch.androidapp.permission.RECEIVE_ADM_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="edu.hm.cs.projektstudium.findlunch.androidapp.permission.RECEIVE_ADM_MESSAGE" />
+
+    <!-- This permission allows your app access to receive push notifications from ADM. -->
+    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -39,32 +51,58 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAvO9bl1Yi2hn7mkTSniv5lXaPRii1JxjI"/>
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="com.example.gcm" />
-            </intent-filter>
-        </receiver>
+
+
+
+
+        <!-- Google Firebase PushListener service -->
         <service
-            android:name="edu.hm.cs.projektstudium.findlunch.androidapp.push.PushListenerService"
-            android:exported="false" >
+            android:name="edu.hm.cs.projektstudium.findlunch.androidapp.push.FirebasePushListenerService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!-- Google Firebase ID service -->
         <service
-            android:name=".push.GcmRegistrationIntentService"
-            android:exported="false">
+            android:name="edu.hm.cs.projektstudium.findlunch.androidapp.push.FirebaseTokenReceiver">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
         </service>
+
+        <!-- Firebase Token request service -->
+        <service android:name="edu.hm.cs.projektstudium.findlunch.androidapp.push.FirebaseTokenRequest"></service>
+
+
+
+        <!--  ADMMessageHandlerBase implementation as a service -->
+        <service
+            android:name="edu.hm.cs.projektstudium.findlunch.androidapp.push.AmazonPushListenerService"
+            android:exported="false" />
 
         <!-- QR-Code Scanner in vertical position-->
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+
+        <amazon:enable-feature
+            android:name="com.amazon.device.messaging"
+            android:required="true"/>
+
+        <receiver
+            android:name="edu.hm.cs.projektstudium.findlunch.androidapp.push.AmazonPushListenerService$ADMReceiver"
+            android:permission="com.amazon.device.messaging.permission.SEND" >
+
+            <intent-filter>
+                <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
+                <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
+
+                <category android:name="edu.hm.cs.projektstudium.findlunch.androidapp" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 </manifest>

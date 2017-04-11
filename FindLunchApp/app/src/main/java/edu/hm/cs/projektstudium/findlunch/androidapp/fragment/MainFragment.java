@@ -19,7 +19,6 @@ import edu.hm.cs.projektstudium.findlunch.androidapp.validation.MainFragmentCont
 import edu.hm.cs.projektstudium.findlunch.androidapp.validation.ValidationError;
 import edu.hm.cs.projektstudium.findlunch.androidapp.view.DebouncedOnClickListener;
 
-
 /**
  * A {@link Fragment} that allows the
  * user to provide the location information
@@ -98,10 +97,10 @@ public class MainFragment extends Fragment {
             Spinner distanceSpinner = (Spinner) view.findViewById(R.id.spinner_distance_range);
 
             // get the user input
-            String street = streetTextView.getText().toString().trim();
-            String streetNumber = streetNumberTextView.getText().toString().trim();
-            String zip = zipTextView.getText().toString().trim();
-            String distance = distanceSpinner.getSelectedItem().toString().trim();
+           String street = streetTextView.getText().toString().trim();
+           String streetNumber = streetNumberTextView.getText().toString().trim();
+           String zip = zipTextView.getText().toString().trim();
+           String distance = distanceSpinner.getSelectedItem().toString().trim();
 
             // create a validator for the user input
             MainFragmentContentValidator validator = new MainFragmentContentValidator();

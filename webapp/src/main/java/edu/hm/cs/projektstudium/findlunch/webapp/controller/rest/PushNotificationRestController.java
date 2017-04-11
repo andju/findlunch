@@ -35,9 +35,21 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeReposit
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 
+
 /**
- * The Class Push_NotificationRestController.
- */
+*
+* The Class PushNotificationRestController.
+* 
+* Registers pushes at api call: /api/register_push
+* Shows pushes of current user at api call: /api/get_push
+* Unregisters pushes at api call: /api/unregister_push/
+* Receives initial push of current user at login.
+* Initial push identification specified on mobile application side.
+* Updating (changed) device identification / token of all pushes of current user in database.
+*  
+* Extended by Maxmilian Haag on 06.02.2017.
+*/
+
 @RestController
 public class PushNotificationRestController {
 
@@ -76,35 +88,65 @@ public class PushNotificationRestController {
 		User requestUser = (User) ((Authentication) principal).getPrincipal();
 		User authenticatedUser = userRepository.findOne(requestUser.getId());
 
-		List<DayOfWeek> daysOfWeekComplete = new ArrayList<DayOfWeek>();
-		
-		if (pushNotification.getDayOfWeeks() == null || 
-				pushNotification.getDayOfWeeks().size() <= 0) {
-			// No DayOfWeek specified for PushNotification
-			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The push notification has no DayOfWeek."));
-			return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
+		//Initial push for user with current device token
+		//Updating all pushes of this user with new tokens in database.
+		if(pushNotification.getTitle().equals("INIT_PUSH")) {
+			
+			List<PushNotification> allNotificationsOfCurrentUser = pushNotificationRepository.findByUser_id(authenticatedUser.getId());
+
+			for(int i = 0; i < allNotificationsOfCurrentUser.size(); i++) {
+				PushNotification pushToModify = allNotificationsOfCurrentUser.get(i);
+				//delete old
+				pushNotificationRepository.delete(pushToModify);
+			
+				//add with new token
+				pushToModify.setFcmToken(pushNotification.getFcmToken());
+				pushToModify.setSnsToken(pushNotification.getSnsToken());
+				
+				//token info log
+				LOGGER.info(pushNotification.getSnsToken());
+				LOGGER.info(pushNotification.getFcmToken());
+				
+				pushNotificationRepository.save(pushToModify);
+			
+			}
+			//update info log
+			LOGGER.info("User logged in, all tokens updated to current device");
+
+			
 		} else {
-			List<DayOfWeek> daysOfWeek = pushNotification.getDayOfWeeks();
-			for (DayOfWeek d : daysOfWeek) {
-				String dayOfWeekName = d.getName();
-				daysOfWeekComplete.add(dayOfWeekRepository.findByName(dayOfWeekName));
-				pushNotification.setDayOfWeeks(daysOfWeekComplete);
+			//Not initial push, operation after update.
+			List<DayOfWeek> daysOfWeekComplete = new ArrayList<DayOfWeek>();
+			
+			if (pushNotification.getDayOfWeeks() == null || 
+					pushNotification.getDayOfWeeks().size() <= 0) {
+				// No DayOfWeek specified for PushNotification
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The push notification has no DayOfWeek."));
+				return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
+			} else {
+				List<DayOfWeek> daysOfWeek = pushNotification.getDayOfWeeks();
+				for (DayOfWeek d : daysOfWeek) {
+					String dayOfWeekName = d.getName();
+					daysOfWeekComplete.add(dayOfWeekRepository.findByName(dayOfWeekName));
+					pushNotification.setDayOfWeeks(daysOfWeekComplete);
+				}
 			}
-		}
 
-		List<KitchenType> kitchenTypeComplete = new ArrayList<KitchenType>();
-		if (pushNotification.getKitchenTypes() != null && pushNotification.getKitchenTypes().size() > 0) {
-			List<KitchenType> kitchenTypesList = pushNotification.getKitchenTypes();
-			for (KitchenType k : kitchenTypesList) {
-				int kitchenTypeId = k.getId();
-				kitchenTypeComplete.add(kitchenTypeRepository.findById(kitchenTypeId));
+			List<KitchenType> kitchenTypeComplete = new ArrayList<KitchenType>();
+			if (pushNotification.getKitchenTypes() != null && pushNotification.getKitchenTypes().size() > 0) {
+				List<KitchenType> kitchenTypesList = pushNotification.getKitchenTypes();
+				for (KitchenType k : kitchenTypesList) {
+					int kitchenTypeId = k.getId();
+					kitchenTypeComplete.add(kitchenTypeRepository.findById(kitchenTypeId));
+				}
 			}
+			pushNotification.setKitchenTypes(kitchenTypeComplete);
+
+			pushNotification.setUser(authenticatedUser);
+
+			pushNotificationRepository.save(pushNotification);
 		}
-		pushNotification.setKitchenTypes(kitchenTypeComplete);
-
-		pushNotification.setUser(authenticatedUser);
-
-		pushNotificationRepository.save(pushNotification);
+		
 
 		return new ResponseEntity<Integer>(0, HttpStatus.OK);
 

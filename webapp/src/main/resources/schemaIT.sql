@@ -1,4 +1,5 @@
 -- MySQL Workbench Forward Engineering
+-- 07.12.2016, Maximilian Haag, Schema erweitert 
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -315,7 +316,8 @@ CREATE TABLE IF NOT EXISTS `findlunchit`.`push_notification` (
   `latitude` FLOAT NOT NULL,
   `longitude` FLOAT NOT NULL,
   `radius` INT(11) NOT NULL,
-  `gcm_token` TEXT NOT NULL,
+  `fcm_token` TEXT(4096),
+  `sns_token` TEXT(4096),
   PRIMARY KEY (`id`),
   INDEX `fk_push_notification_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_push_notification_user1`

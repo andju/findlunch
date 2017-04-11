@@ -35,23 +35,32 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/notice.txt'
     }
+    productFlavors {
+    }
     sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jni/'] } }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs', exclude: 'amazon-device-messaging-1.0.1.jar')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
     //noinspection GradleDependency
-    compile 'com.google.android.gms:play-services-maps:9.6.1'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
     compile 'org.springframework.android:spring-android-rest-template:2.0.0.M3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.1.3'
     compile 'com.google.maps.android:android-maps-utils:0.4.3'
-        //noinspection GradleDependency
-        compile 'com.google.android.gms:play-services-gcm:9.6.1'
+
+    //18.11.2016, Maximilian Haag
+    //Dependencies for Google Firebase Messaging
+    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.google.firebase:firebase-core:9.8.0'
+
+    //22.11.2016, Maximilian Haag
+    //Amazon Android SNS Messaging libraries (local integration, not available from repository yet)
+    provided files('libs/AmazonDeviceMessaging/amazon-device-messaging-1.0.1.jar')
 
     //Captcha
     compile 'android.lib.recaptcha:reCAPTCHA:+'
@@ -60,4 +69,6 @@ dependencies {
     compile 'com.journeyapps:zxing-android-embedded:3.4.0@aar'
 }
 
+//Must be at the end!
 apply plugin: 'com.google.gms.google-services'
+

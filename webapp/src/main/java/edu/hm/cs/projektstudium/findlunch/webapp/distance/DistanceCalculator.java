@@ -1,5 +1,6 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.distance;
 
+
 /**
  * The Class DistanceCalculator.
  */

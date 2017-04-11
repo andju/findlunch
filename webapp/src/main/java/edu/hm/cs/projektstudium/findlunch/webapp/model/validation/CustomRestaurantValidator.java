@@ -16,6 +16,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.OpeningTime;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 
+
 /**
  * The Class CustomRestaurantValidator.
  */

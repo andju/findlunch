@@ -1,3 +1,5 @@
+--Insert Users and Restaurant value for demo!!!--
+
 INSERT IGNORE INTO `findlunch`.`country` (`country_code`, `name`) VALUES ('DE', 'Deutschland');
 
 INSERT IGNORE INTO `findlunch`.`day_of_week` (`id`, `name`, `day_number`) VALUES (1, 'Montag', 2);
@@ -170,7 +172,6 @@ INSERT IGNORE INTO `findlunch`.`offer_has_day_of_week` (`offer_id`, `day_of_week
 (13, 5),
 (13, 6),
 (13, 7);
-
 
 -- time schedule
 INSERT IGNORE INTO `findlunch`.`time_schedule` (`id`, `restaurant_id`, `offer_start_time`, `offer_end_time`, `day_of_week_id`) VALUES

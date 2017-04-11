@@ -19,6 +19,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 
+
 /**
  * The Class CustomOfferValidator.
  */
@@ -29,12 +30,16 @@ public class CustomOfferValidator implements Validator {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 
+
+	
 	/* (non-Javadoc)
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return Offer.class.equals(clazz);
+		
+			return Offer.class.equals(clazz);
+	
 	}
 
 	/* (non-Javadoc)

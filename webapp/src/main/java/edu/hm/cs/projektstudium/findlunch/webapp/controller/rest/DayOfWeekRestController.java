@@ -2,6 +2,7 @@ package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
 import java.util.List;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -19,8 +20,8 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 
 /**
- * The Class DayOfWeekRestController. The class is responsible for handling rest
- * calls related to DayOfWeeks
+ * The Class DayOfWeekRestController. The class is responsible for handling rest calls related to DayOfWeeks.
+ * Rest controllers mapping api.
  */
 @RestController
 public class DayOfWeekRestController {
