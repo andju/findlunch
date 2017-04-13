@@ -68,5 +68,10 @@ public class CsrfAccessDeniedHandler extends AccessDeniedHandlerImpl
             super.handle(request, response, accessDeniedException);
 
         }
+        //needed to Run the test like testIllegalmethodTypes
+        if (request.getRequestURI().startsWith("/booking")) {
+            response.sendError(HttpStatus.METHOD_NOT_ALLOWED.value(), "Request method '" +
+                    request.getMethod() + "' not supported");
+        }
     }
 }

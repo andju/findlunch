@@ -182,7 +182,7 @@ public class SecurityConfig {
 							"/images/**")
 					.permitAll()
 					.antMatchers("/booking/**").hasAuthority("Betreiber")
-					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and().exceptionHandling().accessDeniedPage("/error").and()
+					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()
 					.logout();
 			// The CSRF-protection should be enabled.
 			//.and().csrf().disable();
