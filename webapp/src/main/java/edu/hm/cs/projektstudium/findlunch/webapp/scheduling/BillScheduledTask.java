@@ -1,5 +1,17 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.scheduling;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -8,17 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
+
+import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +118,7 @@ public class BillScheduledTask {
 	private final static String nL = System.getProperty("line.separator");
 	private final static String DATE_PATTERN = "dd.MM.yyyy";
 	private final static String BILLS_PATH = "bills\\"; //= "src\\main\\resources\\bills\\";
-	private final static String FL_IMG = "static\\images\\FL.png"; //= "src\\main\\resources\\static\\images\\FL.png";
+	private final static String FL_IMG = "static/images/FL.png"; //= "src\\main\\resources\\static\\images\\FL.png";
 	
 	/**
 	 * Create the bills.
@@ -410,9 +413,29 @@ public class BillScheduledTask {
 	 * @return Image
 	 */
 	private Image getImage(){
+		InputStream is = getClass().getClassLoader().getResourceAsStream(FL_IMG);
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(is);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] imageInByte = null;
+		try {
+			ImageIO.write(img, "png", baos );
+			baos.flush();
+			imageInByte = baos.toByteArray();
+			baos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		
 		Image image = null;
 		try {
-			image = Image.getInstance(getPath() + FL_IMG);
+			image = Image.getInstance(imageInByte); //getPath() + FL_IMG
 		} catch (BadElementException e1) {
 			e1.printStackTrace();
 		} catch (MalformedURLException e1) {
@@ -548,27 +571,9 @@ public class BillScheduledTask {
 	 * @return ResourceBundle
 	 */
 	private ResourceBundle getResurceBundel(){
-		File file = new File(getPath() + "\\messages");
-		URL[] urls = null;
-		try {
-			urls = new URL[]{file.toURI().toURL()};
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		
-		ClassLoader loader = new URLClassLoader(urls);
-
 		Locale currentLocale;
         currentLocale = new Locale("de", "DE");
-        ResourceBundle messages = ResourceBundle.getBundle("bill", currentLocale, loader);
+        ResourceBundle messages = ResourceBundle.getBundle("messages.bill", currentLocale);
 		return messages;
-	}
-	
-	/**
-	 * Returns root path of the project for the resources.
-	 * @return path as String
-	 */
-	private String getPath() {
-		return getClass().getClassLoader().getResource("").getPath();
 	}
 }
