@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "459881169137",
+    "firebase_url": "https://findlunch-prototype.firebaseio.com",
+    "project_id": "findlunch-prototype",
+    "storage_bucket": "findlunch-prototype.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459881169137:android:5abf5b29524191eb",
+        "android_client_info": {
+          "package_name": "edu.hm.findlunch_prototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459881169137-e30tml7lc3rf85m0gd9gmhvlfvs02d4g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIKgtq_mCnahU3bar6mc37_HecgzulLCs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
