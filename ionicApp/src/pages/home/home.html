@@ -13,4 +13,11 @@
   <button ion-button full (click)="sendToWeb();">Send Notification to Web-App</button>
 
   <button ion-button full color="secondary" (click)="sendToAndroid();">Send Notification to Android-App</button>
+
+  <div>
+    <span>Position:</span><br>
+    <span>Lat: {{pos?.latitude}}</span><br>
+    <span>Long: {{pos?.longitude}}</span><br>
+    <span>Accuracy: {{pos?.accuracy}}</span>
+  </div>
 </ion-content>
