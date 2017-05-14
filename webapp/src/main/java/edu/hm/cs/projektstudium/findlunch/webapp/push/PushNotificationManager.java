@@ -8,17 +8,20 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRepository;
 /**
  * 
- * Class PushNotificationScheduleBase. 
- * Called from scheduled class "PushNotificationScheduledTask".
+ * Class PushNotificationManager.
+ * 
+ * Called from scheduled class "PushNotificationScheduledTask" for the daily notifications.
  * 
  * Handles live-operation Amazon SNS and Google FCM push-notification messaging.
  * Requires provider credentials for live-operation:
@@ -30,13 +33,18 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRe
  * Created by Maxmilian Haag on 15.01.2017.
  * @author Maximilian Haag
  *
+ * Extended by Niklas Klotz on 21.04.2017
+ * 
+ * Changes:
+ * - Renamed from PushNotificationScheduleBase
+ *
  */
-public class PushNotificationScheduleBase implements PushMessagingInterface {
+public class PushNotificationManager implements PushMessagingInterface {
 	
 	/** 
 	 * The logger. 
 	 */
-	private final Logger LOGGER = LoggerFactory.getLogger(PushNotificationScheduleBase.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(PushNotificationManager.class);
 	
 	/**
 	 * Google FCM / Amazon AWS identification credentials read from /src/main/resources/LiveOpCredentials.conf 
@@ -57,8 +65,11 @@ public class PushNotificationScheduleBase implements PushMessagingInterface {
 	@Autowired
 	protected PushNotificationRepository pushRepo;
 
-	/** The PushNotification. */
-	protected PushNotification p;
+	/** The DailyPushNotification. */
+	protected DailyPushNotificationData p;
+	
+	/** The pushNotification to be send */
+	protected PushNotification push;
 
 	/** The restaurants for push count. */
 	protected Integer restaurantsForPushCount;
@@ -75,7 +86,7 @@ public class PushNotificationScheduleBase implements PushMessagingInterface {
 	/**
 	 * Initialize base credentials only once for inherited runnables.
 	 */
-	public PushNotificationScheduleBase() {
+	public PushNotificationManager() {
 		if(FCM_SENDER_ID == null || AWS_CLIENT_ID == null || AWS_CLIENT_SECRET == null ||  AWS_APPLICATION_NAME == null || 
 				AWS_ENDPOINT_USERDATA == null || AWS_ENDPOINT_USERDATA == null) {
 			checkLiveOpCredentialsFile();
@@ -110,14 +121,29 @@ public class PushNotificationScheduleBase implements PushMessagingInterface {
 
 
 	/**
-	 * Execute FCM push, called by scheduler class "PushNotificationScheduledTask".
+	 * Execute FCM push for daily notification, called by scheduler class "PushNotificationScheduledTask".
 	 */
 	/* (non-Javadoc)
 	 * @see edu.hm.cs.projektstudium.findlunch.webapp.push.PushMessagingInterface#sendFcmNotification(edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification, java.lang.Integer, java.util.List)
 	 */
 	@Override
-	public void sendFcmNotification(PushNotification p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
-		executor.execute(new SendFcmNotification(p, restaurantsForPushCount, pushKitchenTypeIds));
+	public void sendFcmDailyNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
+		//executor.execute(new SendFcmNotification(p, restaurantsForPushCount, pushKitchenTypeIds));
+	}
+	
+	/**
+	 * Execute FCM pushNotification.
+	 * @author Niklas Klotz.
+	 * @throws InterruptedException 
+	 */
+	@Override
+	public void sendFcmNotification(PushNotification p)  {
+			
+			executor.execute(new SendFcmNotification(p));
+		
+		
+		
+		
 	}
 
 	/**
@@ -127,7 +153,7 @@ public class PushNotificationScheduleBase implements PushMessagingInterface {
 	 * @see edu.hm.cs.projektstudium.findlunch.webapp.push.PushMessagingInterface#sendAdmNotification(edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification, java.lang.Integer, java.util.List)
 	 */
 	@Override
-	public void sendAdmNotification(PushNotification p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
+	public void sendAdmNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
 		executor.execute(new SendAdmNotification(p, restaurantsForPushCount, pushKitchenTypeIds));		
 	}
 

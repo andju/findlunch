@@ -6,7 +6,7 @@
 
 	<div th:replace="fragments/navigation :: navbar"></div>
 
-	<div style="margin-left: 25px; margin-right: 25px;">
+	<div style="margin-left: 25px; margin-right: 25px; overflow: auto;">
 		<h1 th:text="#{offer.label}">offer</h1>
 
 		<div th:if="${param.invalid_id}" class="alert alert-danger"
@@ -19,10 +19,12 @@
 		<br /> <a th:href="@{/offer/add}"><button class="btn btn-success">
 				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 			</button></a> <br />
-
-		<div class="table-responsive">
-			<table class="table table-hover">
-					<tr>
+					
+		<div th:each="courseType : ${courseTypes}" class="col-md-8" style="width: 100%; overflow: auto">
+		<h3 th:text="${courseType.name}"></h3>
+		<table class="table table-hover" th:title="${courseType.name}">
+			
+				<tr>
 						<th><label class="control-label" for="title"
 							th:text="#{offer.label.title}">label</label></th>
 						<th><label class="control-label" for="title"
@@ -54,8 +56,10 @@
 						<th><label class="control-label" for="title"
 							th:text="#{label.action}">label</label></th>
 					</tr>
-
-				<div th:each="offer, stat: *{offers}">
+			
+			
+			
+			<div th:each="offer, stat: *{offers}" th:if="${offer.courseTypes.getId() == courseType.getId()} and ${offer.courseTypes.getId() != null}">
 					<tr
 						th:if="${#dates.format(#dates.createNow(), 'yyyyMMdd')} ge ${#dates.format(offer.startDate, 'yyyyMMdd')} and ${#dates.format(#dates.createNow(), 'yyyyMMdd')} le ${#dates.format(offer.endDate, 'yyyyMMdd')}">
 						<td th:text="*{offer.title}"></td>
@@ -84,7 +88,7 @@
 					<tr
 						th:if="${#dates.format(#dates.createNow(), 'yyyyMMdd')} lt ${#dates.format(offer.startDate, 'yyyyMMdd')} or ${#dates.format(#dates.createNow(), 'yyyyMMdd')} gt ${#dates.format(offer.endDate, 'yyyyMMdd')}">
 						<td style="color: #C0C0C0;" th:text="*{offer.title}"></td>
-						<td style="color: #C0C0C0;" th:text="*{offer.description}"></td>
+						<td style="color: #C0C0C0;" th:text="*{offer.description}"></td>						
 						<td style="color: #C0C0C0;"><span
 							th:text="${#numbers.formatDecimal(offer.price, 1, 'POINT', 2, 'COMMA')}"
 							style="color: #C0C0C0;">10.00</span> &euro;</td>
@@ -110,9 +114,16 @@
 							</button></td>
 					</tr>
 				</div>
-			</table>
-		</div>
+			
+		</table>
 	</div>
+
+	</div>
+	
+		
+		
+		
+		
 
 
 	<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog"

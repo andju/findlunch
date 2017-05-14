@@ -30,7 +30,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.App;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.KitchenType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
@@ -150,7 +150,7 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setUser(user);
 		pushRepository.save(p);
 		
@@ -184,9 +184,9 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setUser(user);
-		PushNotification savedPush = pushRepository.save(p);
+		DailyPushNotificationData savedPush = pushRepository.save(p);
 
 		
 		JsonPath response = RestAssured.given().header("Authorization", "Basic " + encodedString).when().put(UNREGISTER_PUSH_API + savedPush.getId()).then().statusCode(405).extract().jsonPath();
@@ -218,9 +218,9 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setUser(user);
-		PushNotification savedPush = pushRepository.save(p);
+		DailyPushNotificationData savedPush = pushRepository.save(p);
 
 		
 		JsonPath response = RestAssured.given().header("Authorization", "Basic " + encodedString).when().put(GET_PUSH_API + savedPush.getId()).then().statusCode(405).extract().jsonPath();
@@ -246,7 +246,7 @@ public class PushNotificationRestControllerIT {
 	@Test
 	public void testMissingAuthorizationForRegister()
 	{
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		
 		JsonPath response = RestAssured
 		.given()
@@ -323,7 +323,7 @@ public class PushNotificationRestControllerIT {
 	 */
 	@Test
 	public void testWrongUserTypeForRegister() {	
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		
 		User user = getUserWithUserTypeAnbieter();
 		// Since we need the password within the header as cleartext, it is extracted from the passwordconfirm field
@@ -449,7 +449,7 @@ public class PushNotificationRestControllerIT {
 	 */
 	@Test
 	public void testIllegalPushNotificationIdForUnregister() {	
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		
 		User user = getUserWithUserTypeKunde();
 		userRepository.save(user);
@@ -478,7 +478,7 @@ public class PushNotificationRestControllerIT {
 	@Test
 	public void testInvalidPushNotificationIdForUnregister() {	
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		
 		RestAssured
 		.registerParser("text/plain", Parser.TEXT);
@@ -490,7 +490,7 @@ public class PushNotificationRestControllerIT {
 		String encodedString = new String(base64Encoded);
 		
 		p.setUser(user);
-		PushNotification savedPush = pushRepository.save(p);
+		DailyPushNotificationData savedPush = pushRepository.save(p);
 		
 		Response response = RestAssured.given()
 		.header("Authorization", "Basic " + encodedString)
@@ -520,7 +520,7 @@ public class PushNotificationRestControllerIT {
 		User differentUserSaved = userRepository.save(different);
 		
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		
 		RestAssured
 		.registerParser("text/plain", Parser.TEXT);
@@ -532,7 +532,7 @@ public class PushNotificationRestControllerIT {
 		String encodedString = new String(base64Encoded);
 		
 		p.setUser(differentUserSaved);
-		PushNotification savedPush = pushRepository.save(p);
+		DailyPushNotificationData savedPush = pushRepository.save(p);
 		
 		Response response = RestAssured.given()
 		.header("Authorization", "Basic " + encodedString)
@@ -563,7 +563,7 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setDayOfWeeks(null);
 		
 		Response response = RestAssured.given()
@@ -597,7 +597,7 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setDayOfWeeks(new ArrayList<DayOfWeek>());
 		
 		Response response = RestAssured.given()
@@ -645,7 +645,7 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		
 		Response response = RestAssured.given()
 				.contentType("application/json")
@@ -662,7 +662,7 @@ public class PushNotificationRestControllerIT {
 		Assert.assertEquals("0", resultCode);
 		
 		//check if push notification was saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(1, savedPushs.size());
 		Assert.assertEquals(savedUser.getId(), savedPushs.get(0).getUser().getId());
@@ -702,7 +702,7 @@ public class PushNotificationRestControllerIT {
 		
 		for(int i = 1; i <= 10; i++)
 		{
-			PushNotification p = getPush(i);
+			DailyPushNotificationData p = getPush(i);
 			
 			Response response = RestAssured.given()
 					.contentType("application/json")
@@ -719,7 +719,7 @@ public class PushNotificationRestControllerIT {
 			Assert.assertEquals("0", resultCode);
 		}
 		//check if push notification was saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(10, savedPushs.size());
 		
@@ -764,7 +764,7 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setKitchenTypes(null);
 		
 		Response response = RestAssured.given()
@@ -782,7 +782,7 @@ public class PushNotificationRestControllerIT {
 		Assert.assertEquals("0", resultCode);
 		
 		//check if push notification was saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(1, savedPushs.size());
 		Assert.assertEquals(savedUser.getId(), savedPushs.get(0).getUser().getId());
@@ -819,7 +819,7 @@ public class PushNotificationRestControllerIT {
 		for(int i = 1; i <= 10; i++)
 		{
 			System.out.println("i = " + i);
-			PushNotification p = getPush(i);
+			DailyPushNotificationData p = getPush(i);
 			
 			if(i % 2 == 0)
 				p.setKitchenTypes(null);
@@ -839,7 +839,7 @@ public class PushNotificationRestControllerIT {
 			Assert.assertEquals("0", resultCode);
 		}
 		//check if push notification was saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(10, savedPushs.size());
 		
@@ -893,7 +893,7 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPushSingleDay(1);
+		DailyPushNotificationData p = getPushSingleDay(1);
 		
 		Response response = RestAssured.given()
 				.contentType("application/json")
@@ -910,7 +910,7 @@ public class PushNotificationRestControllerIT {
 		Assert.assertEquals("0", resultCode);
 		
 		//check if push notification was saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(1, savedPushs.size());
 		Assert.assertEquals(savedUser.getId(), savedPushs.get(0).getUser().getId());
@@ -937,7 +937,7 @@ public class PushNotificationRestControllerIT {
 		
 		for(int i = 1; i <= 10; i++)
 		{
-			PushNotification p = getPushSingleDay(i);
+			DailyPushNotificationData p = getPushSingleDay(i);
 			
 			Response response = RestAssured.given()
 					.contentType("application/json")
@@ -955,7 +955,7 @@ public class PushNotificationRestControllerIT {
 			
 		}
 		//check if push notification was saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(10, savedPushs.size());
 		
@@ -989,9 +989,9 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setUser(savedUser);
-		PushNotification savedPush = pushRepository.save(p);
+		DailyPushNotificationData savedPush = pushRepository.save(p);
 		
 		Response response_unregister = RestAssured.given()
 				.header("Authorization", "Basic " + encodedString)
@@ -1007,7 +1007,7 @@ public class PushNotificationRestControllerIT {
 		Assert.assertEquals("0", resultCode);
 		
 		//check if push notification was deleted for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 
 		Assert.assertEquals(0, savedPushs.size());
 	}
@@ -1030,13 +1030,13 @@ public class PushNotificationRestControllerIT {
 		
 		for(int i = 1; i <= 10; i++)
 		{
-			PushNotification p = getPush(i);
+			DailyPushNotificationData p = getPush(i);
 			p.setUser(savedUser);
 			pushRepository.save(p);
 		}
 		
 		//check if all push notification were saved for user
-		List<PushNotification> savedPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> savedPushs = pushRepository.findByUser_id(savedUser.getId());
 		Assert.assertEquals(10, savedPushs.size());
 		
 		for(int i = 1; i <= 10; i++)
@@ -1055,12 +1055,12 @@ public class PushNotificationRestControllerIT {
 			Assert.assertEquals("0", resultCode);
 		
 			//check if push notification was deleted for user
-			List<PushNotification> currentPushs = pushRepository.findByUser_id(savedUser.getId());
+			List<DailyPushNotificationData> currentPushs = pushRepository.findByUser_id(savedUser.getId());
 			Assert.assertEquals(10 - i, currentPushs.size());
 		}
 		
 		//check if all push notification were deleted for user
-		List<PushNotification> remainingPushs = pushRepository.findByUser_id(savedUser.getId());
+		List<DailyPushNotificationData> remainingPushs = pushRepository.findByUser_id(savedUser.getId());
 		Assert.assertEquals(0, remainingPushs.size());
 	}
 
@@ -1077,12 +1077,12 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		PushNotification p = getPush(1);
+		DailyPushNotificationData p = getPush(1);
 		p.setUser(savedUser);
-		PushNotification savedPush = pushRepository.save(p);
+		DailyPushNotificationData savedPush = pushRepository.save(p);
 		
 		
-		List<PushNotification> expectedResult = new ArrayList<PushNotification>();
+		List<DailyPushNotificationData> expectedResult = new ArrayList<DailyPushNotificationData>();
 		expectedResult.add(savedPush);
 		
 		Response response = RestAssured
@@ -1096,7 +1096,7 @@ public class PushNotificationRestControllerIT {
 			.body("list.size()", Matchers.is(1))
 			.extract().response(); 
 		
-		PushNotification[] actualResult = response.as(PushNotification[].class);
+		DailyPushNotificationData[] actualResult = response.as(DailyPushNotificationData[].class);
 		
 		// Check if correct results are present (Only fields that are sent via the rest interface are checked)
 		 for(int i=0;i< expectedResult.size();i++) {
@@ -1131,12 +1131,12 @@ public class PushNotificationRestControllerIT {
 		byte[] base64Encoded = Base64.getEncoder().encode(authString.getBytes());
 		String encodedString = new String(base64Encoded);
 		
-		List<PushNotification> expectedResult = new ArrayList<PushNotification>();
+		List<DailyPushNotificationData> expectedResult = new ArrayList<DailyPushNotificationData>();
 		for(int i = 1; i <= 10; i++)
 		{
-			PushNotification p = getPush(i);
+			DailyPushNotificationData p = getPush(i);
 			p.setUser(savedUser);
-			PushNotification savedPush = pushRepository.save(p);
+			DailyPushNotificationData savedPush = pushRepository.save(p);
 			expectedResult.add(savedPush);
 		}
 		
@@ -1151,7 +1151,7 @@ public class PushNotificationRestControllerIT {
 			.body("list.size()", Matchers.is(10))
 			.extract().response(); 
 		
-		PushNotification[] actualResult = response.as(PushNotification[].class);
+		DailyPushNotificationData[] actualResult = response.as(DailyPushNotificationData[].class);
 		
 		// Check if correct results are present (Only fields that are sent via the rest interface are checked)
 		 for(int i=0;i< expectedResult.size();i++) {
@@ -1179,9 +1179,9 @@ public class PushNotificationRestControllerIT {
 	 * @param i the i
 	 * @return the push
 	 */
-	private PushNotification getPush(int i)
+	private DailyPushNotificationData getPush(int i)
 	{
-		PushNotification p = new PushNotification();
+		DailyPushNotificationData p = new DailyPushNotificationData();
 		//dummy id
 		//p.setId(i);
 		p.setDayOfWeeks(dowRepository.findAll());
@@ -1189,7 +1189,7 @@ public class PushNotificationRestControllerIT {
 		{
 			//initialize with default values
 			dow.setOffers(new ArrayList<Offer>());
-			dow.setPushNotifications(new ArrayList<PushNotification>());
+			dow.setPushNotifications(new ArrayList<DailyPushNotificationData>());
 			dow.setTimeSchedules(new ArrayList<TimeSchedule>());
 		}
 		
@@ -1197,7 +1197,7 @@ public class PushNotificationRestControllerIT {
 		for(KitchenType kt : p.getKitchenTypes())
 		{
 			//initialize with default values
-			kt.setPushNotifications(new ArrayList<PushNotification>());
+			kt.setPushNotifications(new ArrayList<DailyPushNotificationData>());
 		}
 		p.setRadius(1000 * i);
 		p.setLatitude(10.2f + i);
@@ -1207,9 +1207,9 @@ public class PushNotificationRestControllerIT {
 		return p;
 	}
 	
-	private PushNotification getPushSingleDay(int i)
+	private DailyPushNotificationData getPushSingleDay(int i)
 	{
-		PushNotification p = new PushNotification();
+		DailyPushNotificationData p = new DailyPushNotificationData();
 		//dummy id
 		//p.setId(i);
 		
@@ -1225,7 +1225,7 @@ public class PushNotificationRestControllerIT {
 		{
 			//initialize with default values
 			dow.setOffers(new ArrayList<Offer>());
-			dow.setPushNotifications(new ArrayList<PushNotification>());
+			dow.setPushNotifications(new ArrayList<DailyPushNotificationData>());
 			dow.setTimeSchedules(new ArrayList<TimeSchedule>());
 		}
 		
@@ -1233,7 +1233,7 @@ public class PushNotificationRestControllerIT {
 		for(KitchenType kt : p.getKitchenTypes())
 		{
 			//initialize with default values
-			kt.setPushNotifications(new ArrayList<PushNotification>());
+			kt.setPushNotifications(new ArrayList<DailyPushNotificationData>());
 		}
 		p.setRadius(1000 * i);
 		p.setLatitude(10.2f + i);

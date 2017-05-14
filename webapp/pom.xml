@@ -122,6 +122,11 @@
 			<artifactId>aws-java-sdk</artifactId>
 			<version>1.11.65</version>
 		</dependency>
+		<dependency>
+			<groupId>com.firebase</groupId>
+			<artifactId>firebase-client</artifactId>
+			<version>1.0.11</version>
+		</dependency>
 	</dependencies>
 
 	<profiles>

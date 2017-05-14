@@ -2,6 +2,7 @@ package edu.hm.cs.projektstudium.findlunch.webapp.push;
 
 import java.util.List;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 
 /**
@@ -13,6 +14,9 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
  *  
  * Created by Maxmilian Haag on 12.12.2016.
  * @author Maxmilian Haag
+ * 
+ * Extended by Niklas Klotz 21.04.2017.
+ * @author Niklas Klotz
  *
  */
 public interface PushMessagingInterface {
@@ -24,13 +28,24 @@ public interface PushMessagingInterface {
 	 * @param restaurantsForPushCount Restaurant id for push.
 	 * @param pushKitchenTypeIds Kitchen types list for push.
 	 */
-	public void sendAdmNotification(PushNotification p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds);
+	public void sendAdmNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds);
 	
 	/**
+	 * Sends the daily Notifications.
+	 * 
+	 * Edited by Niklas Klotz: Renamed from sendFcmNotification.
+	 * 
 	 * @param p The push-notification to be sent.
 	 * @param restaurantsForPushCount Restaurant id for push.
 	 * @param pushKitchenTypeIds Kitchen types list for push.
 	 */
-	public void sendFcmNotification(PushNotification p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds);
+	public void sendFcmDailyNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds);
 
+	/**
+	 * Sends FCM pushNotification to a customer.
+	 * @author Niklas Klotz.
+	 * @param p The push-notification to be sent.
+	 * @throws InterruptedException 
+	 */
+	public void sendFcmNotification(PushNotification p);
 }

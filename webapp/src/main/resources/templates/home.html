@@ -8,6 +8,42 @@
 	<div style="margin-left: 25px; margin-right: 25px;">
 		<h1 th:text="#{label.findlunch}">FindLunch</h1>
 
+	
+
+	<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+	<script>
+
+
+	
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyA77wRwTsl8cPvxzXY5LrK_8-atYo05N9o",
+    authDomain: "findlunch-1309.firebaseapp.com",
+    databaseURL: "https://findlunch-1309.firebaseio.com",
+    projectId: "findlunch-1309",
+    storageBucket: "findlunch-1309.appspot.com",
+    messagingSenderId: "343682752512"
+  };
+  firebase.initializeApp(config);
+
+  const messaging = firebase.messaging();
+
+  messaging.requestPermission()
+  .then(function() {
+    console.log('Notification permission granted.');
+    
+    return messaging.getToken();
+  })
+  .then(function(token) {
+	  console.log(token);
+	  })
+  
+  .catch(function(err) {
+    console.log('Unable to get permission to notify.', err);
+  });
+  
+</script>
+
 		<div th:if="${param.success}" class="alert alert-success" role="alert"
 			th:text="#{success.restaurant.saved}">success.restaurant.saved</div>
 
@@ -68,6 +104,6 @@
 		</div>
 
 	</div>
-	<div th:replace="fragments/footer :: footer"></div>
+	<div th:replace="fragments/footer :: footer"></div>	
 </body>
 </html>

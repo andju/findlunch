@@ -146,7 +146,7 @@ public class RegisterController {
 
 		User userDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
+		
 		// generate session if one doesn't exist
 		request.getSession();
 

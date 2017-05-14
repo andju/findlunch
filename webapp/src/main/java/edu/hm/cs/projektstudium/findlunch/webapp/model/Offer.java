@@ -140,6 +140,14 @@ public class Offer {
 	//bi-directional many-to-one association to Restaurant
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Restaurant restaurant;
+	
+	/** NIKLAS KLOTZ */ 
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name = "course_id")
+	@JsonView(OfferView.OfferRest.class)
+	private CourseTypes courseType;
+
+
 
 	/** The offer photos. */
 	//bi-directional many-to-one association to OfferPhoto
@@ -374,6 +382,14 @@ public class Offer {
 	 */
 	public void setNeededPoints(int neededPoints) {
 		this.neededPoints = neededPoints;
+	}
+	
+	public CourseTypes getCourseTypes() {
+		return courseType;
+	}
+
+	public void setCourseTypes(CourseTypes courseType) {
+		this.courseType = courseType;
 	}
 
 }

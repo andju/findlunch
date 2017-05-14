@@ -1,148 +1,46 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
-import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonView;
-
-import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.PushNotificationView;
-
+import org.json.simple.JSONObject;
 
 /**
- * The Class PushNotification.
- * 
- * Database entries extended to sns_token and fcm_token for better overview and extension possibilities.
- * Extended by Maximilian Haag on 06.12.2016.
- * 
+ * The PushNotification Object to be send to the User.
+ * @author Niklas Klotz
+ *
  */
-@Entity
-@Table(name="push_notification")
-public class PushNotification implements Serializable {
-	
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+public class PushNotification {
 
-	/** The id. */
-	@Id
-	@GeneratedValue 
-	@JsonView(PushNotificationView.PushNotificationRest.class)
+	/** The Data of the Object */
+	private JSONObject data = new JSONObject();
+	
+	/** The ID */
 	private int id;
 	
-	/** The title. */
-	@JsonView(PushNotificationView.PushNotificationRest.class)
-	private String title;
- 
-	/** The fcm token. */
-	@Lob
-	@Column(name="fcm_token")
+	/** The FCM Token of the receiver */
 	private String fcmToken;
-	
-	/** The sns token. */
-	@Lob
-	@Column(name="sns_token")
-	private String snsToken;
 
-	/** The latitude. */
-	private float latitude;
-
-	/** The longitude. */
-	private float longitude;
-
-
-	/** The radius. */
-	private int radius;
-
-	/** The user. */
-	//bi-directional many-to-one association to User
-	@ManyToOne
-	private User user;
-	
-	/** The day of weeks. */
-	//bi-directional many-to-many association to DayOfWeek
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-		name="push_notification_has_day_of_week"
-		, joinColumns={
-			@JoinColumn(name="push_notification_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="day_of_week_id")
-			}
-		)
-	@JsonView(PushNotificationView.PushNotificationRest.class)
-	private List<DayOfWeek> dayOfWeeks;
-
-	/** The kitchen types. */
-	//bi-directional many-to-many association to KitchenType
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-		name="push_notification_has_kitchen_type"
-		, joinColumns={
-			@JoinColumn(name="push_notification_id")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="kitchen_type_id")
-			}
-		)
-	@JsonView(PushNotificationView.PushNotificationRest.class)
-	private List<KitchenType> kitchenTypes;
-
-	/**
-	 * Instantiates a new push notification.
-	 */
-	public PushNotification() {
-	}
-
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public int getId() {
-		return this.id;
-	}
-
-	/**
-	 * Sets the id.
-	 *
-	 * @param id the new id
-	 */
-	public void setId(int id) {
-		this.id = id;
+	/** Instantiates a new push notification. */
+	public PushNotification(){
 	}
 	
-
 	/**
-	 * Gets the title.
-	 *
-	 * @return the title
+	 * Puts data to the data object of the PushNotification.
+	 * @param key
+	 * @param value
 	 */
-	public String getTitle() {
-		return this.title;
+	public void putData(String key, Object value){
+		data.put(key, String.valueOf(value));
 	}
-
-
+	
 	/**
-	 * Sets the title.
-	 *
-	 * @param title the new title
+	 * Returns the data which is stored in the object.
+	 * @return
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public JSONObject getData(){
+		return data;
 	}
-
+	
 	/**
 	 * Gets the fcm token.
 	 *
@@ -161,127 +59,58 @@ public class PushNotification implements Serializable {
 		this.fcmToken = fcmToken;
 	}
 	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return this.id;
+	}
+
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	
 	/**
-	 * @return
+	 * Generate data from a regestration for the daily update.
+	 * @param p the registration for the daily update.
 	 */
-	public String getSnsToken() {
-		return snsToken;
-	}
-
-	/**
-	 * @param snsToken
-	 */
-	public void setSnsToken(String snsToken) {
-		this.snsToken = snsToken;
-	}
-
-	/**
-	 * Gets the latitude.
-	 *
-	 * @return the latitude
-	 */
-	public float getLatitude() {
-		return this.latitude;
-	}
-
-	/**
-	 * Sets the latitude.
-	 *
-	 * @param latitude the new latitude
-	 */
-	public void setLatitude(float latitude) {
-		this.latitude = latitude;
-	}
-
-	/**
-	 * Gets the longitude.
-	 *
-	 * @return the longitude
-	 */
-	public float getLongitude() {
-		return this.longitude;
-	}
-
-	/**
-	 * Sets the longitude.
-	 *
-	 * @param longitude the new longitude
-	 */
-	public void setLongitude(float longitude) {
-		this.longitude = longitude;
-	}
-
-	/**
-	 * Gets the radius.
-	 *
-	 * @return the radius
-	 */
-	public int getRadius() {
-		return this.radius;
-	}
-
-	/**
-	 * Sets the radius.
-	 *
-	 * @param radius the new radius
-	 */
-	public void setRadius(int radius) {
-		this.radius = radius;
-	}
-
-	/**
-	 * Gets the user.
-	 *
-	 * @return the user
-	 */
-	public User getUser() {
-		return this.user;
-	}
-
-	/**
-	 * Sets the user.
-	 *
-	 * @param user the new user
-	 */
-	public void setUser(User user) {
-		this.user = user;
+	public void generateFromDaily(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds){
+		putData("title", p.getTitle());
+		putData("numberOfRestaurants", restaurantsForPushCount.toString());
+		putData("longitude", String.valueOf(p.getLongitude()));
+		putData("latitude", String.valueOf(p.getLatitude()));
+		putData("radius", String.valueOf(p.getRadius()));
+		putData("kitchenTypeIds", pushKitchenTypeIds.toString());
+		putData("pushId", String.valueOf(p.getId()));
+		
+		setFcmToken(p.getFcmToken());
+		setId(p.getId());
 	}
 	
-	/**
-	 * Gets the day of weeks.
-	 *
-	 * @return the day of weeks
-	 */
-	public List<DayOfWeek> getDayOfWeeks() {
-		return this.dayOfWeeks;
+	public void generateOrderReceive(Reservation reservation, User user){
+		putData("titel","Deine Bestellung: "+reservation.getId()+" wurde erfolgreich an das Restaurant: " +reservation.getRestaurant()+" übermittelt.");
+		putData("reservation", String.valueOf(reservation.getId()));
+		putData("pushId", String.valueOf(reservation.getId()));
+		
+		//setFcmToken(user.getFcmId());
+		setId(reservation.getId());
 	}
-
-	/**
-	 * Sets the day of weeks.
-	 *
-	 * @param dayOfWeeks the new day of weeks
-	 */
-	public void setDayOfWeeks(List<DayOfWeek> dayOfWeeks) {
-		this.dayOfWeeks = dayOfWeeks;
+	
+	public void generateWeb(){
+		putData("data", "Hier ist eine Push Nachticht!");
+		setId(1);
 	}
-
-	/**
-	 * Gets the kitchen types.
-	 *
-	 * @return the kitchen types
-	 */
-	public List<KitchenType> getKitchenTypes() {
-		return this.kitchenTypes;
+	
+	public void generateReservationConfirm(Reservation reservation){
+		putData("titel","Deine Bestellung: "+reservation.getId());
+		putData("data", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant()+" bestätigt");
 	}
-
-	/**
-	 * Sets the kitchen types.
-	 *
-	 * @param kitchenTypes the new kitchen types
-	 */
-	public void setKitchenTypes(List<KitchenType> kitchenTypes) {
-		this.kitchenTypes = kitchenTypes;
-	}
-
 }

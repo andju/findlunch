@@ -49,6 +49,7 @@ public class CustomOfferValidator implements Validator {
 	public void validate(Object objectToValidate, Errors bindingResult) {
 
 		Offer offer = (Offer) objectToValidate;
+		System.out.println("Valid: "+offer.getCourseTypes());
 		checkDescription(offer.getDescription(), bindingResult);
 		checkTitle(offer.getTitle(), bindingResult);
 

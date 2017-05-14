@@ -40,7 +40,7 @@ public class CsrfAccessDeniedHandler extends AccessDeniedHandlerImpl
 
             final CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
             final String csrfToken = csrf.getToken();
-
+            
             NotificationController.sendMessageToTelegram("There was an invalid CSRF-token sent."
                     + " The IP-address " + request.getRemoteAddr() + " sent an invalid CSRF-token."
                     + " The corresponding session-ID is: " + request.getSession().getId()

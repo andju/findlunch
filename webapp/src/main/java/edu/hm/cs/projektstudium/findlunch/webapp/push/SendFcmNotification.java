@@ -1,6 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.push;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 
 /**
@@ -22,9 +24,15 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
  * 
  * Created by Maxmilian Haag on 07.02.2017
  * @author Maximilian Haag
+ * 
+ * Extended by Niklas Klotz on 21.04.2017
+ * @author Niklas Klotz
+ * 
+ * Edits done:
+ * - Handle different type of Notifications.
  *
  */
-public class SendFcmNotification extends PushNotificationScheduleBase implements Runnable {
+public class SendFcmNotification extends PushNotificationManager implements Runnable {
 	
 	/** 
 	 * The logger. 
@@ -36,18 +44,22 @@ public class SendFcmNotification extends PushNotificationScheduleBase implements
 	 */
 	private final String FCM_NOT_URL = "https://fcm.googleapis.com/fcm/send";
 	
+	public SendFcmNotification(PushNotification push){
+		this.push = push;
+	}
+	
 	/**
+	 * Sending the FindLunch daily update notification.
 	 * @param p Push-notification to be sent.
 	 * @param restaurantsForPushCount Restaurant for push.
 	 * @param pushKitchenTypeIds List of kichen types for push.
 	 */
-	public SendFcmNotification(PushNotification p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
-		this.p = p;
-		this.restaurantsForPushCount = restaurantsForPushCount;
-		this.pushKitchenTypeIds = pushKitchenTypeIds;
-	}
-
-
+	//public SendFcmNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
+		//this.p = p;
+		//this.restaurantsForPushCount = restaurantsForPushCount;
+		//this.pushKitchenTypeIds = pushKitchenTypeIds;
+	//}
+	
 	@SuppressWarnings("unchecked")
 	public void run() {
 
@@ -57,25 +69,30 @@ public class SendFcmNotification extends PushNotificationScheduleBase implements
 
 		//Creating message object and push data inside.
 		JSONObject messageObject = new JSONObject();
-		JSONObject data = new JSONObject();
-		messageObject.put("to", p.getFcmToken());
-
+		//JSONObject data = new JSONObject();
+		//messageObject.put("to", p.getFcmToken());
+		System.out.println(push);
+		messageObject.put("to", push.getFcmToken());
+		
 		//If multiple messages are sent while device is offline,
 		//only receive the latest message is received.
-		messageObject.put("collapse_key", COLLAPSE_KEY + "_" + p.getId());
+		//messageObject.put("collapse_key", COLLAPSE_KEY + "_" + p.getId());
+		
+		messageObject.put("collapse_key", COLLAPSE_KEY + "_" + push.getId());
 
 		//TTL = 6 hours (if scheduled at 9h, push is received until 15h)
 		messageObject.put("time_to_live", 21600);
 
 		//Add data from database to push data.
-		data.put("title", p.getTitle());
-		data.put("numberOfRestaurants", restaurantsForPushCount.toString());
-		data.put("longitude", String.valueOf(p.getLongitude()));
-		data.put("latitude", String.valueOf(p.getLatitude()));
-		data.put("radius", String.valueOf(p.getRadius()));
-		data.put("kitchenTypeIds", pushKitchenTypeIds.toString());
-		data.put("pushId", String.valueOf(p.getId()));
-		messageObject.put("data", data);
+		//data.put("title", p.getTitle());
+		//data.put("numberOfRestaurants", restaurantsForPushCount.toString());
+		//data.put("longitude", String.valueOf(p.getLongitude()));
+		//data.put("latitude", String.valueOf(p.getLatitude()));
+		//data.put("radius", String.valueOf(p.getRadius()));
+		//data.put("kitchenTypeIds", pushKitchenTypeIds.toString());
+		//data.put("pushId", String.valueOf(p.getId()));
+		//messageObject.put("data", data);
+		messageObject.put("data", push.getData());
 
 
 		//Adding required properties to generate push-request.

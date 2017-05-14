@@ -28,9 +28,11 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.EuroPerPointRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
@@ -121,6 +123,17 @@ public class ReservationRestController {
 		}
 		
 		reservationRepository.save(reservation);
+		
+		/**
+		 * Senden einer Bestätigung als Push
+		 * @author Niklas Klotz
+		 * TODO: Test
+		 */
+		PushNotificationManager pushManager = new PushNotificationManager();
+		PushNotification push = new PushNotification();
+		push.generateOrderReceive(reservation, authenticatedUser);
+		pushManager.sendFcmNotification(push);
+		
 		
 		if(reservation.isUsedPoints()){
 			Restaurant restaurant = restaurantRepository.findById(offer.getRestaurant().getId());

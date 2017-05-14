@@ -51,6 +51,8 @@ public class User implements UserDetails {
 	/** The username. */
 	@NotBlank(message="{user.usernameEmpty}")
 	private String username;
+	
+	//private String fcmId;
 
 	/**
 	 * A user object has a Captcha object.
@@ -75,7 +77,7 @@ public class User implements UserDetails {
 	/** The push notifications. */
 	//bi-directional many-to-one association to PushNotification
 	@OneToMany(mappedBy="user")
-	private List<PushNotification> pushNotifications;
+	private List<DailyPushNotificationData> pushNotifications;
 
 	/** The restaurant. */
 	//bi-directional many-to-one association to Restaurant
@@ -197,7 +199,7 @@ public class User implements UserDetails {
 	 *
 	 * @return the push notifications
 	 */
-	public List<PushNotification> getPushNotifications() {
+	public List<DailyPushNotificationData> getPushNotifications() {
 		return this.pushNotifications;
 	}
 
@@ -206,7 +208,7 @@ public class User implements UserDetails {
 	 *
 	 * @param pushNotifications the new push notifications
 	 */
-	public void setPushNotifications(List<PushNotification> pushNotifications) {
+	public void setPushNotifications(List<DailyPushNotificationData> pushNotifications) {
 		this.pushNotifications = pushNotifications;
 	}
 	
@@ -216,7 +218,7 @@ public class User implements UserDetails {
 	 * @param pushNotification the push notification
 	 * @return the push notification
 	 */
-	public PushNotification addPushNotification(PushNotification pushNotification) {
+	public DailyPushNotificationData addPushNotification(DailyPushNotificationData pushNotification) {
 		getPushNotifications().add(pushNotification);
 		pushNotification.setUser(this);
 
@@ -229,7 +231,7 @@ public class User implements UserDetails {
 	 * @param pushNotification the push notification
 	 * @return the push notification
 	 */
-	public PushNotification removePushNotification(PushNotification pushNotification) {
+	public DailyPushNotificationData removePushNotification(DailyPushNotificationData pushNotification) {
 		getPushNotifications().remove(pushNotification);
 		pushNotification.setUser(null);
 
@@ -361,5 +363,13 @@ public class User implements UserDetails {
 	public Captcha getCaptcha() {
 		return captcha;
 	}
+	
+	//public void setFcmId(String fcmId){
+	//	this.fcmId = fcmId;
+	//}
+	
+	//public String getFcmId(){
+	//	return fcmId;
+	//}
 
 }

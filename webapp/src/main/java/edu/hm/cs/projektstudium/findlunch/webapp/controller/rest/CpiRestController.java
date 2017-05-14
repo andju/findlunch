@@ -36,7 +36,7 @@ class CpiRestController {
      */
     @RequestMapping(path = "/api/csp-report-uri", method = RequestMethod.POST)
     public void getCspViolations(final HttpServletRequest request) throws IOException {
-
+    	
         LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -51,8 +51,8 @@ class CpiRestController {
         final JsonObject jsonObject = jsonElement.getAsJsonObject();
         // Get the csp-report explicitly from the originally JSON-object.
         final JsonObject cspReport = jsonObject.getAsJsonObject("csp-report");
-        NotificationController.sendMessageToTelegram("Content-Security-Policy-Report:\n" + cspReport.toString());
-
+        // NotificationController.sendMessageToTelegram("Content-Security-Policy-Report:\n" + cspReport.toString());
+        System.out.println("Content-Security-Policy-Report:\n" + cspReport.toString());
     }
 
 }

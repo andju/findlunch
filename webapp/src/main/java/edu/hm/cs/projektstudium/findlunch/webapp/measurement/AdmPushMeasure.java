@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 
 /**
  * The AdmPushMeasure, sends Amazon SNS based push-notifications for measurement (not at live-operation).
@@ -66,7 +66,7 @@ public class AdmPushMeasure extends PushMeasureBase implements Runnable {
 	/**
 	 * Current push-notification 
 	 */
-	private PushNotification p;
+	private DailyPushNotificationData p;
 	
 	/**
 	 * Current identification credentials for Amazon Simple Notification Service.
@@ -79,7 +79,7 @@ public class AdmPushMeasure extends PushMeasureBase implements Runnable {
 	 * @param p Push notification
 	 * @param count Current count
 	 */
-	public AdmPushMeasure(PushNotification p, int count) {
+	public AdmPushMeasure(DailyPushNotificationData p, int count) {
 		this.count = count;
 		token = p.getSnsToken();
 		this.p = p;
@@ -94,7 +94,7 @@ public class AdmPushMeasure extends PushMeasureBase implements Runnable {
 	 */
 	private Map<String, Object> createTitleAndTimestamp(int count) {
 
-		PushNotification p = new PushNotification();
+		DailyPushNotificationData p = new DailyPushNotificationData();
 		
 		//Create title with titlename, userid and current push count for later identification at receiver.
 		//Only one string to reduce overhead (not more required)

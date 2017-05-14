@@ -1,14 +1,27 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
+import java.security.Principal;
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;;
 
 /**
  * The class is responsible for handling http calls related to the main page (home) of the website..
@@ -16,9 +29,12 @@ import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
  */
 @Controller
 public class HomeController {
-	
+
 	/** The logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+	
+	@Autowired
+	PushTokenRepository tokenRepo;
 
 	/**
 	 * Gets the the "home" page for a request with the path "/home".
@@ -44,4 +60,32 @@ public class HomeController {
 		return "redirect:/home";
 	}
 	
+	@RequestMapping(path="/home", method = RequestMethod.POST, params={"push"})
+	public void sendPushAtHome(Principal principal)  {
+		//System.out.println("ENTER FCM TOKEN: "+token);
+		
+		User authenticatedUser = (User)((Authentication)principal).getPrincipal();
+		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
+		sendPush(token.getFcmToken());
+		
+		//return "home";
+	}
+	
+	@RequestMapping(path="/home?token", method = RequestMethod.POST)
+	public String getClientToken(@RequestParam String token) {
+		System.out.println("ENTER FCM TOKEN: "+token);
+		return "home";
+	}
+	
+	private void sendPush(String token){
+		
+		PushNotificationManager pushManager = new PushNotificationManager();
+		PushNotification push = new PushNotification();
+		
+		push.generateWeb();
+		push.setFcmToken(token);
+		
+		pushManager.sendFcmNotification(push);
+	}
+
 }

@@ -54,6 +54,7 @@ public class LoginUserRestController {
         // As there is no session-ID with the RESTful-Webservice we just can use the retrieved IP-address.
         if (!authenticationHelper.isBlocked(ipAddress)) {
             LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            
             return new ResponseEntity<>(0, HttpStatus.OK);
         } else {
             LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()) +

@@ -15,9 +15,10 @@ import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.KitchenType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushMessagingInterface;
-import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationScheduleBase;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 
@@ -30,6 +31,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantReposito
  * Push-notifications with valid tokens are processed.
  * 
  * Extended by Maxmilian Haag on 18.12.2016.
+ * Extended by Niklas Klotz on 21.04.2017.
  */
 @Component
 public class PushNotificationScheduledTask {
@@ -74,18 +76,18 @@ public class PushNotificationScheduledTask {
 	 *  
 	 */
 	@Scheduled(fixedRate = 200000)
-	public void checkPushNotifications() {
+	public void checkPushNotifications()  {
 
 		//Log info
 		LOGGER.info(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1].getMethodName(),
 				"Starting check for push notifications."));
 
 		//Extracting all push-notifications from database.
-		List<PushNotification> activePushNotifications = pushRepo.findAll();
+		List<DailyPushNotificationData> activePushNotifications = pushRepo.findAll();
 		int dayNumberToday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 		
 		//Check all push notifications
-		for (PushNotification p : activePushNotifications) {
+		for (DailyPushNotificationData p : activePushNotifications) {
 
 			// Determine if the push notification shall be sent today.
 			List<DayOfWeek> daysOfWeekPushList = p.getDayOfWeeks();
@@ -124,11 +126,19 @@ public class PushNotificationScheduledTask {
 				if (restaurantsForPushCount > 0) {
 					
 					//Create push notification sender base for further push-message processing.
-					PushMessagingInterface senderBase = new PushNotificationScheduleBase();
+					PushMessagingInterface senderBase = new PushNotificationManager();
 					
-					//Check which push notification token is valid, process data at sender base.
+					// Create a Object that stores the data for the push Notification
+					PushNotification push = new PushNotification();
+					
+					// Put the data the the Notification
+					push.generateFromDaily(p, restaurantsForPushCount, pushKitchenTypeIds);
+					
+					//Check which push notification token is valid, process data at sender manager.
 					if(!p.getFcmToken().equals(NOT_AVAILABLE)) {
-						senderBase.sendFcmNotification(p, restaurantsForPushCount, pushKitchenTypeIds);
+						
+						senderBase.sendFcmNotification(push);
+						//senderBase.sendFcmDailyNotification(p, restaurantsForPushCount, pushKitchenTypeIds);
 					}
 					if(!p.getSnsToken().equals(NOT_AVAILABLE)) {
 						senderBase.sendAdmNotification(p, restaurantsForPushCount, pushKitchenTypeIds);

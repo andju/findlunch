@@ -36,6 +36,9 @@ public class Reservation {
 	/** Is confirmed. */
 	private boolean confirmed;
 	
+	/** Is rejected. */
+	private boolean rejected;
+	
 	/** Is used points. */
 	private boolean usedPoints;
 	
@@ -181,6 +184,16 @@ public class Reservation {
 		this.confirmed = confirmed;
 	}
 	
+	
+	
+	public boolean isRejected() {
+		return rejected;
+	}
+
+	public void setRejected(boolean rejected) {
+		this.rejected = rejected;
+	}
+
 	/**
 	 * Gets the donation.
 	 * @return The donation

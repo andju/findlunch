@@ -22,7 +22,7 @@ import com.amazonaws.services.sns.model.PublishRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 
 /**
  *  
@@ -39,7 +39,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
  *
  */
 
-public class SendAdmNotification extends PushNotificationScheduleBase implements Runnable {
+public class SendAdmNotification extends PushNotificationManager implements Runnable {
 
 	/** 
 	 * The logger. 
@@ -74,7 +74,7 @@ public class SendAdmNotification extends PushNotificationScheduleBase implements
 	 * @param restaurantsForPushCount Restaurant for push.
 	 * @param pushKitchenTypeIds List of kichen types for push.
 	 */
-	public SendAdmNotification(PushNotification p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
+	public SendAdmNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
 		this.p = p;
 		this.restaurantsForPushCount = restaurantsForPushCount;
 		this.pushKitchenTypeIds = pushKitchenTypeIds;

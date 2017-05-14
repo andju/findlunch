@@ -47,7 +47,7 @@ public class DayOfWeek {
 	/** The push notifications. */
 	//bi-directional many-to-many association to PushNotification
 	@ManyToMany(mappedBy="dayOfWeeks")
-	private List<PushNotification> pushNotifications;
+	private List<DailyPushNotificationData> pushNotifications;
 
 	/** The time schedules. */
 	//bi-directional many-to-one association to TimeSchedule
@@ -181,7 +181,7 @@ public class DayOfWeek {
 	 *
 	 * @return the push notifications
 	 */
-	public List<PushNotification> getPushNotifications() {
+	public List<DailyPushNotificationData> getPushNotifications() {
 		return this.pushNotifications;
 	}
 
@@ -190,7 +190,7 @@ public class DayOfWeek {
 	 *
 	 * @param pushNotifications the new push notifications
 	 */
-	public void setPushNotifications(List<PushNotification> pushNotifications) {
+	public void setPushNotifications(List<DailyPushNotificationData> pushNotifications) {
 		this.pushNotifications = pushNotifications;
 	}
 

@@ -28,7 +28,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.PushNotificatio
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.KitchenType;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeRepository;
@@ -82,7 +82,7 @@ public class PushNotificationRestController {
 	 */
 	@RequestMapping(path = "/api/register_push", method = RequestMethod.POST)
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<Integer> registerPush(@RequestBody PushNotification pushNotification, Principal principal, HttpServletRequest request) {
+	public ResponseEntity<Integer> registerPush(@RequestBody DailyPushNotificationData pushNotification, Principal principal, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		User requestUser = (User) ((Authentication) principal).getPrincipal();
@@ -92,10 +92,10 @@ public class PushNotificationRestController {
 		//Updating all pushes of this user with new tokens in database.
 		if(pushNotification.getTitle().equals("INIT_PUSH")) {
 			
-			List<PushNotification> allNotificationsOfCurrentUser = pushNotificationRepository.findByUser_id(authenticatedUser.getId());
+			List<DailyPushNotificationData> allNotificationsOfCurrentUser = pushNotificationRepository.findByUser_id(authenticatedUser.getId());
 
 			for(int i = 0; i < allNotificationsOfCurrentUser.size(); i++) {
-				PushNotification pushToModify = allNotificationsOfCurrentUser.get(i);
+				DailyPushNotificationData pushToModify = allNotificationsOfCurrentUser.get(i);
 				//delete old
 				pushNotificationRepository.delete(pushToModify);
 			
@@ -162,7 +162,7 @@ public class PushNotificationRestController {
 	@PreAuthorize("isAuthenticated()")
 	@JsonView(PushNotificationView.PushNotificationRest.class)
 	@RequestMapping(path = "/api/get_push", method = RequestMethod.GET)
-	public List<PushNotification> getPush(Principal principal, HttpServletRequest request) {
+	public List<DailyPushNotificationData> getPush(Principal principal, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		User requestUser = (User) ((Authentication) principal).getPrincipal();
@@ -188,7 +188,7 @@ public class PushNotificationRestController {
 		
 		User requestUser = (User) ((Authentication) principal).getPrincipal();
 		User authenticatedUser = userRepository.findOne(requestUser.getId());
-		PushNotification pushNotificationToUnregister = pushNotificationRepository.findById(pushId);
+		DailyPushNotificationData pushNotificationToUnregister = pushNotificationRepository.findById(pushId);
 		
 		if (pushNotificationToUnregister == null) {
 			// Push Notification not found

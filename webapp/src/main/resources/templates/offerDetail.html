@@ -38,7 +38,7 @@
 									class="alert alert-danger" role="alert" th:errors="*{title}"></div>
 							</div>
 						</td>
-					</tr>
+					</tr>					
 					<tr>
 						<td><label class="control-label" for="description"
 							th:text="#{offer.label.description}">desc</label>*</td>
@@ -57,9 +57,29 @@
 									th:errors="*{description}"></div>
 							</div>
 						</td>
-					</tr>
+					</tr>	
+					
 					<tr>
-						<td><label class="control-label" for="price"
+						<td><label class="control-label" for="courseType" 
+							th:text="#{offer.label.course}">course</label>
+						</td>
+						
+						<td style="width: 15px"><span 
+							style="padding-top: 7px"
+							class="glyphicon glyphicon-question-sign" data-placement="left"
+							data-toggle="tooltip"
+							th:title="#{offerDetail.tooltip.course}"></span></td>
+						
+						<td>
+						<div th:each="course : ${courseType}">
+						<input type="radio" th:field="*{courseTypes}" th:value="${course.getId()}"/>
+						<label th:text="${course.getName()}" ></label>
+						</div>
+						</td>
+					</tr>
+					
+					<tr>
+							<td><label class="control-label" for="price"
 							th:text="#{offer.label.price}">price</label>*</td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
@@ -71,7 +91,7 @@
 								<input type="text"
 									th:field="*{price}" class="form-control" id="price" />
 								<div th:if="${#fields.hasErrors('price')}? has-error"
-									class="alert alert-danger" role="alert" th:errors="*{price}">Muss größer 0,00
+									class="alert alert-danger" role="alert" th:errors="*{price}">Muss grï¿½ï¿½er 0,00
 									sein</div>
 							</div>
 						</td>
@@ -90,7 +110,7 @@
 									th:field="*{neededPoints}" class="form-control"
 									id="neededPoints" />
 								<div th:if="${#fields.hasErrors('neededPoints')}? has-error"
-									class="alert alert-danger" role="alert" th:errors="*{neededPoints}">Muss größer 0
+									class="alert alert-danger" role="alert" th:errors="*{neededPoints}">Muss grï¿½ï¿½er 0
 									sein</div>
 							</div>
 						</td>
@@ -109,7 +129,7 @@
 									th:field="*{preparationTime}" class="form-control"
 									id="preparationTime" />
 								<div th:if="${#fields.hasErrors('preparationTime')}? has-error"
-									class="alert alert-danger" role="alert" th:errors="*{preparationTime}">Muss größer 0
+									class="alert alert-danger" role="alert" th:errors="*{preparationTime}">Muss grï¿½ï¿½er 0
 									sein</div>
 							</div>
 						</td>

@@ -36,7 +36,7 @@ public class KitchenType {
 	/** The push notifications. */
 	//bi-directional many-to-many association to PushNotification
 	@ManyToMany(mappedBy="kitchenTypes")
-	private List<PushNotification> pushNotifications;
+	private List<DailyPushNotificationData> pushNotifications;
 
 	/** The restaurants. */
 	//bi-directional many-to-many association to Restaurant
@@ -91,7 +91,7 @@ public class KitchenType {
 	 *
 	 * @return the push notifications
 	 */
-	public List<PushNotification> getPushNotifications() {
+	public List<DailyPushNotificationData> getPushNotifications() {
 		return this.pushNotifications;
 	}
 
@@ -100,7 +100,7 @@ public class KitchenType {
 	 *
 	 * @param pushNotifications the new push notifications
 	 */
-	public void setPushNotifications(List<PushNotification> pushNotifications) {
+	public void setPushNotifications(List<DailyPushNotificationData> pushNotifications) {
 		this.pushNotifications = pushNotifications;
 	}
 

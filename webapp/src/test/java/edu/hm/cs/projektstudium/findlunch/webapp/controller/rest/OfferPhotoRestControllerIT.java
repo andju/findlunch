@@ -46,6 +46,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.OfferPhoto;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CountryRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
@@ -81,6 +82,10 @@ public class OfferPhotoRestControllerIT {
 	/** The kitchen type repo. */
 	@Autowired
 	private KitchenTypeRepository kitchenTypeRepo;
+	
+	/** Niklas Klotz */
+	@Autowired
+	private CourseTypeRepository courserTypeRepository;
 	
 	/** The Constant OFFERPHOTO_API. */
 	private static final String OFFERPHOTO_API = "/api/offer_photos";
@@ -289,6 +294,7 @@ public class OfferPhotoRestControllerIT {
 		o.setStartDate(new Date());
 		o.setEndDate(new Date());
 		o.setNeededPoints(30);
+		o.setCourseTypes(courserTypeRepository.getOne(1));
 
 		return o;
 	}

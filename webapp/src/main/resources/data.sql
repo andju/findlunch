@@ -16,6 +16,11 @@ INSERT IGNORE INTO `findlunch`.`kitchen_type` (`id`, `name`) VALUES (3, 'Griechi
 INSERT IGNORE INTO `findlunch`.`kitchen_type` (`id`, `name`) VALUES (4, 'Asiatisch');
 INSERT IGNORE INTO `findlunch`.`kitchen_type` (`id`, `name`) VALUES (5, 'Bayerisch');
 
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (1, 'Vorspeise');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (2, 'Hauptspeise');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (3, 'Nachspeise');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (4, 'Getränk');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (5, 'Beilage');
 
 INSERT IGNORE INTO `findlunch`.`restaurant_type` (`id`, `name`) VALUES (1, 'Imbiss');
 INSERT IGNORE INTO `findlunch`.`restaurant_type` (`id`, `name`) VALUES (2, 'Restaurant');

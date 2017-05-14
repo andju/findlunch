@@ -24,6 +24,8 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 @EnableWebSecurity
 public class SecurityConfig {
 
+	
+	
 	/**
 	 * Class for configuring the stateless security configuration (REST). The
 	 * filter chain is executed before the stateful security chain. How the urls
@@ -78,14 +80,15 @@ public class SecurityConfig {
 		 **/
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
+			
 			http
 					// Change the sent server name.
 					.headers().addHeaderWriter(new StaticHeadersWriter("Server", "Unbekannter Webserver")).and()
 					// Add an elementary Content-Security-Policy-Report-Only-header with a reporting URL.
 					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only",
 					"default-src 'self' script-src 'self' 'unsafe-inline' " +
-							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;" +
-							"; report-uri /api/csp-report-uri"))
+							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.gstatic.com/firebasejs/ https://fcm.googleapis.com/;" +
+							"; report-uri /api/csp-report-uri"+ "; https://localost" + "; /js/**"+ "; https://fcm.googleapis.com/"))
 					.and()
 					.csrf().disable().requestMatchers()
 					// Add a Content-Security-Policy-violation-report-endpoint
@@ -108,7 +111,9 @@ public class SecurityConfig {
 				.and().httpBasic().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}
+		
 	}
+
 
 	/**
 	 * Class for configuring the stateful security configuration (websize). The
@@ -145,6 +150,7 @@ public class SecurityConfig {
 
 			auth.userDetailsService(restaurantUserDetailsService).passwordEncoder(passwordEncoder);
 
+			
 		}
 
 		/*
@@ -160,9 +166,11 @@ public class SecurityConfig {
 		 * page should be used, using a formlogin with the default Spring
 		 * Security login entrypoints
 		 **/
+		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
+					.authorizeRequests().antMatchers("https://localhost:8443/**").permitAll().and()
 					// Change the sent server name.
 					.headers().addHeaderWriter(new StaticHeadersWriter("Server", "Unbekannter Webserver")).and()
 					// Add an elementary Content-Security-Policy-header with a reporting URL.
@@ -170,8 +178,8 @@ public class SecurityConfig {
 					// See: https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website-how-can-i-configure-it-to-work-with-recaptcha
 					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy",
 							"default-src 'self' data:; script-src 'self' 'unsafe-inline' " +
-									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; " +
-									"child-src https://www.google.com/recaptcha/; " +
+									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.gstatic.com/firebasejs/ https://localhost:8443/ https://fcm.googleapis.com/; " +
+									"; /js/**"+"child-src https://www.google.com/recaptcha/;"+
 									"style-src 'self' data: 'unsafe-inline'" +
 									"; report-uri /api/csp-report-uri")).and()
 					// A custom AccessDeniedHandler in order to handle CSRF-attacks.
@@ -188,5 +196,7 @@ public class SecurityConfig {
 			//.and().csrf().disable();
 
 		}
+		
 	}
+	
 }

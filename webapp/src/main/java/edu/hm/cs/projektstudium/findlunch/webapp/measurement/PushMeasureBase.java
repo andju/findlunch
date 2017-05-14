@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRepository;
 
 
@@ -123,7 +123,7 @@ public class PushMeasureBase implements PushMeasureInterface {
 		LOGGER.info("Launching SNS/ADM Performance Measure");
 
 		//Load dummy push notification from db
-		PushNotification dummyNotification = extractFromDB();
+		DailyPushNotificationData dummyNotification = extractFromDB();
 	
 		for(int j = 0; j < NUMBER_OF_ITERATIONS; j++) {
 			for(int i = 0; i < NUMBER_OF_PUSHES; i++) {
@@ -146,7 +146,7 @@ public class PushMeasureBase implements PushMeasureInterface {
 		LOGGER.info("Launching FCM Performance Measure");
 		
 		//Load dummy push notification from db
-		PushNotification dummyNotification = extractFromDB();
+		DailyPushNotificationData dummyNotification = extractFromDB();
 		
 		for(int j = 0; j < NUMBER_OF_ITERATIONS; j++) {
 			for(int i = 0; i < NUMBER_OF_PUSHES; i++) {
@@ -174,7 +174,7 @@ public class PushMeasureBase implements PushMeasureInterface {
 		LOGGER.info("Launching FCM (Single) Speed Measure");
 
 		//Load dummy push notification from db
-		PushNotification dummyNotification = extractFromDB();
+		DailyPushNotificationData dummyNotification = extractFromDB();
 		
 		if(pushCount < NUMBER_OF_PUSHES) {
 			singleEx.execute(new FcmPushMeasure(dummyNotification, pushCount));
@@ -199,7 +199,7 @@ public class PushMeasureBase implements PushMeasureInterface {
 		LOGGER.info("Launching ADM/SNS (Single) Speed Measure");
 
 		//Load dummy push notification from db
-		PushNotification dummyNotification = extractFromDB();
+		DailyPushNotificationData dummyNotification = extractFromDB();
 		
 		if(pushCount < NUMBER_OF_PUSHES) {
 			singleEx.execute(new AdmPushMeasure(dummyNotification, pushCount));
@@ -221,11 +221,11 @@ public class PushMeasureBase implements PushMeasureInterface {
 	public void launchDeviceScaledFCMMeasure() {
 		LOGGER.info("Launching Device scaled FCM Measure");
 		
-		List<PushNotification> toSend = new ArrayList<>();
+		List<DailyPushNotificationData> toSend = new ArrayList<>();
 
 		//FCM Token extract from Database by registred name "testpush".
-		List<PushNotification> activePushNotifications = pushRepo.findAll();
-		for(PushNotification pu : activePushNotifications) {
+		List<DailyPushNotificationData> activePushNotifications = pushRepo.findAll();
+		for(DailyPushNotificationData pu : activePushNotifications) {
 			if(pu.getTitle().equals("testpush")) {
 				toSend.add(pu);
 			}
@@ -233,7 +233,7 @@ public class PushMeasureBase implements PushMeasureInterface {
 		for(int j = 0; j < NUMBER_OF_ITERATIONS; j++) {
 			for(int i = 0; i < NUMBER_OF_PUSHES; i++) {
 				for(int k = 0; k < toSend.size(); k++) {
-					PushNotification p = toSend.get(k);
+					DailyPushNotificationData p = toSend.get(k);
 					singleEx.execute(new FcmPushMeasure(p, NUMBER_OF_PUSHES));
 				}
 			}
@@ -249,11 +249,11 @@ public class PushMeasureBase implements PushMeasureInterface {
 	 * Extract one (first) dummy push-notification found in database.
 	 * @return The push-notification to extract.
 	 */
-	private PushNotification extractFromDB() {
+	private DailyPushNotificationData extractFromDB() {
 		//Token extract from Database by registred name "testpush".
-		List<PushNotification> activePushNotifications = pushRepo.findAll();
-		PushNotification p = null;
-		for(PushNotification pu : activePushNotifications) {
+		List<DailyPushNotificationData> activePushNotifications = pushRepo.findAll();
+		DailyPushNotificationData p = null;
+		for(DailyPushNotificationData pu : activePushNotifications) {
 			if(pu.getTitle().equals("testpush")) {
 				p = pu;
 			}

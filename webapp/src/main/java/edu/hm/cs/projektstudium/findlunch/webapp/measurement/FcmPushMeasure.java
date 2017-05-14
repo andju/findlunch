@@ -11,7 +11,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 
 /**
  * The FcmPushMeasure, sends Google FCM based push-notifications for measurement (not at live-operation).
@@ -35,7 +35,7 @@ public class FcmPushMeasure extends PushMeasureBase implements Runnable {
 	/**
 	 * Current push-notification 
 	 */
-	private PushNotification p;
+	private DailyPushNotificationData p;
 	
 	/**
 	 * Current push count.
@@ -53,7 +53,7 @@ public class FcmPushMeasure extends PushMeasureBase implements Runnable {
 	 * @param p Push notification
 	 * @param count Current count
 	 */
-	public FcmPushMeasure(PushNotification p, int count) {
+	public FcmPushMeasure(DailyPushNotificationData p, int count) {
 		this.p = p;
 		this.count = count;
 	}

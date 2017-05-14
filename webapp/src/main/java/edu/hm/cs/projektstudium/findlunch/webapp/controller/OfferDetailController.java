@@ -1,11 +1,13 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.OfferPhoto;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomOfferValidator;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
@@ -36,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -63,10 +66,14 @@ public class OfferDetailController implements HandlerExceptionResolver {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 	
+	/** Niklas Klotz */
+	@Autowired
+	private CourseTypeRepository courserTypeRepository;
+	
 	/** The custom offer validator. Handled enhanced checks not handled by the hibernate annotation */
 	@Autowired
 	private CustomOfferValidator customOfferValidator;
-
+	
 	/** The logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(OfferDetailController.class);
 	
@@ -96,6 +103,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		session.setAttribute("photoList", newOffer.getOfferPhotos());
 		model.addAttribute("offer", newOffer);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+		model.addAttribute("courseType" , courserTypeRepository.findAll());
 		model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		return "offerDetail";
 	}
@@ -135,6 +143,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		model.addAttribute("offer", offer);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+		model.addAttribute("courseType" , courserTypeRepository.findAll());
+		//model.addAttribute("selectedCourse", courserTypeRepository.findOne(offer.getCourseType().getId()));
 		model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		return "offerDetail";	
 	}
@@ -162,8 +172,11 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		HttpSession session = request.getSession();
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		
+		System.out.println(request.getParameterMap());
+		
 		Restaurant restaurant = restaurantRepository.findOne(authenticatedUser.getAdministratedRestaurant().getId());
 		restaurant.addOffer(offer);
+		System.out.println(offer.getCourseTypes()+" - "+offer.getDescription());
 		offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 		
 		// Checks not handled by Hibernate annotations
