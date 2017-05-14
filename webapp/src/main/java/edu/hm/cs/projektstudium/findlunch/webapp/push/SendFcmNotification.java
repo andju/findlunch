@@ -103,7 +103,7 @@ public class SendFcmNotification extends PushNotificationManager implements Runn
 				.addHeader("Content-type", mediaType.toString())
 				.addHeader("Authorization", "key="+FCM_SENDER_ID).build();
 		try {
-
+			
 			//Console log info
 			LOGGER.info("Push sent: " + messageObject.toString());
 			

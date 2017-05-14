@@ -66,7 +66,7 @@ public class HomeController {
 		
 		User authenticatedUser = (User)((Authentication)principal).getPrincipal();
 		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
-		sendPush(token.getFcmToken());
+		sendPush(token.getFcm_token());
 		
 		//return "home";
 	}

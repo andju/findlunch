@@ -110,7 +110,8 @@ public class PushNotification {
 	}
 	
 	public void generateReservationConfirm(Reservation reservation){
-		putData("titel","Deine Bestellung: "+reservation.getId());
-		putData("data", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant()+" bestätigt");
+		putData("titel:","Deine Bestellung: "+reservation.getId());
+		putData("body:", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant()+" bestätigt");
+		putData("icon:", "/images/FL.png");
 	}
 }

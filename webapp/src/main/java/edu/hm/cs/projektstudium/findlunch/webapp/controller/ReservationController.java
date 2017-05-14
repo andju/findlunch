@@ -131,6 +131,7 @@ public class ReservationController {
 		
 		if(confirmedReservations.isEmpty()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no reservation selected. Redirect to /reservations."));
+			
 			return "redirect:/reservations?selectReservation";
 		}
 		
@@ -269,7 +270,6 @@ public class ReservationController {
 		PushToken userToken = tokenRepository.findByUserId(user.getId());
 		
 		push.setFcmToken(userToken.toString());
-		
 		pushManager.sendFcmNotification(push);
 		
 	}
