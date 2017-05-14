@@ -40,21 +40,26 @@ public class TokenRestContoller {
     ResponseEntity<Integer> submitToken(@PathVariable("pushToken") String pushToken, Principal principal, HttpServletRequest request){
     	
     	User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
-    	authenticatedUser = userRepository.findOne(authenticatedUser.getId());	
+    	authenticatedUser = userRepository.findOne(authenticatedUser.getId());
+    	PushToken oldToken = pushTokenRepository.findByUserId(authenticatedUser.getId());
     	
-    	if(!pushTokenRepository.findByUserId(authenticatedUser.getId()).equals(pushToken) || pushTokenRepository.findByUserId(authenticatedUser.getId())==null){
-    		
-    		PushToken oldToken = pushTokenRepository.findByUserId(authenticatedUser.getId());
-    		pushTokenRepository.delete(oldToken.getId());
-    		
+    	if(oldToken==null){
     		PushToken newToken = new PushToken();
         	newToken.setUser_id(authenticatedUser.getId());
         	newToken.setFcm_token(pushToken);
         	pushTokenRepository.save(newToken);
-        	return new ResponseEntity<>(0, HttpStatus.OK);
+        	return new ResponseEntity<>(0, HttpStatus.ACCEPTED);
+    	}
+    	else if(!oldToken.equals(pushToken)){
+    		pushTokenRepository.delete(oldToken.getId());
+    		PushToken newToken = new PushToken();
+    		newToken.setUser_id(authenticatedUser.getId());
+        	newToken.setFcm_token(pushToken);
+        	pushTokenRepository.save(newToken);
+        	return new ResponseEntity<>(1, HttpStatus.OK);
     	}
     	else{
-    		return new ResponseEntity<>(0, HttpStatus.ALREADY_REPORTED);
+    		return new ResponseEntity<>(2, HttpStatus.ALREADY_REPORTED);
     	}
     }
 	
