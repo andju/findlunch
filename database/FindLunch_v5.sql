@@ -126,6 +126,15 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`account` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `findlunch`.`course_types`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `findlunch`.`course_types` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `findlunch`.`user`
@@ -201,6 +210,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` INT(11) NOT NULL,
+  `course_id` INT(11) NOT NULL,
   `title` VARCHAR(60) NOT NULL,
   `description` TINYTEXT NOT NULL,
   `price` DECIMAL(5,2) NOT NULL,
@@ -214,10 +224,32 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
     FOREIGN KEY (`restaurant_id`)
     REFERENCES `findlunch`.`restaurant` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  INDEX `fk_product_course_idx` (`course_id` ASC),
+  CONSTRAINT `fk_productcourse1`
+    FOREIGN KEY (`course_id`)
+    REFERENCES `findlunch`.`course_types` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `findlunch`.`user_pushtoken`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `findlunch`.`user_pushtoken` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `fcm_token` TEXT(4096) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_user_pushtoken_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_user_pushtoken_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `findlunch`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `findlunch`.`offer_has_day_of_week`

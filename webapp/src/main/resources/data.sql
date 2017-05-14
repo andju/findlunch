@@ -35,6 +35,9 @@ INSERT IGNORE INTO `findlunch`.`euro_per_point` (`id`,`euro`) VALUES (1, 1.0);
 
 INSERT IGNORE INTO `findlunch`.`minimum_profit` (`id`,`profit`) VALUES (1, 10);
 
+-- user for ionic
+INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `user_type_id`) VALUES ('100', 'ionic@ionic.com', '$2a$10$AM5MLDZLCINLkGqWSQdIkeI/RR2DzlIWXP8UMLmJTNfjnrBFO7meu', '2');
+
 -- account type
 INSERT IGNORE INTO `findlunch`.`account_type` (`id`,`name`) VALUES (1, 'Forderungskonto');
 INSERT IGNORE INTO `findlunch`.`account_type` (`id`,`name`) VALUES (2, 'Kundenkonto');
