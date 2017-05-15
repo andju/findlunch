@@ -41,7 +41,7 @@ public class PointsRestController {
 	 * @param request the HttpServletRequest
 	 * @return a List from the current points of the user
 	 */
-	@JsonView(PointsView.PointsRest.class)
+    @JsonView(PointsView.PointsRest.class)
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "/api/get_points", method = RequestMethod.GET, headers = {"Authorization"})
 	public List<Points> getPointsOfAUser(/*@RequestParam(name ="user_id", required=true) int userId ,*/ Principal principal, HttpServletRequest request) {

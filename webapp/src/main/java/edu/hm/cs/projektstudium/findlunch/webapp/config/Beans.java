@@ -11,6 +11,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 
@@ -95,6 +96,14 @@ public class Beans extends WebMvcConfigurerAdapter{
 			  }
 		};
 	  }
+	
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/api/**")
+			.allowedOrigins("/**")
+			.allowedMethods("PUT","GET")
+			.allowCredentials(true);
+	}
 	
 	/**
 	 * Returns the local validator

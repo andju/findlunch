@@ -95,9 +95,8 @@ public class SecurityConfig {
 					// The CSRF-protection should be disabled as it is a POST-request.
 					// Otherwise a CSRF-token exception will be sent.
 					.antMatchers(HttpMethod.POST, "/api/csp-report-uri")
-
 					.antMatchers(HttpMethod.POST, "/api/register_user")
-
+					.antMatchers(HttpMethod.PUT, "/api/submitToken/**")
 					.antMatchers(HttpMethod.GET, "/api/login_user")
 					.antMatchers(HttpMethod.POST, "/api/register_push")
 					.antMatchers(HttpMethod.GET, "/api/get_push")
