@@ -27,7 +27,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
--- -----------------------------------------------------
+-- ——————————————————————————
 -- Table `findlunch`.`day_of_week`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `findlunch`.`day_of_week` (
@@ -510,6 +510,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   `amount` INT(4) NOT NULL,
   `reservation_time` DATETIME NOT NULL,
   `confirmed` TINYINT(1) NOT NULL,
+  `rejected` TINYINT(1) NOT NULL,
   `total_price` DECIMAL(5,2) NOT NULL,
   `donation` DECIMAL(5,2) NOT NULL,
   `used_points` TINYINT(1) NOT NULL,

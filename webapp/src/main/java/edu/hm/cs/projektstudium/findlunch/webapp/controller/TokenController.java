@@ -48,7 +48,6 @@ public class TokenController {
     ResponseEntity<Integer> submitToken(@PathVariable("pushToken") String pushToken, Principal principal, HttpServletRequest request){
     	LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
     	
-    	System.out.println("Principal: "+principal.getName());
     	User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
     	authenticatedUser = userRepository.findOne(authenticatedUser.getId());
     	PushToken oldToken = pushTokenRepository.findByUserId(authenticatedUser.getId());
