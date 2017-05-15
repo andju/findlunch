@@ -41,7 +41,7 @@ var config = {
 	    			  // test
 	    		  }
 	   
-	    		  xmlhttpTkn.open("GET","/api/submitToken/"+token);
+	    		  xmlhttpTkn.open("PUT","/api/submitToken/"+token);
 	    		  xmlhttpTkn.send();
 	    		  
 	    		  })
@@ -78,7 +78,7 @@ var config = {
 	    			  // test
 	    		  }
 	   
-	    		  xmlhttpTkn.open("GET","/api/submitToken/"+token);
+	    		  xmlhttpTkn.open("PUT","/api/submitToken/"+token, false);
 	    		  xmlhttpTkn.send();
 	    		  
 	    		  })

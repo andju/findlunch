@@ -14,8 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
@@ -36,9 +38,11 @@ public class TokenRestContoller {
     private final Logger LOGGER = LoggerFactory.getLogger(LogRestController.class);
     
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(path="api/submitToken/{pushToken}")
+    @RequestMapping(path="api/submitToken/{pushToken}", method = RequestMethod.PUT)
     ResponseEntity<Integer> submitToken(@PathVariable("pushToken") String pushToken, Principal principal, HttpServletRequest request){
+    	LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
     	
+    	System.out.println("Principal: "+principal);
     	User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
     	authenticatedUser = userRepository.findOne(authenticatedUser.getId());
     	PushToken oldToken = pushTokenRepository.findByUserId(authenticatedUser.getId());
