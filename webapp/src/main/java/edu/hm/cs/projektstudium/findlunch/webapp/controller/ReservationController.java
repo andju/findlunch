@@ -269,7 +269,7 @@ public class ReservationController {
 		User user = reservation.getUser();
 		PushToken userToken = tokenRepository.findByUserId(user.getId());
 		
-		push.setFcmToken(userToken.toString());
+		push.setFcmToken(userToken.getFcm_token());
 		pushManager.sendFcmNotification(push);
 		
 	}
