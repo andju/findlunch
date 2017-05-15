@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +54,7 @@ public class FavoritesRestController {
 	 *            the principal to get the authenticated user
 	 * @return the response entity representing a status code
 	 */
+	@CrossOrigin
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "/api/register_favorite/{restaurantId}", method = RequestMethod.PUT)
 	public ResponseEntity<Integer> registerFavorite(@PathVariable("restaurantId") Integer restaurantId,
@@ -92,6 +94,7 @@ public class FavoritesRestController {
 	 *            the principal to get the authenticated user
 	 * @return the response entity representing a status code
 	 */
+	@CrossOrigin
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "/api/unregister_favorite/{restaurantId}", method = RequestMethod.DELETE)
 	public ResponseEntity<Integer> unregisterFavorite(@PathVariable("restaurantId") Integer restaurantId,

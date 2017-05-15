@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +81,7 @@ public class PushNotificationRestController {
 	 * @param principal the principal
 	 * @return the response entity
 	 */
+	@CrossOrigin
 	@RequestMapping(path = "/api/register_push", method = RequestMethod.POST)
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Integer> registerPush(@RequestBody DailyPushNotificationData pushNotification, Principal principal, HttpServletRequest request) {
@@ -159,6 +161,7 @@ public class PushNotificationRestController {
 	 * @param principal the principal
 	 * @return the kitchen types
 	 */
+	@CrossOrigin
 	@PreAuthorize("isAuthenticated()")
 	@JsonView(PushNotificationView.PushNotificationRest.class)
 	@RequestMapping(path = "/api/get_push", method = RequestMethod.GET)
@@ -180,6 +183,7 @@ public class PushNotificationRestController {
 	 * @param principal the principal
 	 * @return the response entity
 	 */
+	@CrossOrigin
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "/api/unregister_push/{pushId}", method = RequestMethod.DELETE)
 	public ResponseEntity<Integer> unregisterPush(

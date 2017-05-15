@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,6 +82,7 @@ public class ReservationRestController {
 	 * @param request the HttpServletRequest
 	 * @return the response entity representing a status code
 	 */
+	@CrossOrigin
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path= "api/register_reservation", method = RequestMethod.POST)
 	public ResponseEntity<Integer> registerReservation(@RequestBody Reservation reservation, Principal principal, HttpServletRequest request){
@@ -168,6 +170,7 @@ public class ReservationRestController {
 	 * @param request the HttpServletRequest
 	 * @return the response entity representing a status code
 	 */
+	@CrossOrigin
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "api/confirm_reservation/{restaurantUuid}", method = RequestMethod.PUT)
 	public ResponseEntity<Integer> confirmReservation(@PathVariable("restaurantUuid") String restaurantUuid, Principal principal, HttpServletRequest request){

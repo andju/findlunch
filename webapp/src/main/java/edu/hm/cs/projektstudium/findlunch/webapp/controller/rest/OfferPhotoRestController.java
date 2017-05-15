@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +45,7 @@ public class OfferPhotoRestController {
 	 * @param offerId the offer id
 	 * @return the all photos for the given offer
 	 */
+	@CrossOrigin
 	@JsonView(OfferView.OfferPhotoFull.class)
 	@RequestMapping(path = "/api/offer_photos", method = RequestMethod.GET)
 	public List<OfferPhoto> getOfferPhotos(@RequestParam(name = "offer_id", required = true) int offerId, HttpServletRequest request) {

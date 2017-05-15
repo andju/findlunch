@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,6 +67,7 @@ public class RestaurantRestController {
 	 * @return the restaurants within the given radius with a flag showing if
 	 *         the restaurants is a favorite of the authenticated user
 	 */
+	@CrossOrigin
 	@JsonView(RestaurantView.RestaurantRest.class)
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "/api/restaurants", method = RequestMethod.GET, headers = { "Authorization" })
@@ -121,6 +123,7 @@ public class RestaurantRestController {
 	 * @return the restaurants within the given radius. The flag "isFavorite" is
 	 *         always false
 	 */
+	@CrossOrigin
 	@JsonView(RestaurantView.RestaurantRest.class)
 	@RequestMapping(path = "/api/restaurants", method = RequestMethod.GET)
 	public List<Restaurant> getRestaurants(@RequestParam(name = "longitude", required = true) float longitude,

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +54,7 @@ public class OfferRestController {
 	 *            the id of the restaurant
 	 * @return the offers of the given restaurant
 	 */
+	@CrossOrigin
 	@JsonView(OfferView.OfferRest.class)
 	@RequestMapping(path = "/api/offers", method = RequestMethod.GET)
 	public List<Offer> getOffers(@RequestParam(name = "restaurant_id", required = true) int restaurantId, HttpServletRequest request) {

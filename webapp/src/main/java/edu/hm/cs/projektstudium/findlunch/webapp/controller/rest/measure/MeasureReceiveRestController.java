@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,6 +104,7 @@ public class MeasureReceiveRestController {
 	 * @param request The HttpServletRequest.
 	 * @return The response entity representing a status code.
 	 */
+	@CrossOrigin
 	@RequestMapping(value = "/api/transmit_measure", method = RequestMethod.POST, headers = "Accept=application/json")
 	public ResponseEntity<Integer> transmitMeasure(@RequestBody HashMap<String,String> msg, HttpServletRequest request) {
 

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +42,7 @@ public class PointsRestController {
 	 * @param request the HttpServletRequest
 	 * @return a List from the current points of the user
 	 */
+	@CrossOrigin
     @JsonView(PointsView.PointsRest.class)
 	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(path = "/api/get_points", method = RequestMethod.GET, headers = {"Authorization"})

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,7 @@ public class LoginUserRestController {
      * @param request the HttpServletRequest
      * @return the response entity representing a status code
      */
+    @CrossOrigin
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/api/login_user", method = RequestMethod.GET)
     public ResponseEntity<Integer> loginUser(HttpServletRequest request) {

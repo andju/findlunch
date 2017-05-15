@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,6 +55,7 @@ public class RegisterUserRestController {
 	 *            the user that should be registered
 	 * @return the response entity
 	 */
+	@CrossOrigin
 	@RequestMapping(path = "/api/register_user", method = RequestMethod.POST)
 	public ResponseEntity<Integer> registerUser(@RequestBody(required = true) User user, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
