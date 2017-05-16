@@ -97,14 +97,6 @@ public class Beans extends WebMvcConfigurerAdapter{
 		};
 	  }
 	
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/api/**")
-			.allowedOrigins("/**")
-			.allowedMethods("PUT","GET","POST")
-			.allowCredentials(true);
-	}
-	
 	/**
 	 * Returns the local validator
 	 */
