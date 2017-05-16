@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
@@ -16,6 +17,8 @@ import com.squareup.okhttp.Response;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 
 /**
  * 
@@ -38,6 +41,10 @@ public class SendFcmNotification extends PushNotificationManager implements Runn
 	 * The logger. 
 	 */
 	private final Logger LOGGER = LoggerFactory.getLogger(SendFcmNotification.class);
+	
+	//TEST
+	@Autowired
+	PushTokenRepository pushRepo;
 	
 	/**
 	 * Url for sending Google FCM notification.
@@ -71,7 +78,7 @@ public class SendFcmNotification extends PushNotificationManager implements Runn
 		JSONObject messageObject = new JSONObject();
 		//JSONObject data = new JSONObject();
 		//messageObject.put("to", p.getFcmToken());
-		System.out.println(push);
+		
 		messageObject.put("to", push.getFcmToken());
 		
 		//If multiple messages are sent while device is offline,
