@@ -7,8 +7,6 @@
 	<div style="margin-left: 25px; margin-right: 25px;">
 		<h1 th:text="#{reservations.label}">daily bussiness</h1>
 		
-		<div id="pushNotification" hidden="hideen" class="alert alert-warning" th:text="placeholder" role="alert"></div>
-
 		<div th:if="${param.success}" class="alert alert-success"
 			th:text="#{success.reservations.confirmed}" role="alert">success.offer.confirmed</div>
 		<div th:if="${param.selectReservation}" class="alert alert-danger"

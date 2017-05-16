@@ -63,19 +63,16 @@ var config = {
   
   messaging.onMessage(function(payload) {
 		console.log("Message received. ", payload);
-		  
-		//const data = JSON.parse(payload.data.notification);
-		//Const notificationTitle = data.title;
-		//const notificationOptions = {
-		//		body: data.body,
-		//		icon: data.icon
-		//};
-		const dataElement = JSON.stringify(payload, null, 2);
 		
-		var pushNotification = document.getElementById("pushNotification");
-		pushNotification.hidden="";
-		pushNotification.innerHTML=dataElement;//notificationTitle+" - "+notificationOptions;
+		var currentLocation = window.location.pathname;
 		
+		if(currentLocation!="/reservations"){
+			var pushNotification = document.getElementById("pushNotification");
+			pushNotification.hidden="";
+		}
+		else{
+			location.reload();
+		}
 	});	
 	
   messaging.onTokenRefresh(function() {
