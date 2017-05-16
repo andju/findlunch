@@ -63,7 +63,16 @@ var config = {
   
   messaging.onMessage(function(payload) {
 		console.log("Message received. ", payload);
-		  // ...
+		
+		var currentLocation = window.location.pathname;
+		
+		if(currentLocation!="/reservations"){
+			var pushNotification = document.getElementById("pushNotification");
+			pushNotification.hidden="";
+		}
+		else{
+			location.reload();
+		}
 	});	
 	
   messaging.onTokenRefresh(function() {
