@@ -140,6 +140,7 @@ public class ReservationController {
 		for(Reservation r: confirmedReservations){
 			Reservation reservation = reservationRepository.findOne(r.getId());
 			reservation.setConfirmed(true);
+			reservation.setRejected(false);
 			reservationRepository.save(reservation);
 			increaseConsumerPoints(reservation);
 			confirmPush(reservation);
