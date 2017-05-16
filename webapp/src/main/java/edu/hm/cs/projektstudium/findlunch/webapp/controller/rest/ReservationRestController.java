@@ -109,6 +109,7 @@ public class ReservationRestController {
 		reservation.setReservationNumber(generateReservationNumber());
 		reservation.setReservationTime(new Date());
 		reservation.setConfirmed(false);
+		reservation.setRejected(false);
 		reservation.setUser(authenticatedUser);
 		reservation.setOffer(offer);
 		reservation.setRestaurant(offer.getRestaurant());
