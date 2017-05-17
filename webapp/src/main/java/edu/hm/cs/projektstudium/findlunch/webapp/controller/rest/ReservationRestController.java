@@ -30,6 +30,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
@@ -37,6 +38,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.EuroPerPointRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
@@ -71,6 +73,10 @@ public class ReservationRestController {
 	/** The restaurant repository. */
 	@Autowired 
 	private RestaurantRepository restaurantRepository;
+	
+	/** The token repository. */
+	@Autowired
+	private PushTokenRepository tokenRepository;
 	
 	/** The Logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(ReservationRestController.class);
@@ -127,15 +133,7 @@ public class ReservationRestController {
 		
 		reservationRepository.save(reservation);
 		
-		/**
-		 * Senden einer Bestätigung als Push
-		 * @author Niklas Klotz
-		 * TODO: Test
-		 */
-		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
-		push.generateOrderReceive(reservation, authenticatedUser);
-		pushManager.sendFcmNotification(push);
+		confirmPush(reservation);
 		
 		
 		if(reservation.isUsedPoints()){
@@ -232,6 +230,26 @@ public class ReservationRestController {
 			//restaurant nicht gefunden
 			return new ResponseEntity<Integer>(3, HttpStatus.CONFLICT);
 		}
+	}
+	
+	/**
+	 * Sendet eine Push Notification über die neue Bestellung an das Restaurant.
+	 * @param reservation
+	 */
+	private void confirmPush(Reservation reservation) {
+		
+		PushNotificationManager pushManager = new PushNotificationManager();
+		PushNotification push = new PushNotification();
+		push.generateReservationConfirm(reservation);
+		
+		Restaurant restaurant = reservation.getRestaurant();
+		
+		
+		PushToken userToken = tokenRepository.findByUserId(restaurant.getId());
+		
+		push.setFcmToken(userToken.getFcm_token());
+		pushManager.sendFcmNotification(push);
+		
 	}
 	
 	

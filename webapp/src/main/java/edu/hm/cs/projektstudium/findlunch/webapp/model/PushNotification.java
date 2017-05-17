@@ -100,6 +100,7 @@ public class PushNotification {
 		putData("reservation", String.valueOf(reservation.getId()));
 		putData("pushId", String.valueOf(reservation.getId()));
 		
+		
 		//setFcmToken(user.getFcmId());
 		setId(reservation.getId());
 	}

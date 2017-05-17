@@ -258,7 +258,7 @@ public class ReservationController {
 	}
 	
 	/**
-	 *  
+	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
 	 * 
 	 */
 	private void confirmPush(Reservation reservation) {
