@@ -218,6 +218,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
   `start_date` DATE NULL DEFAULT NULL,
   `end_date` DATE NULL DEFAULT NULL,
   `needed_points` INT NOT NULL,
+  `sold_out` TINYINT(1) NOT NULL,	
   PRIMARY KEY (`id`),
   INDEX `fk_product_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_product_restaurant1`

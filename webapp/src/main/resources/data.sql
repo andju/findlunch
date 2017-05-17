@@ -1,5 +1,8 @@
 --Insert Users and Restaurant value for demo!!!--
 
+--TEST BESTELLUNG:
+/*INSERT INGNORE INTO `findlunch`.`reservation` (`id`, `reservation_number`, `amount`, `reservation_time`, `total_price`, `donation`, `used_points`, `user_id`, `offer_id`, `euro_per_point_id`, `restaurant_id`) VALUES (1, 1, 1, '2017-05-17 21:16:00', 1.0, 0.0, 0.0, 101, 101, 1, NULL, 101); */
+
 INSERT IGNORE INTO `findlunch`.`country` (`country_code`, `name`) VALUES ('DE', 'Deutschland');
 
 INSERT IGNORE INTO `findlunch`.`day_of_week` (`id`, `name`, `day_number`) VALUES (1, 'Montag', 2);

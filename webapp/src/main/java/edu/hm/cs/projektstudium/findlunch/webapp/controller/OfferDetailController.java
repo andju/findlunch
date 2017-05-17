@@ -176,7 +176,6 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		
 		Restaurant restaurant = restaurantRepository.findOne(authenticatedUser.getAdministratedRestaurant().getId());
 		restaurant.addOffer(offer);
-		System.out.println(offer.getCourseTypes()+" - "+offer.getDescription());
 		offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 		
 		// Checks not handled by Hibernate annotations

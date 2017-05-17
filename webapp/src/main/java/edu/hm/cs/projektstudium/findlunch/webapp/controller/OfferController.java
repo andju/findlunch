@@ -104,6 +104,32 @@ public class OfferController {
 		return "redirect:/offer?deleted";
 	}
 	
+	@RequestMapping(path="/offer/soldout/{offerId}", method=RequestMethod.GET)
+	public String soldoutOffer(@PathVariable("offerId") Integer offerId, Model model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "offerId", offerId.toString()));
+		
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		
+		if(authenticatedUser.getAdministratedRestaurant() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
+			return "redirect:/restaurant/add?required";
+		}
+		
+		Offer offer = offerRepository.findByIdAndRestaurant_id(offerId, authenticatedUser.getAdministratedRestaurant().getId());
+		if(offer == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The offer with id " + offerId + " could not be found for the given restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + "."));
+			return "redirect:/offer?invalid_id";
+		}
+
+		if(!offer.getSold_out()){
+			offer.setSold_out(true);
+			return "redirect:/offer?soldOut";
+		}
+		
+		offer.setSold_out(false);
+		return "redirect:/offer?availabile";		
+	}
+	
 	public List<CourseTypes> getCourseTypesForOffers(List<Offer> offers){
 		
 		List<CourseTypes> courseTypes = new ArrayList<CourseTypes>();

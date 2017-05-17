@@ -147,12 +147,13 @@ public class Offer {
 	@JsonView(OfferView.OfferRest.class)
 	private CourseTypes courseType;
 
-
-
 	/** The offer photos. */
 	//bi-directional many-to-one association to OfferPhoto
 	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL, orphanRemoval=true )
 	private List<OfferPhoto> offerPhotos;
+
+	/** Is sold out */
+	private boolean sold_out;
 
 	/**
 	 * Instantiates a new offer.
@@ -390,6 +391,21 @@ public class Offer {
 
 	public void setCourseTypes(CourseTypes courseType) {
 		this.courseType = courseType;
+	}
+	public CourseTypes getCourseType() {
+		return courseType;
+	}
+
+	public void setCourseType(CourseTypes courseType) {
+		this.courseType = courseType;
+	}
+
+	public boolean getSold_out() {
+		return sold_out;
+	}
+
+	public void setSold_out(boolean sold_out) {
+		this.sold_out = sold_out;
 	}
 
 }
