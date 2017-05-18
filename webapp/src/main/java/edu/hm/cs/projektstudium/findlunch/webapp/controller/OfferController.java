@@ -123,10 +123,12 @@ public class OfferController {
 
 		if(!offer.getSold_out()){
 			offer.setSold_out(true);
+			offerRepository.save(offer);
 			return "redirect:/offer?soldOut";
 		}
 		
 		offer.setSold_out(false);
+		offerRepository.save(offer);
 		return "redirect:/offer?availabile";		
 	}
 	

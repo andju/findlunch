@@ -75,6 +75,13 @@ public class OfferRestController {
 			if (ts != null) {
 				getValidOffers(c, ts, restaurantId, result);
 			}
+			
+			//removes offers which are not availabile
+			for(Offer offer : result){
+				if(offer.getSold_out()){
+					result.remove(offer);
+				}
+			}
 		}
 		return result;
 	}

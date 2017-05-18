@@ -85,6 +85,18 @@
 								data-toggle="modal" data-target="#confirm-delete">
 								<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 							</button></td>
+							<td>
+								<a th:href="@{/offer/soldout/{id}(id=*{offer.id})}">
+									<button th:if="${offer.sold_out != true}" 
+											class="btn btn-default" 
+											th:text="Ausverkauft">								
+									</button>
+									<button th:if="${offer.sold_out == true}" 
+											class="btn btn-default" 
+											th:text="Verfügbar">								
+									</button>
+								</a>
+							</td>
 					</tr>
 					<tr
 						th:if="${#dates.format(#dates.createNow(), 'yyyyMMdd')} lt ${#dates.format(offer.startDate, 'yyyyMMdd')} or ${#dates.format(#dates.createNow(), 'yyyyMMdd')} gt ${#dates.format(offer.endDate, 'yyyyMMdd')}">
@@ -112,15 +124,19 @@
 								data-toggle="modal" data-target="#confirm-delete">
 								<span class="glyphicon glyphicon-trash" aria-hidden="true"
 									style="color: #C0C0C0;"></span>
-							</button>
-							<button th:if="{offer.sold_out != true}" class="btn btn-default"
-								th:attr="data-href=@{/offer/soldout/{id}(id=*{offer.id})}"
-								th:text="Ausverkauft">								
-							</button>
-							<button th:if="{offer.sold_out == true}" class="btn btn-default"
-								th:attr="data-href=@{/offer/soldout/{id}(id=*{offer.id})}"
-								th:text="Verfügbar">
 							</button></td>
+							<td>
+								<a th:href="@{/offer/soldout/{id}(id=*{offer.id})}">
+									<button th:if="${offer.sold_out != true}" 
+											class="btn btn-default" 
+											th:text="Ausverkauft">								
+									</button>
+									<button th:if="${offer.sold_out == true}" 
+											class="btn btn-default" 
+											th:text="Verfügbar">								
+									</button>
+								</a>
+							</td>
 					</tr>
 				</div>
 			
@@ -128,7 +144,6 @@
 	</div>
 
 	</div>
-	
 		
 		
 		

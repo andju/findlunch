@@ -111,6 +111,10 @@ public class ReservationRestController {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "It do not exist an offer with the id "+ reservation.getOffer().getId()));
 			return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 		}
+		if(offer.getSold_out()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The offer is currently sold out "+ reservation.getOffer().getId()));
+			return new ResponseEntity<Integer>(5, HttpStatus.CONFLICT);
+		}
 
 		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1); //holt den euro pro punkt mit der id
 		

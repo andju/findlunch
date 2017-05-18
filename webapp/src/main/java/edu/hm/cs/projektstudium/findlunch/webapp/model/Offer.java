@@ -153,6 +153,8 @@ public class Offer {
 	private List<OfferPhoto> offerPhotos;
 
 	/** Is sold out */
+	@Column(name="sold_out")
+	@JsonView(OfferView.OfferRest.class)
 	private boolean sold_out;
 
 	/**
