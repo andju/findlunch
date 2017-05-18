@@ -89,11 +89,11 @@
 								<a th:href="@{/offer/soldout/{id}(id=*{offer.id})}">
 									<button th:if="${offer.sold_out != true}" 
 											class="btn btn-default" 
-											th:text="Ausverkauft">								
+											th:text="#{offer.button.soldout}">								
 									</button>
 									<button th:if="${offer.sold_out == true}" 
 											class="btn btn-default" 
-											th:text="Verfügbar">								
+											th:text="#{offer.button.avaliabile}">								
 									</button>
 								</a>
 							</td>
@@ -129,11 +129,11 @@
 								<a th:href="@{/offer/soldout/{id}(id=*{offer.id})}">
 									<button th:if="${offer.sold_out != true}" 
 											class="btn btn-default" 
-											th:text="Ausverkauft">								
+											th:text="#{offer.button.soldout}">								
 									</button>
 									<button th:if="${offer.sold_out == true}" 
 											class="btn btn-default" 
-											th:text="Verfügbar">								
+											th:text="#{offer.button.avaliabile}">								
 									</button>
 								</a>
 							</td>
