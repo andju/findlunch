@@ -131,8 +131,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `findlunch`.`course_types` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
+	`restaurant_id` INT(11) NOT NULL,
   `name` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`id`))
+    `sort_by` INT(11) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_course_restaurant1_idx` (`restaurant_id` ASC),
+  CONSTRAINT `fk_course_restaurant1`
+    FOREIGN KEY (`restaurant_id`)
+    REFERENCES `findlunch`.`restaurant` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)  
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

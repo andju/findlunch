@@ -31,6 +31,14 @@ public class CourseTypes {
 	@Column(name="name")
 	@JsonView({OfferView.OfferRest.class})
 	private String name;
+	
+	@Column(name="restaurant_id")
+	@JsonView({OfferView.OfferRest.class})
+	private int restaurantId;
+	
+	@Column(name="sort_by")
+	@JsonView({OfferView.OfferRest.class})
+	private int sortBy;
 
 	public CourseTypes(){
 		
@@ -50,6 +58,22 @@ public class CourseTypes {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(int restaurantId) {
+		this.restaurantId = restaurantId;
+	}
+
+	public int getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(int sortBy) {
+		this.sortBy = sortBy;
 	}
 	
 }

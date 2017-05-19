@@ -36,7 +36,7 @@ public class OfferController {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 	
-	/** NIKLSA KLOTZ */
+	/** NIKLAS KLOTZ */
 	@Autowired
 	private CourseTypeRepository courserTypeRepository;
 	
