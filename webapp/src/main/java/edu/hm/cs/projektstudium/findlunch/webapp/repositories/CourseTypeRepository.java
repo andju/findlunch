@@ -1,5 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.repositories;
 
+import java.util.ArrayList;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +28,6 @@ public interface CourseTypeRepository extends JpaRepository<CourseTypes, Integer
 	 * @return
 	 */
 	CourseTypes findById(int id);
-	
+
+
 }
