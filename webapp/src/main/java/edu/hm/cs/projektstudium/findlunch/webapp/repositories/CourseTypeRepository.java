@@ -22,6 +22,18 @@ public interface CourseTypeRepository extends JpaRepository<CourseTypes, Integer
 	 */
 	CourseTypes findById(int id);
 	
+	/**
+	 * 
+	 * @param restaurant_id
+	 * @return
+	 */
 	List<CourseTypes> findByRestaurantIdOrderBySortByAsc(int restaurant_id);
 	
+	/**
+	 * 
+	 * @param id
+	 * @param restaurant_id
+	 * @return
+	 */
+	CourseTypes findByIdAndRestaurantId(int id, int restaurant_id);
 }

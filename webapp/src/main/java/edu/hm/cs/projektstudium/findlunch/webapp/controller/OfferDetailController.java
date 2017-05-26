@@ -38,7 +38,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -98,12 +97,17 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be added."));
 			return "redirect:/restaurant/add?required";
 		}
+		List<CourseTypes> courseTypes = courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
+		 if(courseTypes.isEmpty()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + " has no coursetypes."));
+			return "redirect:/coursetype/add?required";
+		}
 		
 		Offer newOffer = new Offer();
 		session.setAttribute("photoList", newOffer.getOfferPhotos());
 		model.addAttribute("offer", newOffer);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
-		model.addAttribute("courseType" , courserTypeRepository.findAll());
+		model.addAttribute("courseTypes" , courseTypes);
 		model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		return "offerDetail";
 	}
@@ -132,8 +136,13 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be edited."));
 			return "redirect:/restaurant/add?required";
 		}
+		List<CourseTypes> courseTypes = courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
+		 if(courseTypes.isEmpty()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + " has no coursetypes."));
+			return "redirect:/coursetype/add?required";
+		}
 		
-		Offer offer = offerRepository.findByIdAndRestaurant_id(offerId, authenticatedUser.getAdministratedRestaurant().getId());
+		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(offerId, authenticatedUser.getAdministratedRestaurant().getId());
 		if(offer == null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The offer with id " + offerId + " could not be found for the given restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + "."));
 			return "redirect:/offer?invalid_id";
@@ -143,8 +152,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		model.addAttribute("offer", offer);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
-		model.addAttribute("courseType" , courserTypeRepository.findAll());
-		//model.addAttribute("selectedCourse", courserTypeRepository.findOne(offer.getCourseType().getId()));
+		model.addAttribute("courseTypes" , courseTypes);
 		model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		return "offerDetail";	
 	}

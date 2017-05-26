@@ -17,6 +17,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -33,6 +34,7 @@ import org.springframework.format.annotation.NumberFormat.Style;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
 
 /**
@@ -141,12 +143,20 @@ public class Offer {
 	@ManyToOne(fetch=FetchType.EAGER)
 	private Restaurant restaurant;
 	
-	/** NIKLAS KLOTZ */ 
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name = "course_id")
+	/**
+	@ManyToOne
+	@JoinTable(name = "offer_course", joinColumns = {
+	@JoinColumn(name = "offer_id") }, inverseJoinColumns = { @JoinColumn(name = "coursetype_id") })
 	@JsonView(OfferView.OfferRest.class)
-	private CourseTypes courseType;
-
+	private OfferCourse offerCourse;
+	*/
+	
+	@Column(name="course_type")
+	private int courseType;
+	
+	@Column(name="sort_by")
+	private int order;
+	
 	/** The offer photos. */
 	//bi-directional many-to-one association to OfferPhoto
 	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL, orphanRemoval=true )
@@ -387,6 +397,7 @@ public class Offer {
 		this.neededPoints = neededPoints;
 	}
 	
+	/*
 	public CourseTypes getCourseTypes() {
 		return courseType;
 	}
@@ -401,6 +412,7 @@ public class Offer {
 	public void setCourseType(CourseTypes courseType) {
 		this.courseType = courseType;
 	}
+	*/
 
 	public boolean getSold_out() {
 		return sold_out;
@@ -410,4 +422,19 @@ public class Offer {
 		this.sold_out = sold_out;
 	}
 
+	public int getCourseType() {
+		return courseType;
+	}
+
+	public void setCourseType(int courseType) {
+		this.courseType = courseType;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int orderby) {
+		this.order = orderby;
+	}
 }

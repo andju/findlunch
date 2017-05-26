@@ -294,7 +294,7 @@ public class OfferPhotoRestControllerIT {
 		o.setStartDate(new Date());
 		o.setEndDate(new Date());
 		o.setNeededPoints(30);
-		o.setCourseTypes(courserTypeRepository.getOne(1));
+		//o.setCourseTypes(courserTypeRepository.getOne(1));
 
 		return o;
 	}

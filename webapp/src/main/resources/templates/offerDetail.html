@@ -60,26 +60,22 @@
 							</div>
 						</td>
 					</tr>	
-					
 					<tr>
 						<td><label class="control-label" for="courseType" 
 							th:text="#{offer.label.course}">course</label>
 						</td>
-						
 						<td style="width: 15px"><span 
 							style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip"
 							th:title="#{offerDetail.tooltip.course}"></span></td>
-						
 						<td>
-						<div th:each="course : ${courseType}">
-						<input type="radio" th:field="*{courseTypes}" th:value="${course.getId()}"/>
-						<label th:text="${course.getName()}" ></label>
-						</div>
+							<div th:each="course : ${courseTypes}">
+								<input type="radio" th:field="${offer.courseType}" th:value="${course.getId()}"/>
+									<label th:text="${course.getName()}" ></label>
+							</div>
 						</td>
 					</tr>
-					
 					<tr>
 							<td><label class="control-label" for="price"
 							th:text="#{offer.label.price}">price</label>*</td>
