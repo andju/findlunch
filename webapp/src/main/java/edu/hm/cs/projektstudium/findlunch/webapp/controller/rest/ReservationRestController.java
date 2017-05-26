@@ -188,7 +188,7 @@ public class ReservationRestController {
 		List<Reservation> reservations = reservationRepository.findByUserIdAndReservationTimeAfterAndConfirmedFalse(authenticatedUser.getId(),startOfDay);
 		
 		if(r != null){
-			List<Offer> offerList = offerRepository.findByRestaurant_id(r.getId());
+			List<Offer> offerList = offerRepository.findByRestaurant_idOrderByOrderAsc(r.getId());
 			if(offerList != null && !offerList.isEmpty()){
 				
 				for(int i = 0; i < reservations.size(); i++) {

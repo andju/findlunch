@@ -119,7 +119,7 @@ public class OfferRestController {
 		if (startTime <= currentTime && endTime >= currentTime) {
 			Date today = getZeroTimeDate(new Date());
 
-			for (Offer o : offerRepo.findByRestaurant_id(restaurantId)) {
+			for (Offer o : offerRepo.findByRestaurant_idOrderByOrderAsc(restaurantId)) {
 				Date startDate = getZeroTimeDate(o.getStartDate());
 				Date endDate = getZeroTimeDate(o.getEndDate());
 

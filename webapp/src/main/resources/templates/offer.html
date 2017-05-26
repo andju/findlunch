@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head th:replace="fragments/head :: includes">
@@ -60,7 +61,7 @@
 			
 			
 			
-			<div th:each="offer, stat: *{offers}" th:if="${offer.courseTypes.getId() == courseType.getId()} and ${offer.courseTypes.getId() != null}">
+			<div th:each="offer, stat: *{offers}" th:if="${offer.courseType == courseType.getId()}">
 					<tr
 						th:if="${#dates.format(#dates.createNow(), 'yyyyMMdd')} ge ${#dates.format(offer.startDate, 'yyyyMMdd')} and ${#dates.format(#dates.createNow(), 'yyyyMMdd')} le ${#dates.format(offer.endDate, 'yyyyMMdd')}">
 						<td th:text="*{offer.title}"></td>

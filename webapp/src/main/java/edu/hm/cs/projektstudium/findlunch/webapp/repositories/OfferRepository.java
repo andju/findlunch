@@ -21,7 +21,7 @@ public interface OfferRepository extends JpaRepository<Offer, Serializable>{
 	 * @param restaurantId the restaurant id
 	 * @return the list of Offers for this restaurant
 	 */
-	List<Offer> findByRestaurant_id(int restaurantId);
+	List<Offer> findByRestaurant_idOrderByOrderAsc(int restaurantId);
 	
 	/**
 	 * Find a Offer by its id and the restaurant id.
@@ -30,6 +30,8 @@ public interface OfferRepository extends JpaRepository<Offer, Serializable>{
 	 * @param restaurantId the restaurant id
 	 * @return the offer
 	 */
-	Offer findByIdAndRestaurant_id(int id, int restaurantId);
+	Offer findByIdAndRestaurant_idOrderByOrderAsc(int id, int restaurantId);
+	
+	List<Offer> findByCourseTypeOrderByOrderAsc(int courseType_id);
 	
 }

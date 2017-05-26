@@ -186,7 +186,7 @@ public class SecurityConfig {
 					.authorizeRequests()
 					.antMatchers("/", "/login", "/home", "/register", "/privacy", "/terms", "/faq_customer",
 							"/faq_restaurant", "/about_findlunch", "/css/**", "/api/**", "/js/**", "/fonts/**",
-							"/images/**")
+							"/images/**", "/course_type/**", "coursetype/**")
 					.permitAll()
 					.antMatchers("/booking/**").hasAuthority("Betreiber")
 					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()

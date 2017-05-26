@@ -1,12 +1,17 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
@@ -31,7 +36,21 @@ public class CourseTypes {
 	@Column(name="name")
 	@JsonView({OfferView.OfferRest.class})
 	private String name;
+	
+	@Column(name="restaurant_id")
+	@JsonView({OfferView.OfferRest.class})
+	private int restaurantId;
+	
+	@Column(name="sort_by")
+	@JsonView({OfferView.OfferRest.class})
+	private int sortBy;
 
+	/*
+	@OneToMany(mappedBy="coursetype", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Offer> offers;
+	*/
+	
 	public CourseTypes(){
 		
 	}
@@ -50,6 +69,22 @@ public class CourseTypes {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(int restaurantId) {
+		this.restaurantId = restaurantId;
+	}
+
+	public int getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(int sortBy) {
+		this.sortBy = sortBy;
 	}
 	
 }

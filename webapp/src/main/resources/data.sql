@@ -19,11 +19,12 @@ INSERT IGNORE INTO `findlunch`.`kitchen_type` (`id`, `name`) VALUES (3, 'Griechi
 INSERT IGNORE INTO `findlunch`.`kitchen_type` (`id`, `name`) VALUES (4, 'Asiatisch');
 INSERT IGNORE INTO `findlunch`.`kitchen_type` (`id`, `name`) VALUES (5, 'Bayerisch');
 
-INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (1, 'Vorspeise');
-INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (2, 'Hauptspeise');
-INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (3, 'Nachspeise');
-INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (4, 'Getränk');
-INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `name`) VALUES (5, 'Beilage');
+
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `restaurant_id`, `name`, `sort_by`) VALUES ('1', '101', 'Vorspeise', '1');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `restaurant_id`, `name`, `sort_by`) VALUES ('2', '101', 'Hauptspeise', '2');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `restaurant_id`, `name`, `sort_by`) VALUES ('3', '11', 'Hauptspeise', '1');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `restaurant_id`, `name`, `sort_by`) VALUES ('4', '12', 'Hauptspeise', '1');
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `restaurant_id`, `name`, `sort_by`) VALUES ('5', '13', 'Hauptspeise', '1');
 
 INSERT IGNORE INTO `findlunch`.`restaurant_type` (`id`, `name`) VALUES (1, 'Imbiss');
 INSERT IGNORE INTO `findlunch`.`restaurant_type` (`id`, `name`) VALUES (2, 'Restaurant');
@@ -77,21 +78,21 @@ INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `restaurant
 (100, 'ionic@ionic.com', '$2a$10$AM5MLDZLCINLkGqWSQdIkeI/RR2DzlIWXP8UMLmJTNfjnrBFO7meu', NULL, 2, NULL);
 
 -- offer
-INSERT IGNORE INTO `findlunch`.`offer` (`id`, `restaurant_id`, `course_id`, `title`, `description`, `price`, `preparation_time`, `start_date`, `end_date`, `needed_points`) VALUES
-(1, 11, 1,'Champignonreispfanne (Tg1) ', 'vegan', '1.00', 2, '2017-01-08', '2017-03-31', 30),
-(2, 11, 1, 'Hackbällchen mit Paprikasauce (Tg3)', 'Rindfleisch und Schweinefleisch', '1.90', 4, '2017-01-08', '2017-04-30', 35),
-(3, 11, 1, 'Pfannkuchen mit Schokosauce (Tg2)', 'fleischlos', '1.59', 3, '2017-01-08', '2017-05-01', 25),
-(4, 11, 1, 'Putengulasch (Tg4) ', 'Putenfleisch', '2.40', 5, '2017-01-08', '2017-04-30', 37),
-(5, 12, 1, 'Country Potatoes', 'Knusprige Countrypotatoes mit Sourcreamdip', '4.90', 5, '2017-01-08', '2017-04-30', 40),
-(6, 12, 1, 'Feurige Bohnen', 'Chili con Carne, der leckere texanische Eintopf)', '4.50', 6, '2017-01-08', '2017-05-01', 38),
-(7, 12, 1, 'Fleischpflanzerlsemmel', 'Frisch', '2.50', 3, '2017-01-08', '2017-05-01', 23),
-(8, 12, 1, 'Wiener mit Semmel oder Kartoffelsalat', 'klein', '2.90', 2, '2017-01-08', '2017-05-01', 15),
-(9, 12, 1, 'Wiener mit Semmel oder Kartoffelsalat ', 'groß', '4.00', 5, '2017-01-08', '2017-05-01', 30),
-(10, 13, 1, 'Butterbreze', 'mit Salz', '1.10', 1, '2017-01-08', '2017-05-01', 10),
-(11, 13, 1, 'Früchtetee', 'mit Himbeeren und Erdbeeren', '1.30', 2, '2017-01-08', '2017-05-01', 15),
-(12, 13, 1, 'Nussschnecke', 'jeden Tag frisch', '1.80', 1, '2017-01-08', '2017-05-01', 20),
-(13, 13, 1, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-05-01', 8),
-(101, 101, 1, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-05-01', 8);
+INSERT IGNORE INTO `findlunch`.`offer` (`id`, `restaurant_id`, `title`, `description`, `price`, `preparation_time`, `start_date`, `end_date`, `needed_points`, `sold_out`, `course_type`, `sort_by`) VALUES
+(1, 11,'Champignonreispfanne (Tg1) ', 'vegan', '1.00', 2, '2017-01-08', '2017-03-31', 30, FALSE, 3, 1),
+(2, 11, 'Hackbällchen mit Paprikasauce (Tg3)', 'Rindfleisch und Schweinefleisch', '1.90', 4, '2017-01-08', '2017-04-30', 35, FALSE, 3, 1),
+(3, 11, 'Pfannkuchen mit Schokosauce (Tg2)', 'fleischlos', '1.59', 3, '2017-01-08', '2017-05-01', 25, FALSE, 3, 1),
+(4, 11, 'Putengulasch (Tg4) ', 'Putenfleisch', '2.40', 5, '2017-01-08', '2017-04-30', 37, FALSE, 3, 1),
+(5, 12, 'Country Potatoes', 'Knusprige Countrypotatoes mit Sourcreamdip', '4.90', 5, '2017-01-08', '2017-04-30', 40, FALSE, 4, 1),
+(6, 12, 'Feurige Bohnen', 'Chili con Carne, der leckere texanische Eintopf)', '4.50', 6, '2017-01-08', '2017-05-01', 38, FALSE, 4, 1),
+(7, 12, 'Fleischpflanzerlsemmel', 'Frisch', '2.50', 3, '2017-01-08', '2017-05-01', 23, FALSE, 4, 1),
+(8, 12, 'Wiener mit Semmel oder Kartoffelsalat', 'klein', '2.90', 2, '2017-01-08', '2017-05-01', 15, FALSE, 4, 1),
+(9, 12, 'Wiener mit Semmel oder Kartoffelsalat ', 'groß', '4.00', 5, '2017-01-08', '2017-05-01', 30, FALSE, 4, 1),
+(10, 13, 'Butterbreze', 'mit Salz', '1.10', 1, '2017-01-08', '2017-05-01', 10, FALSE, 5, 1),
+(11, 13, 'Früchtetee', 'mit Himbeeren und Erdbeeren', '1.30', 2, '2017-01-08', '2017-05-01', 15, FALSE, 5, 1),
+(12, 13, 'Nussschnecke', 'jeden Tag frisch', '1.80', 1, '2017-01-08', '2017-05-01', 20, FALSE, 5, 1),
+(13, 13, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-05-01', 8, FALSE, 5, 1),
+(101, 101, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-05-01', 8, FALSE, 1, 1);
 
 -- offer has day
 INSERT IGNORE INTO `findlunch`.`offer_has_day_of_week` (`offer_id`, `day_of_week_id`) VALUES

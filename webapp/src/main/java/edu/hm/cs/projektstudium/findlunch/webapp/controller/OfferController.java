@@ -36,7 +36,7 @@ public class OfferController {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 	
-	/** NIKLSA KLOTZ */
+	/** NIKLAS KLOTZ */
 	@Autowired
 	private CourseTypeRepository courserTypeRepository;
 	
@@ -64,10 +64,11 @@ public class OfferController {
 			return "redirect:/restaurant/add?required";
 		}
 		
-		List<Offer> offers = (ArrayList<Offer>) offerRepository.findByRestaurant_id(authenticatedUser.getAdministratedRestaurant().getId());
+		List<Offer> offers = (ArrayList<Offer>) offerRepository.findByRestaurant_idOrderByOrderAsc(authenticatedUser.getAdministratedRestaurant().getId());
 		model.addAttribute("offers", offers);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
-		model.addAttribute("courseTypes" , getCourseTypesForOffers(offers));
+		//model.addAttribute("courseTypes" , getCourseTypesForOffers(offers));
+		model.addAttribute("courseTypes" , courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 		
 		return "offer";
 	}
@@ -94,7 +95,7 @@ public class OfferController {
 			return "redirect:/restaurant/add?required";
 		}
 		
-		Offer offer = offerRepository.findByIdAndRestaurant_id(offerId, authenticatedUser.getAdministratedRestaurant().getId());
+		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(offerId, authenticatedUser.getAdministratedRestaurant().getId());
 		if(offer == null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The offer with id " + offerId + " could not be found for the given restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + "."));
 			return "redirect:/offer?invalid_id";
@@ -115,7 +116,7 @@ public class OfferController {
 			return "redirect:/restaurant/add?required";
 		}
 		
-		Offer offer = offerRepository.findByIdAndRestaurant_id(offerId, authenticatedUser.getAdministratedRestaurant().getId());
+		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(offerId, authenticatedUser.getAdministratedRestaurant().getId());
 		if(offer == null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The offer with id " + offerId + " could not be found for the given restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + "."));
 			return "redirect:/offer?invalid_id";
@@ -132,6 +133,7 @@ public class OfferController {
 		return "redirect:/offer?availabile";		
 	}
 	
+	/*
 	public List<CourseTypes> getCourseTypesForOffers(List<Offer> offers){
 		
 		List<CourseTypes> courseTypes = new ArrayList<CourseTypes>();
@@ -144,4 +146,5 @@ public class OfferController {
 		}		
 		return courseTypes;
 	}
+	*/
 }

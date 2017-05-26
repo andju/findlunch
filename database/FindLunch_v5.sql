@@ -131,8 +131,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `findlunch`.`course_types` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `restaurant_id` INT(11) NOT NULL,
   `name` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`id`))
+  `sort_by` INT(11) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  INDEX `fk_course_restaurant1_idx` (`restaurant_id` ASC),
+  CONSTRAINT `fk_course_restaurant1`
+    FOREIGN KEY (`restaurant_id`)
+    REFERENCES `findlunch`.`restaurant` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)  
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -210,7 +218,6 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `restaurant_id` INT(11) NOT NULL,
-  `course_id` INT(11) NOT NULL,
   `title` VARCHAR(60) NOT NULL,
   `description` TINYTEXT NOT NULL,
   `price` DECIMAL(5,2) NOT NULL,
@@ -218,7 +225,9 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
   `start_date` DATE NULL DEFAULT NULL,
   `end_date` DATE NULL DEFAULT NULL,
   `needed_points` INT NOT NULL,
-  `sold_out` TINYINT(1) NOT NULL,	
+  `sold_out` TINYINT(1) NOT NULL,
+  `course_type` INT(11) NOT NULL,
+  `order` INT(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_product_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_product_restaurant1`
@@ -226,9 +235,9 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
     REFERENCES `findlunch`.`restaurant` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  INDEX `fk_product_course_idx` (`course_id` ASC),
+  INDEX `fk_product_course_idx` (`course_type` ASC),
   CONSTRAINT `fk_productcourse1`
-    FOREIGN KEY (`course_id`)
+    FOREIGN KEY (`course_type`)
     REFERENCES `findlunch`.`course_types` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
