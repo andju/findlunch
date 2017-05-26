@@ -41,6 +41,14 @@
 						sec:authentication="name">Dropdown <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li>
+								<a th:text="#{menu.label.edit_account}" href="/restaurant/edit"
+								role="menuitem">Edit</a>
+							</li>
+							<li>
+								<a th:text="#{menu.label.help}" href="/faq_restaurant"
+								role="menuitem">Help</a>
+							</li>
+							<li>
 								<!-- When the CSRF-protection is enabled we have to send the logout request
 									 through POST together with the token. -->
 								<!-- See: https://docs.spring.io/spring-security/site/docs/current/reference/html/csrf.html#csrf-logout
