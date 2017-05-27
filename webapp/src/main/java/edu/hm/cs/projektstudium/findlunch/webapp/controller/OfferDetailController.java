@@ -192,6 +192,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
+			model.addAttribute("courseTypes", courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			
 			LOGGER.error(LogUtils.getValidationErrorString(request, bindingResult, Thread.currentThread().getStackTrace()[1].getMethodName()));
 			return "offerDetail";			

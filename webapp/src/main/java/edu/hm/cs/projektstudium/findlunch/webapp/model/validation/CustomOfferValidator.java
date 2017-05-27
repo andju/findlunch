@@ -10,13 +10,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 
 
@@ -30,7 +35,8 @@ public class CustomOfferValidator implements Validator {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 
-
+	@Autowired
+	private CourseTypeRepository courseTypeRepository;
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
@@ -51,6 +57,7 @@ public class CustomOfferValidator implements Validator {
 		Offer offer = (Offer) objectToValidate;
 		checkDescription(offer.getDescription(), bindingResult);
 		checkTitle(offer.getTitle(), bindingResult);
+		checkCourseType(offer.getCourseType(), bindingResult);
 
 		if (offer.getStartDate() != null && offer.getEndDate() != null) {
 			boolean offerDatesAreValid = checkOfferDates(offer, bindingResult);
@@ -59,7 +66,19 @@ public class CustomOfferValidator implements Validator {
 		}
 
 	}
-
+	
+	/**
+	 * Check coursetype.
+	 * 
+	 * @param courseType
+	 * @param bindingResult
+	 */
+	public void checkCourseType(int courseType, Errors bindingResult) {
+		if(courseTypeRepository.findById(courseType)==null){
+			bindingResult.rejectValue("courseType", "offer.coursetype.notNull");
+		}
+	}
+	
 	/**
 	 * Check offer dates.
 	 *
@@ -189,7 +208,7 @@ public class CustomOfferValidator implements Validator {
 	/** The Constant VALID_TITLE_PATTERN. */
 	private static final Pattern VALID_TITLE_PATTERN = Pattern.compile("([ÖöÄäÜüßA-Z0-9]+[,&()'\". -]*)*",
 			Pattern.CASE_INSENSITIVE);
-
+	
 	/**
 	 * Validate title.
 	 *
