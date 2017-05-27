@@ -573,6 +573,37 @@ public class RestaurantController {
 		
 		return "redirect:/home";
 	}
+	
+	/**
+	 * Get the QR-Code for an existing restaurant.
+	 * @param model
+	 * @param principal
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(path="/restaurant/qrCode", method = RequestMethod.GET)
+	public String getRestaurantQR(Model model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getCancelInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		
+		User authenticatedUser = (User)((Authentication) principal).getPrincipal();
+		
+		if(authenticatedUser.getAdministratedRestaurant() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers it can be edited."));
+			return "redirect:/restaurant/add";
+		}
+		
+		Restaurant restaurant = restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId());
+
+		if(restaurant == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers it can be edited."));
+			return "redirect:/restaurant/add";
+		}
+		
+		setBase64(restaurant);
+		
+		model.addAttribute("restaurant", restaurant);
+		return "qrCode";
+	}
 
 	/**
 	 * Converts a given time to a Date object.
