@@ -67,7 +67,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 	
 	/** Niklas Klotz */
 	@Autowired
-	private CourseTypeRepository courserTypeRepository;
+	private CourseTypeRepository courseTypeRepository;
 	
 	/** The custom offer validator. Handled enhanced checks not handled by the hibernate annotation */
 	@Autowired
@@ -97,7 +97,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be added."));
 			return "redirect:/restaurant/add?required";
 		}
-		List<CourseTypes> courseTypes = courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
+		List<CourseTypes> courseTypes = courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
 		 if(courseTypes.isEmpty()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + " has no coursetypes."));
 			return "redirect:/coursetype/add?required";
@@ -136,7 +136,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be edited."));
 			return "redirect:/restaurant/add?required";
 		}
-		List<CourseTypes> courseTypes = courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
+		List<CourseTypes> courseTypes = courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
 		 if(courseTypes.isEmpty()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + " has no coursetypes."));
 			return "redirect:/coursetype/add?required";
@@ -180,8 +180,6 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		HttpSession session = request.getSession();
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		
-		System.out.println(request.getParameterMap());
-		
 		Restaurant restaurant = restaurantRepository.findOne(authenticatedUser.getAdministratedRestaurant().getId());
 		restaurant.addOffer(offer);
 		offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
@@ -192,7 +190,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
-			model.addAttribute("courseTypes", courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
+			model.addAttribute("courseTypes", courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			
 			LOGGER.error(LogUtils.getValidationErrorString(request, bindingResult, Thread.currentThread().getStackTrace()[1].getMethodName()));
 			return "offerDetail";			
