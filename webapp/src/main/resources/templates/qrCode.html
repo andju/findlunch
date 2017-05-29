@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{QR.headline}"></h1>
+			<div class="table-responsive">
+				<table class="table">
+					<tr>	
+						<td>					
+							<div class="form-group col-md-12">
+								<img  th:src="@{'data:image/jpeg;base64,'+${restaurant.base64Encoded}}" alt="Fail" class="img-thumbnail" width="250" height="250"/>
+							</div>
+							<div>
+								<input type="hidden" th:field="${restaurant.qrUuid}" 
+									class="form-control" id="restaurantQrUuid"/>
+							</div>
+							<div>
+								<input type="hidden" th:field="${restaurant.restaurantUuid}" 
+									class="form-control" id="restaurantUuid"/>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
