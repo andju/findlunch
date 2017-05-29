@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+	
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div id="pushNotification" hidden="hidden" class="alert alert-warning" 
+		role="alert"><a th:href="@{/reservations}" class="alert-link">Sie haben neue Bestellungen!</a></div>
+	
+	<div style="margin-left: 25px; margin-right: 25px; overflow: auto;">
+	
+		<h1 th:text="${courseType.name}">CourseTypes</h1>
+		
+		
+				<table class="table">
+					<thead>
+						<tr>
+							<th><label class="control-label" for="title"
+								th:text="#{offer.label.title}">label</label></th>
+							<th><label class="control-label" for="title"
+								th:text="#{courseoverview.labale.course}">label</label></th>
+							<th><label class="control-label" for="title"
+								th:text="#{offer.label.sortBy}">label</label></th>
+							<th><label class="control-label" for="title"
+								th:text="#{label.action}">label</label></th>
+						</tr>
+					</thead>
+				<tbody>
+					<tr th:each="offer, stat: *{offers}">
+						<td th:text="*{offer.title}"></td>
+						<td th:text="*{courseType.name}"></td>
+						<td th:text="*{offer.order}"></td>
+						<td>
+							<a th:href="@{/coursetype/overview/up/{id}(id=*{offer.id})}">
+							<button class="btn btn-default" name="offerUp">
+									<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+							</button></a>
+							<a th:href="@{/coursetype/overview/down/{id}(id=*{offer.id})}">
+							<button class="btn btn-default" name="offerDown">
+									<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+							</button></a>
+						</td>
+					</tr>			
+				</tbody>
+		</table>	
+
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>	
+</body>
+</html>
