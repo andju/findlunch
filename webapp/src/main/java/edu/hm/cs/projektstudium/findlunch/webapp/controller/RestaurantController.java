@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -601,7 +602,11 @@ public class RestaurantController {
 		
 		setBase64(restaurant);
 		
+		byte[] encoded = Base64.getDecoder().decode(restaurant.getBase64Encoded());
+		System.out.println(encoded);
+		
 		model.addAttribute("restaurant", restaurant);
+		
 		return "qrCode";
 	}
 
@@ -658,7 +663,7 @@ public class RestaurantController {
 	 * @param restaurant
 	 */
 	private void setBase64(Restaurant restaurant){
-		String base64Encoded = Base64.getEncoder().encodeToString(restaurant.getQrUuid()); 
+		String base64Encoded = Base64.getEncoder().encodeToString(restaurant.getQrUuid());
 		restaurant.setBase64Encoded(base64Encoded);
 	}
 	
@@ -694,6 +699,12 @@ public class RestaurantController {
 		baos.close();
 		File file = new File(filePath);
 		file.delete();
+		
+		StringBuilder qr = new StringBuilder();
+		for(int i = 0; i < imageInByte.length; i++){
+			qr.append(imageInByte[i]);
+		}
+		System.out.println(qr);
 		
 		return imageInByte;
 	}
