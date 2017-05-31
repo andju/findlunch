@@ -602,9 +602,6 @@ public class RestaurantController {
 		
 		setBase64(restaurant);
 		
-		byte[] encoded = Base64.getDecoder().decode(restaurant.getBase64Encoded());
-		System.out.println(encoded);
-		
 		model.addAttribute("restaurant", restaurant);
 		
 		return "qrCode";
@@ -699,12 +696,6 @@ public class RestaurantController {
 		baos.close();
 		File file = new File(filePath);
 		file.delete();
-		
-		StringBuilder qr = new StringBuilder();
-		for(int i = 0; i < imageInByte.length; i++){
-			qr.append(imageInByte[i]);
-		}
-		System.out.println(qr);
 		
 		return imageInByte;
 	}
