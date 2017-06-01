@@ -3,7 +3,12 @@ package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,9 +27,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 
@@ -42,6 +49,9 @@ public class OfferRestController {
 	/** The restaurant repository. */
 	@Autowired
 	private RestaurantRepository restaurantRepo;
+	
+	@Autowired
+	private CourseTypeRepository courseTypeRepo;
 
 	/** The logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(OfferRestController.class);
@@ -57,7 +67,7 @@ public class OfferRestController {
 	@CrossOrigin
 	@JsonView(OfferView.OfferRest.class)
 	@RequestMapping(path = "/api/offers", method = RequestMethod.GET)
-	public List<Offer> getOffers(@RequestParam(name = "restaurant_id", required = true) int restaurantId, HttpServletRequest request) {
+	public Map<String, List<Offer>> getOffers(@RequestParam(name = "restaurant_id", required = true) int restaurantId, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		List<Offer> result = new ArrayList<Offer>();
@@ -76,14 +86,30 @@ public class OfferRestController {
 				getValidOffers(c, ts, restaurantId, result);
 			}
 			
-			//removes offers which are not availabile
+			/*
 			for(Offer offer : result){
 				if(offer.getSold_out()){
 					result.remove(offer);
 				}
 			}
+			*/
 		}
-		return result;
+		
+		Map<String, List<Offer>> offers = new LinkedHashMap<String, List<Offer>>();
+		
+		for(CourseTypes course : courseTypeRepo.findByRestaurantIdOrderBySortByAsc(restaurantId)){
+			
+			List<Offer> offersInCourse = new LinkedList<Offer>();
+			for(Offer offer  : result){
+				if(offer.getCourseType() == course.getId() && !offer.getSold_out()){
+					offersInCourse.add(offer);
+				}
+			}
+			if(!offersInCourse.isEmpty()){
+				offers.put(course.getName(), offersInCourse);
+			}
+		}
+		return offers;
 	}
 
 	/**

@@ -40,22 +40,6 @@
 						</td>
 					</tr>
 					<tr>
-						<td><label class="control-label" for="sortBy"
-							th:text="#{coursetype.label.sort}">label</label>*</td>
-						<td style="width: 15px"><span style="padding-top: 7px"
-							class="glyphicon glyphicon-question-sign" data-placement="left"
-							data-toggle="tooltip" th:title="#{coursetype.tooltip.sort}"></span>
-						</td>
-						<td>
-							<div class="form-group col-md-12"
-								th:classappend="${#fields.hasErrors('sortBy')}? has-error">
-									<input type="text" th:field="*{sortBy}" class="form-control" id="sortBy"/>	
-									<div th:if="${#fields.hasErrors('sortBy')}? has-error"
-									class="alert alert-danger" role="alert" th:errors="*{sortBy}"></div>
-							</div>
-						</td>
-					</tr>
-					<tr>
 						<td></td>
 						<td style="width: 15px"></td>
 						<td>

@@ -126,6 +126,9 @@ public class CourseTypesDetailController {
 		}
 		
 		courseType.setRestaurantId(restaurant.getId());
+		if(!courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()).contains(courseType)){
+			courseType.setSortBy(courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()).size()+1);
+		}
 		courseTypeRepository.save(courseType);
 		return "redirect:/coursetype?success";
 	}
@@ -243,7 +246,7 @@ public class CourseTypesDetailController {
 		List<Offer> offersInCourse = offerRepository.findByCourseTypeOrderByOrderAsc(courseTypeId);
 		int position = offer.getOrder();
 		
-		if(position!=offerRepository.findByCourseTypeOrderByOrderAsc(courseTypeId).size()-1){
+		if(position!=offerRepository.findByCourseTypeOrderByOrderAsc(courseTypeId).size()){
 			for(Offer offerEntry : offersInCourse){
 				if(offerEntry.getOrder()==position+1){
 					offerEntry.setOrder(position);

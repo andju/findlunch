@@ -46,6 +46,14 @@
 						 	class="btn btn-default">
 							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 						</button></a>
+						<a th:href="@{/coursetype/up/{id}(id=*{courseType.id})}">
+							<button class="btn btn-default" name="courseUp">
+									<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+							</button></a>
+							<a th:href="@{/coursetype/down/{id}(id=*{courseType.id})}">
+							<button class="btn btn-default" name="courseDown">
+									<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+							</button></a>
 					</td>
 				</tr>
 			</tbody>
@@ -80,16 +88,17 @@
 	<script>
 		$('#confirm-delete').on(
 				'show.bs.modal',
-				function(e) {
-					$(this).find('.btn-ok').attr('href',
-							$(e.relatedTarget).data('href'));
+				
+					function(e) {
+								$(this).find('.btn-ok').attr('href',
+										$(e.relatedTarget).data('href'));
 
-					$('.debug-url').html(
-							'Delete URL: <strong>'
-									+ $(this).find('.btn-ok').attr('href')
-									+ '</strong>');
-				});
-	</script>	
+								$('.debug-url').html(
+										'Delete URL: <strong>'
+												+ $(this).find('.btn-ok').attr('href')
+												+ '</strong>');
+							});
+	</script>
 	
 	<div th:replace="fragments/footer :: footer"></div>	
 </body>

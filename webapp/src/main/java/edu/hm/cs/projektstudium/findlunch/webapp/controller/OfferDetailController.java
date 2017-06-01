@@ -212,6 +212,10 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			return "offerDetail";
 		}
 		
+		if(!offerRepository.findByRestaurant_idOrderByOrderAsc(authenticatedUser.getId()).contains(offer)){
+			offer.setOrder(offerRepository.findByCourseTypeOrderByOrderAsc(offer.getCourseType()).size()+1);
+		}
+		
 		offerRepository.save(offer);
 		
 		session.removeAttribute("photoList");
