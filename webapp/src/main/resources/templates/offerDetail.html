@@ -70,10 +70,14 @@
 							data-toggle="tooltip"
 							th:title="#{offerDetail.tooltip.course}"></span></td>
 						<td>
-							<div th:each="course : ${courseTypes}">
-								<input type="radio" th:field="${offer.courseType}" th:value="${course.getId()}"/>
-									<label th:text="${course.getName()}" ></label>
+							<div class="form-group col-md-12" th:each="course : ${courseTypes}" 
+								th:classappend="${#fields.hasErrors('courseType')}? has-error">
+								<input type="radio" th:field="${offer.courseType}" th:value="${course.getId()}"
+									id="courseType"/>
+									<label th:text="${course.getName()}"></label>
 							</div>
+							<div th:if="${#fields.hasErrors('courseType')}? has-error"
+								 class="alert alert-danger" role="alert" th:errors="*{courseType}">Darf nicht null sein</div>
 						</td>
 					</tr>
 					<tr>

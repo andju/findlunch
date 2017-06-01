@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes">
+</head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+		<div id="pushNotification" hidden="hideen" class="alert alert-warning" 
+			role="alert"><a th:href="@{/reservations}" class="alert-link">Sie haben neue Bestellungen!</a></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+			
+		<h1 th:if="${#httpServletRequest.requestURI}=='/coursetypedetail/add'">
+			<span th:text="#{courseTypesDetail.label.add}" th:remove="tag">title</span>
+			<small th:text="#{label.required}">Subtitle</small>
+		</h1>
+		<h1 th:unless="${#httpServletRequest.requestURI}=='/coursetypedetail/edit'">
+			<span th:text="#{courseTypesDetail.label.modify}" th:remove="tag">title</span>
+			<small th:text="#{label.required}">Subtitle</small>
+		</h1>
+		
+		<form action="#" th:object="${courseType}" class="form-horizontal"
+			method="post" enctype="multipart/form-data">
+			<input type="hidden" th:field="*{id}" />
+			<div class="table-responsive">
+				<table class="table">
+					<tr>
+						<td><label class="control-label" for="title"
+							th:text="#{coursetype.label.name}">label</label>*</td>
+						<td style="width: 15px"><span style="padding-top: 7px"
+							class="glyphicon glyphicon-question-sign" data-placement="left"
+							data-toggle="tooltip" th:title="#{coursetype.tooltip.name}"></span>
+						</td>
+						<td>
+							<div class="form-group col-md-12"
+								th:classappend="${#fields.hasErrors('name')}? has-error">
+								<input type="text" th:field="*{name}" class="form-control" id="name"/>
+								<div th:if="${#fields.hasErrors('name')}? has-error"
+									class="alert alert-danger" role="alert" th:errors="*{name}"></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td style="width: 15px"></td>
+						<td>
+							<button type="submit" class="btn btn-success" name="saveCourse"
+								th:text="#{coursetypeDetails.button.save}">save</button>
+							<button class="btn btn-danger" type="button"
+								th:text="#{button.delete}" th:if="${#strings.startsWith(#httpServletRequest.servletPath,'/coursetype/edit/')}"
+								th:attr="data-href=@{/coursetype/delete/{id}(id=*{id})}"
+								data-toggle="modal" data-target="#confirm-delete">delete</button>
+							<button type="submit" class="btn btn-danger" name="cancel"
+								th:text="#{button.cancel}">Cancel</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+				<input type="hidden"
+				   th:name="${_csrf.parameterName}"
+				   th:value="${_csrf.token}" />
+		</form>
+		
+	</div>
+	
+	<div th:replace="fragments/footer :: footer"></div>
+	
+	<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel"
+						th:text="#{delete.label.title}">Confirm Delete</h4>
+				</div>
+
+				<div class="modal-body">
+					<p th:text="#{delete.label.coursetype.message}">delete message</p>
+					<p th:text="#{delete.label.attention}">attention message</p>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal"
+						th:text="#{button.cancel}">Cancel</button>
+					<a class="btn btn-danger btn-ok" th:text="#{button.delete}">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$('#confirm-delete').on(
+				'show.bs.modal',
+				function(e) {
+					$(this).find('.btn-ok').attr('href',
+							$(e.relatedTarget).data('href'));
+
+					$('.debug-url').html(
+							'Delete URL: <strong>'
+									+ $(this).find('.btn-ok').attr('href')
+									+ '</strong>');
+				});
+	</script>
+</body>
+</html>
