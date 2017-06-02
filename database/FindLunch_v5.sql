@@ -519,8 +519,9 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   `reservation_number` INT(11) NOT NULL,
   `amount` INT(4) NOT NULL,
   `reservation_time` DATETIME NOT NULL,
-  `confirmed` TINYINT(1) NOT NULL,
-  `rejected` TINYINT(1) NOT NULL,
+  `confirmed` TINYINT(1) NOT NULL DEFAULT 0,
+  `rejected` TINYINT(1) NOT NULL DEFAULT 0,
+  `points_collected` TINYINT(1) NOT NULL DEFAULT 0,
   `total_price` DECIMAL(5,2) NOT NULL,
   `donation` DECIMAL(5,2) NOT NULL,
   `used_points` TINYINT(1) NOT NULL,
@@ -562,7 +563,6 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `findlunch`.`booking_reason`

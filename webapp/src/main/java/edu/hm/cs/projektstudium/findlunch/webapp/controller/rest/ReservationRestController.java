@@ -183,56 +183,49 @@ public class ReservationRestController {
 		authenticatedUser = userRepository.findOne(authenticatedUser.getId());
 		
 		Restaurant r = restaurantRepository.findByRestaurantUuid(restaurantUuid);
-		LocalDateTime midnight = LocalDate.now().atStartOfDay();
-		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
-		List<Reservation> reservations = reservationRepository.findByUserIdAndReservationTimeAfterAndConfirmedFalse(authenticatedUser.getId(),startOfDay);
-		
-		if(r != null){
-			List<Offer> offerList = offerRepository.findByRestaurant_idOrderByOrderAsc(r.getId());
-			if(offerList != null && !offerList.isEmpty()){
-				
-				for(int i = 0; i < reservations.size(); i++) {
-					for(int j = 0; j <offerList.size(); j++) {
-						if(reservations.get(i).getOffer().getId() == offerList.get(j).getId()){
-							reservations.get(i).setConfirmed(true);
-							reservationRepository.save(reservations.get(i));
-							Offer offer = offerRepository.findOne(reservations.get(i).getOffer().getId());
-							Restaurant restaurant = restaurantRepository.findOne(offer.getRestaurant().getId());
-							EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-
-							if(!reservations.get(i).isUsedPoints()){
-								Float amountOfPoints= new Float((reservations.get(i).getAmount()*offer.getPrice()) / euroPerPoint.getEuro());
-	
-								//composite Key
-								PointId pointId = new PointId();
-								pointId.setUser(authenticatedUser);
-								pointId.setRestaurant(restaurant);
-								
-								Points points = pointsRepository.findByCompositeKey(pointId);
-								if(points == null){ //user get First time points
-									points = new Points();
-									points.setCompositeKey(pointId);
-									points.setPoints(amountOfPoints.intValue());
-								}
-								else{//add new points to the old points
-									points.setPoints(points.getPoints() +amountOfPoints.intValue());
-								}
-								
-								pointsRepository.save(points);
-							}
-						}
-					}
-				}
-				return new ResponseEntity<Integer>(0, HttpStatus.OK);
-			}
-			else{
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No offer existing"));
-				return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
-			}
-		}
-		else{
+		if(r==null){
 			//restaurant nicht gefunden
 			return new ResponseEntity<Integer>(3, HttpStatus.CONFLICT);
+		}
+		LocalDateTime midnight = LocalDate.now().atStartOfDay();
+		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
+		List<Reservation> reservations = reservationRepository.findByUserIdAndReservationTimeAfterAndPointscollectedFalseAndUsedPointsFalseAndRejectedFalse(authenticatedUser.getId(), startOfDay);
+		
+		if(!reservations.isEmpty()){
+			for(Reservation reservation : reservations){
+				EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
+				
+				Float amountOfPoints= new Float(reservation.getTotalPrice()*euroPerPoint.getEuro());
+				PointId pointId = new PointId();
+				pointId.setUser(authenticatedUser);
+				pointId.setRestaurant(reservation.getRestaurant());
+					
+				Points points = pointsRepository.findByCompositeKey(pointId);
+				if(points == null){ //user get First time points
+					points = new Points();
+					points.setCompositeKey(pointId);
+					points.setPoints(amountOfPoints.intValue());
+				}
+				else{//add new points to the old points
+					points.setPoints(points.getPoints() +amountOfPoints.intValue());
+				}
+				//if the reservation is neither rejected not confirmed by the restaurant but 
+				//collected by the user the reservation is confirmed by the user
+				if(!reservation.isConfirmed() && !reservation.isRejected()){
+					reservation.setRejected(false);
+					reservation.setConfirmed(true);
+				}
+					
+				reservation.setPointscollected(true);
+				reservationRepository.save(reservation);
+				pointsRepository.save(points);
+				
+			}
+			return new ResponseEntity<Integer>(0, HttpStatus.OK);
+		}
+		else{
+			//keine Reservierung
+			return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 		}
 	}
 	

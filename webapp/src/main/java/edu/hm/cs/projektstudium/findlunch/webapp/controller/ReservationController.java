@@ -42,8 +42,8 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 /**
  * The class is responsible for handling http calls related to the process of manage the reservations.
  */
-@Controller
-public class ReservationController {
+@Controller 
+class ReservationController {
 
 	/** The reservation repository. */
 	@Autowired

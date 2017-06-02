@@ -2,6 +2,7 @@ package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,10 @@ public class Reservation {
 	
 	/** Is rejected. */
 	private boolean rejected;
+	
+	/** The points are collected by the customer */
+	@Column(name="points_collected")
+	private boolean pointscollected;
 	
 	/** Is used points. */
 	private boolean usedPoints;
@@ -185,13 +190,37 @@ public class Reservation {
 	}
 	
 	
-	
+	/**
+	 * Checks if a reservation is rejected by the restaurant.
+	 * @return true, if rejected
+	 */
 	public boolean isRejected() {
 		return rejected;
 	}
 
+	/**
+	 * Sets rejected for the reservation
+	 * @param rejected true, if rejected
+	 */
 	public void setRejected(boolean rejected) {
 		this.rejected = rejected;
+	}
+	
+
+	/**
+	 * Checks if the points for the reservation are collected by the customer
+	 * @return true if collected
+	 */
+	public boolean isPointscollected() {
+		return pointscollected;
+	}
+
+	/**
+	 * Sets collected for the reservation
+	 * @param pointscollected true if collected
+	 */
+	public void setPointscollected(boolean pointscollected) {
+		this.pointscollected = pointscollected;
 	}
 
 	/**
