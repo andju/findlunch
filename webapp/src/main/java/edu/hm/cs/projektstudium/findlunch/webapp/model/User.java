@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -99,6 +100,10 @@ public class User implements UserDetails {
 	/** The account.*/
 	@ManyToOne
 	private Account account;
+	
+	
+	@OneToOne(mappedBy="user")
+	private ResetPassword resetPassword;
 	
 	/**
 	 * Instantiates a new user.
@@ -360,6 +365,14 @@ public class User implements UserDetails {
 	 */
 	public Captcha getCaptcha() {
 		return captcha;
+	}
+
+	public ResetPassword getResetPassword() {
+		return resetPassword;
+	}
+
+	public void setResetPassword(ResetPassword resetPassword) {
+		this.resetPassword = resetPassword;
 	}
 
 }

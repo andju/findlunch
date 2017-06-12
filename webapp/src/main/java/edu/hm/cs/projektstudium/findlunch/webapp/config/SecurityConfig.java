@@ -105,6 +105,8 @@ public class SecurityConfig {
 					.antMatchers(HttpMethod.POST, "/api/register_reservation")
 					.antMatchers(HttpMethod.PUT, "/api/confirm_reservation/**")
 					.antMatchers(HttpMethod.GET, "/api/get_points")
+					.antMatchers(HttpMethod.POST, "/api/get_reset_token")
+					.antMatchers(HttpMethod.PUT, "/api/reset_password/**")
 				.and().httpBasic().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}
@@ -179,7 +181,7 @@ public class SecurityConfig {
 					.authorizeRequests()
 					.antMatchers("/", "/login", "/home", "/register", "/privacy", "/terms", "/faq_customer",
 							"/faq_restaurant", "/about_findlunch", "/css/**", "/api/**", "/js/**", "/fonts/**",
-							"/images/**")
+							"/images/**","/resetpassword/**")
 					.permitAll()
 					.antMatchers("/booking/**").hasAuthority("Betreiber")
 					.anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and()

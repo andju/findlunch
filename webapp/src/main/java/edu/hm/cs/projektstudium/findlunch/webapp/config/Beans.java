@@ -61,7 +61,7 @@ public class Beans extends WebMvcConfigurerAdapter{
 	@Bean
 	public ResourceBundleMessageSource messageSource() {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasenames("messages/content", "messages/errors", "messages/info", "messages/success", "messages/bill");
+		messageSource.setBasenames("messages/content", "messages/errors", "messages/info", "messages/success", "messages/bill","messages/resetpassword");
 		return messageSource;	
 	}
 	
