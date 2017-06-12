@@ -263,11 +263,11 @@ public class BillScheduledTask {
 							font = new Font(Font.DEFAULTSIZE, 11, Font.NORMAL);
 							table.addCell(new Phrase(Integer.toString(i), font));
 							table.addCell(new Phrase(Integer.toString(reservation.getReservationNumber()), font));
-							table.addCell(new Phrase(reservation.getOffer().getTitle(), font));
+							//table.addCell(new Phrase(reservation.getOffer().getTitle(), font));
 							table.addCell(new Phrase(sdf.format(reservation.getReservationTime()), font));
 							table.addCell(new Phrase(reservation.getUser().getUsername(), font));
-							table.addCell(new Phrase(Integer.toString(reservation.getAmount()), font));
-							table.addCell(new Phrase(floatToString(reservation.getOffer().getPrice()), font));
+							//table.addCell(new Phrase(Integer.toString(reservation.getAmount()), font));
+							//table.addCell(new Phrase(floatToString(reservation.getOffer().getPrice()), font));
 							table.addCell(new Phrase(floatToString(reservation.getTotalPrice()), font));
 							table.addCell(new Phrase(floatToString(reservation.getDonation()), font));
 						}

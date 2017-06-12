@@ -28,6 +28,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationList;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
@@ -224,12 +225,12 @@ class ReservationController {
 	 * @param reservation reservation
 	 */
 	private void increaseConsumerPoints(Reservation reservation) {
-		Offer offer = offerRepository.findOne(reservation.getOffer().getId());
-		Restaurant restaurant = restaurantRepository.findOne(offer.getRestaurant().getId());
+		
+		
+		Restaurant restaurant = restaurantRepository.findOne(reservation.getRestaurant());
 		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 		User consumer = userRepository.findOne(reservation.getUser().getId());
-		
-		Float amountOfPoints= new Float((reservation.getAmount()*offer.getPrice()) / euroPerPoint.getEuro());
+		int reservationPoints = getReservationPoints(reservation.getReservation_offers());
 		
 		//composite Key
 		PointId pointId = new PointId();
@@ -240,10 +241,10 @@ class ReservationController {
 		if(points == null){ //user get First time points
 			points = new Points();
 			points.setCompositeKey(pointId);
-			points.setPoints(amountOfPoints.intValue());
+			points.setPoints(reservationPoints);
 		}
 		else{//add new points to the old points
-			points.setPoints(points.getPoints() +amountOfPoints.intValue());
+			points.setPoints(points.getPoints() +reservationPoints);
 		}
 		pointsRepository.save(points);
 	}
@@ -273,5 +274,17 @@ class ReservationController {
 		push.setFcmToken(userToken.getFcm_token());
 		pushManager.sendFcmNotification(push);
 		
+	}
+	
+	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
+		
+		int neededPoints = 0;
+		
+		for(ReservationOffers reOffers : reservation_Offers){
+			Offer offer = offerRepository.findOne(reOffers.getOffer_id());
+			neededPoints += reOffers.getAmount() * offer.getNeededPoints();
+		}
+		
+		return neededPoints;
 	}
 }

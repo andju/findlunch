@@ -94,9 +94,10 @@ public class Offer {
 	@JsonView(OfferView.OfferRest.class)
 	private OfferPhoto defaultPhoto;
 	
-	/** The reservations.*/
+	/*
 	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
 	List<Reservation> reservation;
+	*/
 	
 	/** The needed point*/
 	@JsonView(OfferView.OfferRest.class)

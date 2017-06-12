@@ -39,10 +39,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	public List<Reservation> findByRestaurantIdAndConfirmedTrueAndBillIdOrderByReservationTimeAsc(int restaurantId, Integer billId);
 	
 	/**
-	 * Find all reservations which are new, nor rejectec, not paied by points and the points are not collected yet
+	 * Find all reservations which are new, nor rejected neighter confirmed and not paied by points
 	 * @param userId Id of the customer
 	 * @param midnight date
 	 * @return List of corresponding reservations
 	 */
-	public List<Reservation> findByUserIdAndReservationTimeAfterAndPointscollectedFalseAndUsedPointsFalseAndRejectedFalse(int userId, Date midnight);
+	public List<Reservation> findByUserIdAndReservationTimeAfterAndUsedPointsFalseAndRejectedFalseAndConfirmedFalse(int userId, Date midnight);
 }
