@@ -1,8 +1,11 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.concurrent.TimeUnit;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -15,12 +18,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.EmailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.SseSend;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;;
 
 /**
@@ -60,32 +67,31 @@ public class HomeController {
 		return "redirect:/home";
 	}
 	
-	@RequestMapping(path="/home", method = RequestMethod.POST, params={"push"})
-	public void sendPushAtHome(Principal principal)  {
-		//System.out.println("ENTER FCM TOKEN: "+token);
+	@RequestMapping(path="/home", method = RequestMethod.POST, params={"sse"})
+	public void sendPushAtHome(Principal principal) throws AddressException, MessagingException  {
 		
 		User authenticatedUser = (User)((Authentication)principal).getPrincipal();
-		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
-		sendPush(token.getFcm_token());
+		/** TEST FÜR SSE */
+		EmailService service = new EmailService();
 		
-		//return "home";
-	}
-	
-	@RequestMapping(path="/home?token", method = RequestMethod.POST)
-	public String getClientToken(@RequestParam String token) {
-		System.out.println("ENTER FCM TOKEN: "+token);
-		return "home";
-	}
-	
-	private void sendPush(String token){
+		/*
+		try{
+		service.sendSimpleMessage(authenticatedUser.getUsername(), "oder", "Sie haben neue Bestellungen");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		*/
 		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
+		service.mimMessage(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
 		
-		push.generateWeb();
-		push.setFcmToken(token);
-		
-		pushManager.sendFcmNotification(push);
+		/*
+		try{
+		service.mailSend(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		*/
 	}
 
 }

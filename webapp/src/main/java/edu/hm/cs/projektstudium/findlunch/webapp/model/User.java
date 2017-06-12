@@ -21,6 +21,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -102,6 +103,17 @@ public class User implements UserDetails {
 	@ManyToOne
 	private Account account;
 	
+	@Transient
+	private SseEmitter emitter;
+	
+	public SseEmitter getEmitter() {
+		return emitter;
+	}
+
+	public void setEmitter(SseEmitter emitter) {
+		this.emitter = emitter;
+	}
+
 	/**
 	 * Instantiates a new user.
 	 */

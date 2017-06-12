@@ -66,6 +66,16 @@
 				<span class="sr-only">Next</span>
 			</a>
 		</div>
+		<br/>
+		<div>
+			<form action="#" method="post">				
+			<button type="submit" class="btn btn-success" th:text="'Test SSE'" 
+				value="sse" name="sse" style="float: right; margin-right: 25px;"></button>
+				<input type="hidden"
+				th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
+			</form>
+		</div>
 
 	</div>
 	<div th:replace="fragments/footer :: footer"></div>	

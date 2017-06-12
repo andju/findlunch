@@ -1,5 +1,8 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.config;
 
+
+import java.util.Properties;
+
 import org.apache.catalina.connector.Connector;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -8,10 +11,11 @@ import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletCon
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 
@@ -30,7 +34,7 @@ In our case we have defined @Bean for view resolver for JSP view.
  */
 @Configuration
 public class Beans extends WebMvcConfigurerAdapter{
-
+	
 	/**
 	 * Password encoder bean, needed for encrypting user passwords.
 	 *
