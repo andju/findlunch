@@ -20,9 +20,6 @@ public class Reservation {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
-
-	/** The amount. */
-	private int amount;
 	
 	/** The donation. */
 	private float donation;
@@ -107,22 +104,6 @@ public class Reservation {
 	 */
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	/**
-	 * Gets the amount.
-	 * @return The amount
-	 */
-	public int getAmount() {
-		return amount;
-	}
-
-	/**
-	 * Sets the new amount of reservation.
-	 * @param amount The amount.
-	 */
-	public void setAmount(int amount) {
-		this.amount = amount;
 	}
 
 	/**
