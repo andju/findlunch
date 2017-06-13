@@ -144,7 +144,7 @@ class ReservationController {
 			reservation.setRejected(false);
 			reservationRepository.save(reservation);
 			increaseConsumerPoints(reservation);
-			confirmPush(reservation);
+			//confirmPush(reservation);
 		}
 		return "redirect:/reservations?success";
 	}
@@ -169,7 +169,7 @@ class ReservationController {
 			
 			if(rejectedReservations.isEmpty()){
 				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no reservation selected. Redirect to /reservations."));
-				return "redirect:/reservations?selectReservation";
+				return "redirect:/reservations?selectReservationReject";
 			}
 			
 			for(Reservation r: rejectedReservations){
@@ -226,8 +226,7 @@ class ReservationController {
 	 */
 	private void increaseConsumerPoints(Reservation reservation) {
 		
-		
-		Restaurant restaurant = restaurantRepository.findOne(reservation.getRestaurant());
+		Restaurant restaurant = restaurantRepository.findOne(reservation.getRestaurant().getId());
 		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 		User consumer = userRepository.findOne(reservation.getUser().getId());
 		int reservationPoints = getReservationPoints(reservation.getReservation_offers());

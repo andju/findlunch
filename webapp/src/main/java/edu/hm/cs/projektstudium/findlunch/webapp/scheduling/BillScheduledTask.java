@@ -233,7 +233,7 @@ public class BillScheduledTask {
 						String billspace = MessageFormat.format(messages.getString("bill.space"), billNumber, startDateString, endDateString);
 						doc.add(new Paragraph(billspace+nL+nL, boldFont));
 						doc.add(new Paragraph(messages.getString("bill.introduction") + nL +nL));
-							
+						
 				        PdfPTable table = new PdfPTable(9);
 				        table.setWidthPercentage(100);
 				        int[] columnWidths = new int[]{8, 13, 16, 12, 20, 6, 8, 8, 9};

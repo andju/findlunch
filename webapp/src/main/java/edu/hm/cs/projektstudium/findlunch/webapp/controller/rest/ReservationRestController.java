@@ -191,7 +191,7 @@ public class ReservationRestController {
 			else {
 				//punkte reichen nicht
 				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Points not enough"));
-				return new ResponseEntity<Integer>(6, HttpStatus.CONFLICT); 
+				return new ResponseEntity<Integer>(8, HttpStatus.CONFLICT); 
 			}
 			
 		}else{

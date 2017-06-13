@@ -11,6 +11,8 @@
 			th:text="#{success.reservations.confirmed}" role="alert">success.offer.confirmed</div>
 		<div th:if="${param.selectReservation}" class="alert alert-danger"
 			role="alert" th:text="#{invalid.selectReservation}">invalid.offerId</div>
+		<div th:if="${param.selectReservationReject}" class="alert alert-danger"
+			role="alert" th:text="#{invalid.selectReservationReject}">invalid.offerId</div>
 		<!-- <br />  -->
 		<h2 th:text="#{reservations.label.normal}">normal reservations</h2>
 		<input type="text" id="searchReservationTable"
@@ -22,9 +24,8 @@
 			<table class="table table-hover" id="reservationTable">
 				<thead>
 					<tr>
+						<th th:text="#{reservations.label.oderId}">Id</th>
 						<th th:text="#{reservations.label.customername}">name</th>
-						<th th:text="#{reservations.label.food}">food</th>
-						<th th:text="#{reservations.label.amount}">amount</th>
 						<th th:text="#{reservations.label.datetime}">date with time</th>
 						<th th:text="#{reservations.label.price}">price</th>
 						<th th:text="#{reservations.label.donation}">customer donation</th>
@@ -32,6 +33,7 @@
 						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
 						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
 						<th th:text="#{reservations.label.choice}">reservation selection</th>
+						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
 
@@ -39,9 +41,8 @@
 					<tr th:each="reservation, stat: *{reservations}">				
 						<div th:switch="${reservation.isUsedPoints()}">
 							<div th:case="false">
+								<td th:text="${reservation.getReservationNumber()}"></td>
 								<td th:text="${reservation.getUser().getUsername()}"></td>
-								<td th:text="${reservation.getOffer().getTitle()}"></td>
-								<td th:text="${reservation.getAmount()}"></td>
 								<td th:text="${#dates.format(reservation.reservationTime, 'HH:mm')}"></td> 
 								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
@@ -49,9 +50,9 @@
 								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
 								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
 								<td>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" />
 									<input type="checkbox" th:field="*{reservations[__${stat.index}__].confirmed}"/>
-									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}"/>
-									<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
+									<input type="hidden" th:field="*{reservations[__${stat.index}__].rejected}" />
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
@@ -59,12 +60,18 @@
 							</div>
 							 <div th:case="true">
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" /> 
-							<input type="hidden" th:field="*{reservations[__${stat.index}__].confirmed}" /> 
-							<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].confirmed}" />
+							<input type="hidden" th:field="*{reservations[__${stat.index}__].rejected}" />  
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
 						</div>
+						<td>
+						<button
+						 	class="btn btn-default" onclick="return reservationDetails('*{reservations[__${stat.index}__].id}')">
+							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+						</button>
+						</td>
 						</div>
 					</tr>
 				</tbody>
@@ -89,9 +96,8 @@
 			<table class="table table-hover" id="reservationTable2">
 				<thead>
 					<tr>
+						<th th:text="#{reservations.label.oderId}">Id</th>
 						<th th:text="#{reservations.label.customername}">name</th>
-						<th th:text="#{reservations.label.food}">food</th>
-						<th th:text="#{reservations.label.amount}">amount</th>
 						<th th:text="#{reservations.label.datetime}">date with time</th>
 						<!-- <th th:text="#{reservations.label.price}">price</th> -->
 						<th th:text="#{reservations.label.donation}">customer donation</th>
@@ -99,6 +105,7 @@
 						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
 						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
 						<th th:text="#{reservations.label.choice}">reservation selection</th>
+						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
 
@@ -106,9 +113,8 @@
 					<tr th:each="reservation, stat: *{reservations}">				
 						<div th:switch="${reservation.isUsedPoints()}">
 							<div th:case="true">
+								<td th:text="${reservation.getReservationNumber()}"></td>
 								<td th:text="${reservation.getUser().getUsername()}"></td>
-								<td th:text="${reservation.getOffer().getTitle()}"></td>
-								<td th:text="${reservation.getAmount()}"></td>
 								<td th:text="${#dates.format(reservation.reservationTime, 'HH:mm')}"></td> 
 								<!-- <td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> -->
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
@@ -118,7 +124,6 @@
 								<td>
 									<input type="checkbox" th:field="*{reservations[__${stat.index}__].confirmed}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}"/>
-									<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
@@ -127,7 +132,6 @@
 						<div th:case="false">
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" /> 
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].confirmed}" /> 
-							<input type="hidden" th:field="*{reservations[__${stat.index}__].amount}"/>
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
@@ -174,6 +178,18 @@
 					}).hide();
 				});
 		/*]]>*/
+	</script>
+	
+	<script th:inline="javascript" type="text/javascript">
+
+		function reservationDetails(id){
+
+			var URL = "/reservationDetails/"+id;
+
+			details = window.open(URL, 'height=200,width=150');
+
+			}
+	
 	</script>
 
 	<div th:replace="fragments/footer :: footer"></div>
