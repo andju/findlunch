@@ -60,6 +60,10 @@ public class HomeController {
 		return "redirect:/home";
 	}
 	
+	/**
+	 * Method for testing the Push
+	 * @param principal
+	 */
 	@RequestMapping(path="/home", method = RequestMethod.POST, params={"push"})
 	public void sendPushAtHome(Principal principal)  {
 		//System.out.println("ENTER FCM TOKEN: "+token);

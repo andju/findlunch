@@ -106,8 +106,9 @@ public class PushNotification {
 	}
 	
 	public void generateWeb(){
-		putData("data", "Hier ist eine Push Nachticht!");
-		setId(1);
+		putData("titel:","Deine Bestellung: 123456");
+		putData("body:", "Deine Bestellung 123456"+ " wurd durch das Restaurant Ionic Cafe bestätigt");
+		putData("icon:", "/images/FL.png");
 	}
 	
 	public void generateReservationConfirm(Reservation reservation){
