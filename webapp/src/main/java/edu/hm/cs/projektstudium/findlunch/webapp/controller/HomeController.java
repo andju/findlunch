@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.EmailService;
@@ -72,7 +72,18 @@ public class HomeController {
 		
 		User authenticatedUser = (User)((Authentication)principal).getPrincipal();
 		/** TEST FÜR SSE */
-		EmailService service = new EmailService();
+		//EmailService service = new EmailService();
+		
+		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
+		
+		try{
+		sendPush(token.getFcm_token());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		
+		
 		
 		/*
 		try{
@@ -82,7 +93,7 @@ public class HomeController {
 		}
 		*/
 		
-		service.mimMessage(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
+		//service.mimMessage(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
 		
 		
 		/*
@@ -93,6 +104,20 @@ public class HomeController {
 			System.out.println(e.getMessage());
 		}
 		*/
+	}
+	
+	private void sendPush(String token){
+		
+		PushNotificationManager pushManager = new PushNotificationManager();
+		
+		
+		JSONObject notification = pushManager.generateWeb(token);
+		
+		//push.put("to", "eVvkYMnfv5s:APA91bHpUqLqwBXwaJlkqVQLRPA8Dbj8Hms2DaVWBhlbhbl20dpkTmpdEVBSggddg6ALNdEMfagoSOzYIA1zrBxAhTWSn5ipIKxDTlmItjE55OEwCk7F8Ve6hSBx6c7ITFG_vltwK-db");
+		
+		
+		System.out.println(notification.toString());
+		pushManager.sendFcmNotification(notification);
 	}
 
 }

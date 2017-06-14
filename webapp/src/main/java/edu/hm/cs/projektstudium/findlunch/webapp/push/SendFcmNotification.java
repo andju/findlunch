@@ -16,7 +16,6 @@ import com.squareup.okhttp.Response;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 
@@ -51,59 +50,19 @@ public class SendFcmNotification extends PushNotificationManager implements Runn
 	 */
 	private final String FCM_NOT_URL = "https://fcm.googleapis.com/fcm/send";
 	
-	public SendFcmNotification(PushNotification push){
+	public SendFcmNotification(JSONObject push){
 		this.push = push;
 	}
 	
-	/**
-	 * Sending the FindLunch daily update notification.
-	 * @param p Push-notification to be sent.
-	 * @param restaurantsForPushCount Restaurant for push.
-	 * @param pushKitchenTypeIds List of kichen types for push.
-	 */
-	//public SendFcmNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
-		//this.p = p;
-		//this.restaurantsForPushCount = restaurantsForPushCount;
-		//this.pushKitchenTypeIds = pushKitchenTypeIds;
-	//}
-	
-	@SuppressWarnings("unchecked")
 	public void run() {
 
 		//Direct HTTP-client usable for sending push json-based.
 		OkHttpClient client = new OkHttpClient();
 		MediaType mediaType = MediaType.parse("application/json");
 
-		//Creating message object and push data inside.
-		JSONObject messageObject = new JSONObject();
-		//JSONObject data = new JSONObject();
-		//messageObject.put("to", p.getFcmToken());
-		
-		messageObject.put("to", push.getFcmToken());
-		
-		//If multiple messages are sent while device is offline,
-		//only receive the latest message is received.
-		//messageObject.put("collapse_key", COLLAPSE_KEY + "_" + p.getId());
-		
-		messageObject.put("collapse_key", COLLAPSE_KEY + "_" + push.getId());
-
-		//TTL = 6 hours (if scheduled at 9h, push is received until 15h)
-		messageObject.put("time_to_live", 21600);
-
-		//Add data from database to push data.
-		//data.put("title", p.getTitle());
-		//data.put("numberOfRestaurants", restaurantsForPushCount.toString());
-		//data.put("longitude", String.valueOf(p.getLongitude()));
-		//data.put("latitude", String.valueOf(p.getLatitude()));
-		//data.put("radius", String.valueOf(p.getRadius()));
-		//data.put("kitchenTypeIds", pushKitchenTypeIds.toString());
-		//data.put("pushId", String.valueOf(p.getId()));
-		//messageObject.put("data", data);
-		messageObject.put("data", push.getData());
-
-
 		//Adding required properties to generate push-request.
-		RequestBody body = RequestBody.create(mediaType, messageObject.toString());
+		//RequestBody body = RequestBody.create(mediaType, messageObject.toString());
+		RequestBody body = RequestBody.create(mediaType, push.toString());
 		Request request = new Request.Builder()
 				.url(FCM_NOT_URL)
 				.post(body)
@@ -112,7 +71,8 @@ public class SendFcmNotification extends PushNotificationManager implements Runn
 		try {
 			
 			//Console log info
-			LOGGER.info("Push sent: " + messageObject.toString());
+			//LOGGER.info("Push sent: " + messageObject.toString());
+			LOGGER.info("Push sent: " + push.toString());
 			
 			//Execute request.
 			Response response = client.newCall(request).execute();

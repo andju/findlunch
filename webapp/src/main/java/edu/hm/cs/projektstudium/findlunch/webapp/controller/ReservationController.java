@@ -37,7 +37,6 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationList;
@@ -157,7 +156,8 @@ class ReservationController {
 			reservation.setRejected(false);
 			reservationRepository.save(reservation);
 			increaseConsumerPoints(reservation);
-			//confirmPush(reservation);
+			confirmPush(reservation, true);
+			
 		}
 		return "redirect:/reservations?success";
 	}
@@ -191,6 +191,7 @@ class ReservationController {
 				reservation.setConfirmed(false);
 				reservation.setRejected(true);
 				reservationRepository.save(reservation);
+				confirmPush(reservation, false);
 			}
 			return "redirect:/reservations?successReject";
 		
@@ -228,6 +229,7 @@ class ReservationController {
 			Reservation reservation = reservationRepository.findOne(r.getId());
 			reservation.setConfirmed(true);
 			reservationRepository.save(reservation);
+			confirmPush(reservation, true);
 			//calculateConsumerPoints(reservation);
 		}
 		return "redirect:/reservations?success";
@@ -269,36 +271,7 @@ class ReservationController {
 		LocalDateTime midnight = LocalDateTime.now().toLocalDate().atStartOfDay();
 		return Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
 	}
-	
-	/**
-	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
-	 * 
-	 */
-	private void confirmPush(Reservation reservation) {
-		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
-		push.generateReservationConfirm(reservation);
-		
-		User user = reservation.getUser();
-		PushToken userToken = tokenRepository.findByUserId(user.getId());
-		
-		push.setFcmToken(userToken.getFcm_token());
-		pushManager.sendFcmNotification(push);
-		
-	}
-	
-	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
-		
-		int addPoints = 0;
-		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-		
-		for(ReservationOffers reOffers : reservation_Offers){
-			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
-		}
-		
-		return addPoints;
-	}
+
 	
 	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
 	public @ResponseBody String getReservationDetails(@PathVariable("reservationId") String reservationId, Model model, Principal principal, HttpServletRequest request){
@@ -350,5 +323,42 @@ class ReservationController {
 		
 		return offers;
 		*/
+	}
+	
+	/**
+	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
+	 * 
+	 */
+	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
+		
+		PushNotificationManager pushManager = new PushNotificationManager();
+		
+		User user = reservation.getUser();
+		PushToken userToken = tokenRepository.findByUserId(user.getId());
+		
+		if(confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		}
+		if(!confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		} 
+		
+		return false;
+	}
+	
+	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
+		
+		int addPoints = 0;
+		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
+		
+		for(ReservationOffers reOffers : reservation_Offers){
+			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
+		}
+		
+		return addPoints;
 	}
 }

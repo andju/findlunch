@@ -29,7 +29,6 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
@@ -261,22 +260,12 @@ public class ReservationRestController {
 	}
 	
 	/**
-	 * Sendet eine Push Notification über die neue Bestellung an das Restaurant.
+	 * Sendet eine Email über die neue Bestellung an das Restaurant.
 	 * @param reservation
 	 */
-	private void confirmPush(Reservation reservation) {
-		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
-		push.generateReservationConfirm(reservation);
-		
-		Restaurant restaurant = reservation.getRestaurant();
+	private void confirmEmail(Reservation reservation) {
 		
 		
-		PushToken userToken = tokenRepository.findByUserId(restaurant.getId());
-		
-		push.setFcmToken(userToken.getFcm_token());
-		pushManager.sendFcmNotification(push);
 		
 	}
 	

@@ -2,8 +2,9 @@ package edu.hm.cs.projektstudium.findlunch.webapp.push;
 
 import java.util.List;
 
+import org.json.simple.JSONObject;
+
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 
 /**
  * Base interface / abstract API for sending push-based notifications.
@@ -31,21 +32,10 @@ public interface PushMessagingInterface {
 	public void sendAdmNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds);
 	
 	/**
-	 * Sends the daily Notifications.
-	 * 
-	 * Edited by Niklas Klotz: Renamed from sendFcmNotification.
-	 * 
-	 * @param p The push-notification to be sent.
-	 * @param restaurantsForPushCount Restaurant id for push.
-	 * @param pushKitchenTypeIds Kitchen types list for push.
-	 */
-	public void sendFcmDailyNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds);
-
-	/**
 	 * Sends FCM pushNotification to a customer.
 	 * @author Niklas Klotz.
 	 * @param p The push-notification to be sent.
 	 * @throws InterruptedException 
 	 */
-	public void sendFcmNotification(PushNotification p);
+	public void sendFcmNotification(JSONObject p);
 }
