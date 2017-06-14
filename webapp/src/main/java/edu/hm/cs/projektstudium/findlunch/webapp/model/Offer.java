@@ -104,6 +104,10 @@ public class Offer {
 	@Min(value=1, message="{offer.neededPoints.invalidMinValue}")
 	private int neededPoints;
 	
+	/** The offers within the reservation */
+	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
+	private List<ReservationOffers> reservation_offers;
+	
 	/**
 	 * Gets the default photo.
 	 *

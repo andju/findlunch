@@ -22,7 +22,9 @@ public class ReservationOffers {
 	@JoinColumn(name="reservation_id")
 	private Reservation reservation;
 	
-	private int offer_id;
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="offer_id")
+	private Offer offer;
 	
 	private int amount;
 
@@ -36,16 +38,16 @@ public class ReservationOffers {
 	}
 	*/
 
-	public int getOffer_id() {
-		return offer_id;
-	}
-
-	public void setOffer_id(int offer_id) {
-		this.offer_id = offer_id;
-	}
-
 	public int getAmount() {
 		return amount;
+	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
 	}
 
 	public void setAmount(int amount) {

@@ -5,19 +5,32 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
@@ -95,7 +108,7 @@ class ReservationController {
 		}
 		else{
 			ArrayList<Reservation> reservations = (ArrayList<Reservation>) reservationRepository
-					.findByRestaurantIdAndConfirmedFalseAndReservationTimeAfter(authenticatedUser.getAdministratedRestaurant().getId(), getMidnightDateOfToday()); //reservationRepository.findAll(); //reservation form restaurant
+					.findByRestaurantIdAndConfirmedFalseAndRejectedFalseAndReservationTimeAfter(authenticatedUser.getAdministratedRestaurant().getId(), getMidnightDateOfToday()); //reservationRepository.findAll(); //reservation form restaurant
 				
 				ReservationList r = new ReservationList();
 				r.setReservations(reservations);
@@ -159,7 +172,8 @@ class ReservationController {
 		List<Reservation> rejectedReservations = new ArrayList<>();
 		
 		for(Reservation r: reservations){
-			if(r.isRejected()){
+			// Weil die Checkbox bei checked den wert für confirmed auf true setzt wird hier dieser genommen
+			if(r.isConfirmed()){
 				Reservation reservation = reservationRepository.findOne(r.getId());
 				if(!reservation.isConfirmed()){ //maybe scanned before with qr-code scanner
 					rejectedReservations.add(r);
@@ -177,9 +191,8 @@ class ReservationController {
 				reservation.setConfirmed(false);
 				reservation.setRejected(true);
 				reservationRepository.save(reservation);
-				increaseConsumerPoints(reservation);
 			}
-			return "redirect:/reservations?success";
+			return "redirect:/reservations?successReject";
 		
 	}
 	
@@ -277,13 +290,65 @@ class ReservationController {
 	
 	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
 		
-		int neededPoints = 0;
+		int addPoints = 0;
+		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 		
 		for(ReservationOffers reOffers : reservation_Offers){
-			Offer offer = offerRepository.findOne(reOffers.getOffer_id());
-			neededPoints += reOffers.getAmount() * offer.getNeededPoints();
+			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
 		}
 		
-		return neededPoints;
+		return addPoints;
+	}
+	
+	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
+	public @ResponseBody String getReservationDetails(@PathVariable("reservationId") String reservationId, Model model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
+
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		if(authenticatedUser.getAdministratedRestaurant() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
+			return null;
+		}
+		
+		Reservation reservation = reservationRepository.findOne(Integer.parseInt(reservationId));
+		if(reservation == null){
+			return null;
+		}
+		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
+		if(reservationOffers == null){
+			return null;
+		}
+		model.addAttribute("offers", reservationOffers);
+		
+		return "modal/modalContents :: reservationTable";
+		
+		/*
+		//ModelAndView mv = new ModelAndView();
+		
+		//mv.addObject("data", "Test");
+		
+		Map<Integer, HashMap<String, Integer>> offers = new HashMap<Integer, HashMap<String, Integer>>();
+		
+		Reservation reservation = reservationRepository.findOne(reservationId);
+		if(reservation == null){
+			return null;
+		}
+		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
+		if(reservationOffers == null){
+			return null;
+		}
+		for(ReservationOffers offer : reservationOffers){
+			HashMap<String, Integer> offerDetails = new HashMap<>();
+			Offer currentOffer = offerRepository.findOne(offer.getOffer_id());
+			offerDetails.put(currentOffer.getTitle(), offer.getAmount());
+			offers.put(offer.getOffer_id(), offerDetails);
+		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		
+		
+		return offers;
+		*/
 	}
 }

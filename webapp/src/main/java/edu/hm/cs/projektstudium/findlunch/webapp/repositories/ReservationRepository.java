@@ -28,7 +28,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param reservationTime date
 	 * @return List of reservation
 	 */
-	public List<Reservation> findByRestaurantIdAndConfirmedFalseAndReservationTimeAfter(int restaurantId, Date reservationTime);
+	public List<Reservation> findByRestaurantIdAndConfirmedFalseAndRejectedFalseAndReservationTimeAfter(int restaurantId, Date reservationTime);
 	
 	/**
 	 * Find all confirmed reservations from a restaurant.

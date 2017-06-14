@@ -84,6 +84,7 @@ public class HomeController {
 		
 		service.mimMessage(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
 		
+		
 		/*
 		try{
 		service.mailSend(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");

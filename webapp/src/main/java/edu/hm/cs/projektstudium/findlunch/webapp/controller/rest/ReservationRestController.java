@@ -114,21 +114,21 @@ public class ReservationRestController {
 			
 			// Bestellte Menge des Angebots ist 0 oder kleiner
 			if(reservation_offer.getAmount() <= 0){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation has no amount for offer "+reservation_offer.getOffer_id()));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation has no amount for offer "+reservation_offer.getOffer().getId()));
 				return new ResponseEntity<Integer>(2, HttpStatus.CONFLICT);
 			}
 			
-			Offer offer = offerRepository.findOne(reservation_offer.getOffer_id());
+			Offer offer = reservation_offer.getOffer();
 			
 			// Angebots ID ist nicht in der DB
 			if(offer==null){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No Offer for ID "+reservation_offer.getOffer_id()));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No Offer for ID "+reservation_offer.getOffer().getId()));
 				return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 			}
 			
 			// Angebot ist ausverkauft
 			if(offer.getSold_out()){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Das Offer "+reservation_offer.getOffer_id()+" is sold out"));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Das Offer "+reservation_offer.getOffer().getId()+" is sold out"));
 				return new ResponseEntity<Integer>(5, HttpStatus.CONFLICT);
 			}
 			
@@ -300,7 +300,7 @@ public class ReservationRestController {
 		int neededPoints = 0;
 		
 		for(ReservationOffers reOffers : reservation_Offers){
-			Offer offer = offerRepository.findOne(reOffers.getOffer_id());
+			Offer offer = reOffers.getOffer();
 			neededPoints += reOffers.getAmount() * offer.getNeededPoints();
 		}
 		

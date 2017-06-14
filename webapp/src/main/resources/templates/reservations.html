@@ -13,6 +13,8 @@
 			role="alert" th:text="#{invalid.selectReservation}">invalid.offerId</div>
 		<div th:if="${param.selectReservationReject}" class="alert alert-danger"
 			role="alert" th:text="#{invalid.selectReservationReject}">invalid.offerId</div>
+		<div th:if="${param.successReject}" class="alert alert-success"
+			th:text="#{success.reservations.rejected}" role="alert">success.offer.rejected</div>
 		<!-- <br />  -->
 		<h2 th:text="#{reservations.label.normal}">normal reservations</h2>
 		<input type="text" id="searchReservationTable"
@@ -67,8 +69,7 @@
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
 						</div>
 						<td>
-						<button
-						 	class="btn btn-default" onclick="return reservationDetails('*{reservations[__${stat.index}__].id}')">
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#reservationTable"  th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
 							<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 						</button>
 						</td>
@@ -147,6 +148,38 @@
 				th:value="${_csrf.token}" />
 		</form>
 	</div>
+	
+	<div id="reservationModal" class="modal fade" role="dialog" th:fragment="reservationModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        			<h4 class="modal-title" th:text="'Bestelldetails'">Modal Header</h4>
+      			</div>
+      			<div class="modal-body" th:fragment="reservationTable">
+      				<h3 th:text="${offers}"></h3>
+					<table class="table table-hover" id="reservationTable">
+						<thead>
+							<tr>
+								<td th:text="'Name'"></td>
+								<td th:text="'Anzahl'"></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="offer : ${offers}">
+								<td th:text="${offer.getOffer().getTitle()}"></td>
+								<td th:text="${offer.getAmount()}"></td>
+							</tr>
+							<p></p>
+						</tbody>
+					</table>
+     		 	</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      			</div>
+    		</div>
+		</div>
+	</div>
 
 	<script th:inline="javascript" type="text/javascript">
 		/*<![CDATA[*/
@@ -182,13 +215,43 @@
 	
 	<script th:inline="javascript" type="text/javascript">
 
-		function reservationDetails(id){
+	function openReservationModal(id) {
+	
+		$.ajax({
+			url: "/reservations/details/"+id,
+			success: function(data) {
+				alert("DATA: "+data);
+				$("#reservationTable").html(data);
+				$("#reservationModal").modal("show");
+				}
+			});
+		
+		}
 
-			var URL = "/reservationDetails/"+id;
+	<!--
+		$(document).ready(function(){
+			
+			$('#reservationDetails').on('show.bs.modal', function (e) {
+				var reservationid = $(e.relatedTarget).data('id');
+	        	alert(reservationid);
 
-			details = window.open(URL, 'height=200,width=150');
+	        	$.get("/reservations/details/"+reservationid, function(data, status) {
 
-			}
+					$("#reservationDetailsHolder").html(data);
+					$("#reservationDetails").modal("show");
+		        			
+	        			 alert("Data: " + data + "\nStatus: " + status);
+	        			var obj = $.parseJSON(data);
+	        			$.each(obj, function(i, service) {
+								alert(obj);
+		        			}); 
+		        	})
+	        	
+	        	//$(".modal-body").html(data);
+	       		// Do Whatever you like to do,
+			 });
+	});
+	-->
 	
 	</script>
 
