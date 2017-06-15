@@ -10,12 +10,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRepository;
 /**
  * 
@@ -69,7 +71,7 @@ public class PushNotificationManager implements PushMessagingInterface {
 	protected DailyPushNotificationData p;
 	
 	/** The pushNotification to be send */
-	protected PushNotification push;
+	protected JSONObject push;
 
 	/** The restaurants for push count. */
 	protected Integer restaurantsForPushCount;
@@ -116,19 +118,6 @@ public class PushNotificationManager implements PushMessagingInterface {
 		} catch (IOException e) {
 			LOGGER.error("I/O error.");
 		}
-	}	
-
-
-
-	/**
-	 * Execute FCM push for daily notification, called by scheduler class "PushNotificationScheduledTask".
-	 */
-	/* (non-Javadoc)
-	 * @see edu.hm.cs.projektstudium.findlunch.webapp.push.PushMessagingInterface#sendFcmNotification(edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification, java.lang.Integer, java.util.List)
-	 */
-	@Override
-	public void sendFcmDailyNotification(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds) {
-		//executor.execute(new SendFcmNotification(p, restaurantsForPushCount, pushKitchenTypeIds));
 	}
 	
 	/**
@@ -137,13 +126,8 @@ public class PushNotificationManager implements PushMessagingInterface {
 	 * @throws InterruptedException 
 	 */
 	@Override
-	public void sendFcmNotification(PushNotification p)  {
-			
+	public void sendFcmNotification(JSONObject p)  {	
 			executor.execute(new SendFcmNotification(p));
-		
-		
-		
-		
 	}
 
 	/**
@@ -200,5 +184,60 @@ public class PushNotificationManager implements PushMessagingInterface {
 	 */
 	public static String getAwsEndpointUserdata() {
 		return AWS_ENDPOINT_USERDATA;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject generateWeb(String token){
+		JSONObject notification = new JSONObject();
+		notification.put("to", token);
+		JSONObject data = new JSONObject();
+		data.put("titel:","Deine Bestellung: 12345");
+		data.put("body:", "Deine Bestellung 1234 wurd durch das Restaurant Ionic Cafe bestätigt");
+		notification.put("data", data);
+		return notification;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject generateReservationConfirm(Reservation reservation, String token){
+		JSONObject notification = new JSONObject();
+		notification.put("to", token);
+		JSONObject data = new JSONObject();
+		data.put("titel:","Deine Bestellung: "+reservation.getId());
+		data.put("body:", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" bestätigt");
+		data.put("icon:", "/images/FL.png");
+		notification.put("data", data);
+		return notification;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject generateReservationReject(Reservation reservation, String token){
+		JSONObject notification = new JSONObject();
+		notification.put("to", token);
+		JSONObject data = new JSONObject();
+		data.put("titel:","Deine Bestellung: "+reservation.getId());
+		data.put("body:", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt");
+		data.put("icon:", "/images/FL.png");
+		notification.put("data", data);
+		return notification;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject generateFromDaily(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds, String token){
+		JSONObject notification = new JSONObject();
+		notification.put("to", token);
+		JSONObject data = new JSONObject();
+		
+		data.put("title", p.getTitle());
+		data.put("numberOfRestaurants", restaurantsForPushCount.toString());
+		data.put("longitude", String.valueOf(p.getLongitude()));
+		data.put("latitude", String.valueOf(p.getLatitude()));
+		data.put("radius", String.valueOf(p.getRadius()));
+		data.put("kitchenTypeIds", pushKitchenTypeIds.toString());
+		data.put("pushId", String.valueOf(p.getId()));
+
+		notification.put("collapse_key", COLLAPSE_KEY + "_" + p.getId());
+		notification.put("time_to_live", 21600);
+		notification.put("data: ", data);
+		return notification;
 	}
 }

@@ -1,10 +1,14 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.concurrent.TimeUnit;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +19,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.EmailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
+import edu.hm.cs.projektstudium.findlunch.webapp.push.SseSend;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;;
 
 /**
@@ -60,36 +67,57 @@ public class HomeController {
 		return "redirect:/home";
 	}
 	
-	/**
-	 * Method for testing the Push
-	 * @param principal
-	 */
-	@RequestMapping(path="/home", method = RequestMethod.POST, params={"push"})
-	public void sendPushAtHome(Principal principal)  {
-		//System.out.println("ENTER FCM TOKEN: "+token);
+	@RequestMapping(path="/home", method = RequestMethod.POST, params={"sse"})
+	public void sendPushAtHome(Principal principal) throws AddressException, MessagingException  {
 		
 		User authenticatedUser = (User)((Authentication)principal).getPrincipal();
-		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
-		sendPush(token.getFcm_token());
+		/** TEST FÜR SSE */
+		//EmailService service = new EmailService();
 		
-		//return "home";
-	}
-	
-	@RequestMapping(path="/home?token", method = RequestMethod.POST)
-	public String getClientToken(@RequestParam String token) {
-		System.out.println("ENTER FCM TOKEN: "+token);
-		return "home";
+		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
+		
+		try{
+		sendPush(token.getFcm_token());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		/*
+		try{
+		service.sendSimpleMessage(authenticatedUser.getUsername(), "oder", "Sie haben neue Bestellungen");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		*/
+		
+		//service.mimMessage(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
+		
+		
+		/*
+		try{
+		service.mailSend(authenticatedUser.getUsername(), "Test", "Das ist ein Mime Test");
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		*/
 	}
 	
 	private void sendPush(String token){
 		
 		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
 		
-		push.generateWeb();
-		push.setFcmToken(token);
 		
-		pushManager.sendFcmNotification(push);
+		JSONObject notification = pushManager.generateWeb(token);
+		
+		//push.put("to", "eVvkYMnfv5s:APA91bHpUqLqwBXwaJlkqVQLRPA8Dbj8Hms2DaVWBhlbhbl20dpkTmpdEVBSggddg6ALNdEMfagoSOzYIA1zrBxAhTWSn5ipIKxDTlmItjE55OEwCk7F8Ve6hSBx6c7ITFG_vltwK-db");
+		
+		
+		System.out.println(notification.toString());
+		pushManager.sendFcmNotification(notification);
 	}
 
 }

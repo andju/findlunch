@@ -94,14 +94,19 @@ public class Offer {
 	@JsonView(OfferView.OfferRest.class)
 	private OfferPhoto defaultPhoto;
 	
-	/** The reservations.*/
+	/*
 	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
 	List<Reservation> reservation;
+	*/
 	
 	/** The needed point*/
 	@JsonView(OfferView.OfferRest.class)
 	@Min(value=1, message="{offer.neededPoints.invalidMinValue}")
 	private int neededPoints;
+	
+	/** The offers within the reservation */
+	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
+	private List<ReservationOffers> reservation_offers;
 	
 	/**
 	 * Gets the default photo.
