@@ -1,7 +1,10 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,9 +24,6 @@ public class Reservation {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
-
-	/** The amount. */
-	private int amount;
 	
 	/** The donation. */
 	private float donation;
@@ -40,10 +41,6 @@ public class Reservation {
 	/** Is rejected. */
 	private boolean rejected;
 	
-	/** The points are collected by the customer */
-	@Column(name="points_collected")
-	private boolean pointscollected;
-	
 	/** Is used points. */
 	private boolean usedPoints;
 	
@@ -56,10 +53,9 @@ public class Reservation {
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	/** The offer.*/
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="offer_id")
-	private Offer offer;
+	/** The offers within the reservation */
+	@OneToMany(mappedBy="reservation", cascade=CascadeType.ALL)
+	private List<ReservationOffers> reservation_offers;
 	
 	/** The euroPerPoint.*/
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -110,22 +106,6 @@ public class Reservation {
 	}
 
 	/**
-	 * Gets the amount.
-	 * @return The amount
-	 */
-	public int getAmount() {
-		return amount;
-	}
-
-	/**
-	 * Sets the new amount of reservation.
-	 * @param amount The amount.
-	 */
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
-
-	/**
 	 * Gets the reservation time.
 	 * @return The reservation time
 	 */
@@ -155,22 +135,6 @@ public class Reservation {
 	 */
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	/**
-	 * Gets the offer.
-	 * @return The offer
-	 */
-	public Offer getOffer() {
-		return offer;
-	}
-
-	/**
-	 * Sets the new offer.
-	 * @param offer The offer
-	 */
-	public void setOffer(Offer offer) {
-		this.offer = offer;
 	}
 	
 	/**
@@ -206,23 +170,6 @@ public class Reservation {
 		this.rejected = rejected;
 	}
 	
-
-	/**
-	 * Checks if the points for the reservation are collected by the customer
-	 * @return true if collected
-	 */
-	public boolean isPointscollected() {
-		return pointscollected;
-	}
-
-	/**
-	 * Sets collected for the reservation
-	 * @param pointscollected true if collected
-	 */
-	public void setPointscollected(boolean pointscollected) {
-		this.pointscollected = pointscollected;
-	}
-
 	/**
 	 * Gets the donation.
 	 * @return The donation
@@ -318,4 +265,13 @@ public class Reservation {
 	public void setReservationNumber(int reservationNumber) {
 		this.reservationNumber = reservationNumber;
 	}
+
+	public List<ReservationOffers> getReservation_offers() {
+		return reservation_offers;
+	}
+
+	public void setReservation_offers(List<ReservationOffers> reservation_offers) {
+		this.reservation_offers = reservation_offers;
+	}
+	
 }

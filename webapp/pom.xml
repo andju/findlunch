@@ -34,7 +34,19 @@
    				     <scope>provided</scope>
    			 </dependency>
    		-->
-
+		
+		<!-- TEST FOR EMAIl -->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+    		<version>1.4.3.RELEASE</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context-support</artifactId>
+    		<version>4.3.8.RELEASE</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>

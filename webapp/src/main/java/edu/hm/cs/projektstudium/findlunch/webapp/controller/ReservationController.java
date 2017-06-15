@@ -5,29 +5,42 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationList;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
@@ -94,7 +107,7 @@ class ReservationController {
 		}
 		else{
 			ArrayList<Reservation> reservations = (ArrayList<Reservation>) reservationRepository
-					.findByRestaurantIdAndConfirmedFalseAndReservationTimeAfter(authenticatedUser.getAdministratedRestaurant().getId(), getMidnightDateOfToday()); //reservationRepository.findAll(); //reservation form restaurant
+					.findByRestaurantIdAndConfirmedFalseAndRejectedFalseAndReservationTimeAfter(authenticatedUser.getAdministratedRestaurant().getId(), getMidnightDateOfToday()); //reservationRepository.findAll(); //reservation form restaurant
 				
 				ReservationList r = new ReservationList();
 				r.setReservations(reservations);
@@ -143,7 +156,8 @@ class ReservationController {
 			reservation.setRejected(false);
 			reservationRepository.save(reservation);
 			increaseConsumerPoints(reservation);
-			confirmPush(reservation);
+			confirmPush(reservation, true);
+			
 		}
 		return "redirect:/reservations?success";
 	}
@@ -158,7 +172,8 @@ class ReservationController {
 		List<Reservation> rejectedReservations = new ArrayList<>();
 		
 		for(Reservation r: reservations){
-			if(r.isRejected()){
+			// Weil die Checkbox bei checked den wert für confirmed auf true setzt wird hier dieser genommen
+			if(r.isConfirmed()){
 				Reservation reservation = reservationRepository.findOne(r.getId());
 				if(!reservation.isConfirmed()){ //maybe scanned before with qr-code scanner
 					rejectedReservations.add(r);
@@ -168,7 +183,7 @@ class ReservationController {
 			
 			if(rejectedReservations.isEmpty()){
 				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no reservation selected. Redirect to /reservations."));
-				return "redirect:/reservations?selectReservation";
+				return "redirect:/reservations?selectReservationReject";
 			}
 			
 			for(Reservation r: rejectedReservations){
@@ -176,9 +191,9 @@ class ReservationController {
 				reservation.setConfirmed(false);
 				reservation.setRejected(true);
 				reservationRepository.save(reservation);
-				increaseConsumerPoints(reservation);
+				confirmPush(reservation, false);
 			}
-			return "redirect:/reservations?success";
+			return "redirect:/reservations?successReject";
 		
 	}
 	
@@ -214,6 +229,7 @@ class ReservationController {
 			Reservation reservation = reservationRepository.findOne(r.getId());
 			reservation.setConfirmed(true);
 			reservationRepository.save(reservation);
+			confirmPush(reservation, true);
 			//calculateConsumerPoints(reservation);
 		}
 		return "redirect:/reservations?success";
@@ -224,12 +240,11 @@ class ReservationController {
 	 * @param reservation reservation
 	 */
 	private void increaseConsumerPoints(Reservation reservation) {
-		Offer offer = offerRepository.findOne(reservation.getOffer().getId());
-		Restaurant restaurant = restaurantRepository.findOne(offer.getRestaurant().getId());
+		
+		Restaurant restaurant = restaurantRepository.findOne(reservation.getRestaurant().getId());
 		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 		User consumer = userRepository.findOne(reservation.getUser().getId());
-		
-		Float amountOfPoints= new Float((reservation.getAmount()*offer.getPrice()) / euroPerPoint.getEuro());
+		int reservationPoints = getReservationPoints(reservation.getReservation_offers());
 		
 		//composite Key
 		PointId pointId = new PointId();
@@ -240,10 +255,10 @@ class ReservationController {
 		if(points == null){ //user get First time points
 			points = new Points();
 			points.setCompositeKey(pointId);
-			points.setPoints(amountOfPoints.intValue());
+			points.setPoints(reservationPoints);
 		}
 		else{//add new points to the old points
-			points.setPoints(points.getPoints() +amountOfPoints.intValue());
+			points.setPoints(points.getPoints() +reservationPoints);
 		}
 		pointsRepository.save(points);
 	}
@@ -256,22 +271,65 @@ class ReservationController {
 		LocalDateTime midnight = LocalDateTime.now().toLocalDate().atStartOfDay();
 		return Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
 	}
+
+	
+	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
+	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
+
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		if(authenticatedUser.getAdministratedRestaurant() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
+			return null;
+		}
+		
+		Reservation reservation = reservationRepository.findOne(Integer.parseInt(reservationId));
+		if(reservation == null){
+			return null;
+		}
+		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
+		if(reservationOffers == null){
+			return null;
+		}
+		model.addAttribute("offers", reservationOffers);
+		
+		return "reservations :: reservationOfferTable";
+	}
 	
 	/**
 	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
 	 * 
 	 */
-	private void confirmPush(Reservation reservation) {
+	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
 		
 		PushNotificationManager pushManager = new PushNotificationManager();
-		PushNotification push = new PushNotification();
-		push.generateReservationConfirm(reservation);
 		
 		User user = reservation.getUser();
 		PushToken userToken = tokenRepository.findByUserId(user.getId());
 		
-		push.setFcmToken(userToken.getFcm_token());
-		pushManager.sendFcmNotification(push);
+		if(confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		}
+		if(!confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		} 
 		
+		return false;
+	}
+	
+	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
+		
+		int addPoints = 0;
+		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
+		
+		for(ReservationOffers reOffers : reservation_Offers){
+			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
+		}
+		
+		return addPoints;
 	}
 }

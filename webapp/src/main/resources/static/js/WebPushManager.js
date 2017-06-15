@@ -64,11 +64,13 @@ var config = {
   messaging.onMessage(function(payload) {
 		console.log("Message received. ", payload);
 		
+		alert(payload);
+		
 		var currentLocation = window.location.pathname;
 		
 		if(currentLocation!="/reservations"){
-			var pushNotification = document.getElementById("pushNotification");
-			pushNotification.hidden="";
+			//var pushNotification = document.getElementById("pushNotification");
+			//pushNotification.hidden="";
 		}
 		else{
 			location.reload();
