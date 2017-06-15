@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -102,6 +103,10 @@ public class User implements UserDetails {
 	/** The account.*/
 	@ManyToOne
 	private Account account;
+	
+	
+	@OneToOne(mappedBy="user")
+	private ResetPassword resetPassword;
 	
 	@Transient
 	private SseEmitter emitter;
@@ -383,5 +388,13 @@ public class User implements UserDetails {
 	//public String getFcmId(){
 	//	return fcmId;
 	//}
+
+	public ResetPassword getResetPassword() {
+		return resetPassword;
+	}
+
+	public void setResetPassword(ResetPassword resetPassword) {
+		this.resetPassword = resetPassword;
+	}
 
 }

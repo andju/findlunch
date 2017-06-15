@@ -11,6 +11,15 @@
 		<div th:if="${param.success}" class="alert alert-success" role="alert"
 			th:text="#{success.restaurant.saved}">success.restaurant.saved</div>
 
+		<div th:if="${param.mailSend}" class="alert alert-success"
+			th:text="#{success.resetpw.send}" role="alert">success.offer.confirmed</div>
+			
+		<div th:if="${param.resetCancel}" class="alert alert-success" role="alert"
+			th:text="#{resetpw.reset.cancel}">success.restaurant.saved</div>
+			
+		<div th:if="${param.resetSuccessful}" class="alert alert-success" role="alert"
+			th:text="#{succes.resetpw.reset}">success.restaurant.saved</div>
+
 		<div id="myCarousel" class="carousel slide container"
 			data-ride="carousel">
 			<!-- Indicators -->

@@ -657,6 +657,22 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`bill_counter` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `findlunch`.`reset_password`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `findlunch`.`reset_password` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `token` VARCHAR(45) NOT NULL,
+  `date` DATETIME NULL,
+  `user_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`, `user_id`),
+  INDEX `fk_reset_password_user1_idx` (`user_id` ASC),
+  CONSTRAINT `fk_reset_password_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `findlunch`.`user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
