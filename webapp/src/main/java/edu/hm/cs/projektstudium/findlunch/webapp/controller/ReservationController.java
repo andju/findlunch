@@ -301,7 +301,7 @@ class ReservationController {
 	}
 	
 	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
-	public @ResponseBody String getReservationDetails(@PathVariable("reservationId") String reservationId, Model model, Principal principal, HttpServletRequest request){
+	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
 
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
@@ -320,35 +320,6 @@ class ReservationController {
 		}
 		model.addAttribute("offers", reservationOffers);
 		
-		return "modal/modalContents :: reservationTable";
-		
-		/*
-		//ModelAndView mv = new ModelAndView();
-		
-		//mv.addObject("data", "Test");
-		
-		Map<Integer, HashMap<String, Integer>> offers = new HashMap<Integer, HashMap<String, Integer>>();
-		
-		Reservation reservation = reservationRepository.findOne(reservationId);
-		if(reservation == null){
-			return null;
-		}
-		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
-		if(reservationOffers == null){
-			return null;
-		}
-		for(ReservationOffers offer : reservationOffers){
-			HashMap<String, Integer> offerDetails = new HashMap<>();
-			Offer currentOffer = offerRepository.findOne(offer.getOffer_id());
-			offerDetails.put(currentOffer.getTitle(), offer.getAmount());
-			offers.put(offer.getOffer_id(), offerDetails);
-		}
-		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		
-		
-		return offers;
-		*/
+		return "reservations :: reservationOfferTable";
 	}
 }

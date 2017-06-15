@@ -216,10 +216,11 @@ public class CourseTypesDetailController {
 				if(offerEntry.getOrder()==position-1){
 					offerEntry.setOrder(position);
 					offerRepository.save(offerEntry);
+					offer.setOrder(position-1);
+					offerRepository.save(offer);
 				}
 			}
-			offer.setOrder(position-1);
-			offerRepository.save(offer);
+			
 		}
 
 		return "redirect:/coursetype/overview/"+courseTypeId;
@@ -251,10 +252,11 @@ public class CourseTypesDetailController {
 				if(offerEntry.getOrder()==position+1){
 					offerEntry.setOrder(position);
 					offerRepository.save(offerEntry);
+					offer.setOrder(position+1);
+					offerRepository.save(offer);
 				}
 			}
-			offer.setOrder(position+1);
-			offerRepository.save(offer);
+			
 		}
 
 		return "redirect:/coursetype/overview/"+courseTypeId;
