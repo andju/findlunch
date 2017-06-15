@@ -343,12 +343,12 @@ class ReservationController {
 		PushToken userToken = tokenRepository.findByUserId(user.getId());
 		
 		if(confirm && userToken != null){
-			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
+			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.getFcm_token());
 			pushManager.sendFcmNotification(notification);
 			return true;
 		}
 		if(!confirm && userToken != null){
-			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
+			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.getFcm_token());
 			pushManager.sendFcmNotification(notification);
 			return true;
 		} 

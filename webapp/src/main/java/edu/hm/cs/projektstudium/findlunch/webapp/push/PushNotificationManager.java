@@ -187,24 +187,13 @@ public class PushNotificationManager implements PushMessagingInterface {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject generateWeb(String token){
-		JSONObject notification = new JSONObject();
-		notification.put("to", token);
-		JSONObject data = new JSONObject();
-		data.put("titel:","Deine Bestellung: 12345");
-		data.put("body:", "Deine Bestellung 1234 wurd durch das Restaurant Ionic Cafe bestätigt");
-		notification.put("data", data);
-		return notification;
-	}
-	
-	@SuppressWarnings("unchecked")
 	public JSONObject generateReservationConfirm(Reservation reservation, String token){
 		JSONObject notification = new JSONObject();
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
-		data.put("titel:","Deine Bestellung: "+reservation.getId());
-		data.put("body:", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" bestätigt");
-		data.put("icon:", "/images/FL.png");
+		data.put("title","Deine Bestellung: "+reservation.getReservationNumber());
+		data.put("body", "Deine Bestellung "+reservation.getReservationNumber()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" bestätigt");
+		data.put("icon", "/images/FL.png");
 		notification.put("data", data);
 		return notification;
 	}
@@ -214,8 +203,8 @@ public class PushNotificationManager implements PushMessagingInterface {
 		JSONObject notification = new JSONObject();
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
-		data.put("titel:","Deine Bestellung: "+reservation.getId());
-		data.put("body:", "Deine Bestellung "+reservation.getId()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt");
+		data.put("titel:","Deine Bestellung: "+reservation.getReservationNumber());
+		data.put("body:", "Deine Bestellung "+reservation.getReservationNumber()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt");
 		data.put("icon:", "/images/FL.png");
 		notification.put("data", data);
 		return notification;

@@ -74,17 +74,6 @@ public class HomeController {
 		/** TEST FÜR SSE */
 		//EmailService service = new EmailService();
 		
-		PushToken token = tokenRepo.findByUserId(authenticatedUser.getId());
-		
-		try{
-		sendPush(token.getFcm_token());
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		
-		
-		
-		
 		/*
 		try{
 		service.sendSimpleMessage(authenticatedUser.getUsername(), "oder", "Sie haben neue Bestellungen");
@@ -104,20 +93,6 @@ public class HomeController {
 			System.out.println(e.getMessage());
 		}
 		*/
-	}
-	
-	private void sendPush(String token){
-		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		
-		
-		JSONObject notification = pushManager.generateWeb(token);
-		
-		//push.put("to", "eVvkYMnfv5s:APA91bHpUqLqwBXwaJlkqVQLRPA8Dbj8Hms2DaVWBhlbhbl20dpkTmpdEVBSggddg6ALNdEMfagoSOzYIA1zrBxAhTWSn5ipIKxDTlmItjE55OEwCk7F8Ve6hSBx6c7ITFG_vltwK-db");
-		
-		
-		System.out.println(notification.toString());
-		pushManager.sendFcmNotification(notification);
 	}
 
 }
