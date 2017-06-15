@@ -592,6 +592,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_about:
                 openFindLunchPage(getString(R.string.url_path_about));
                 break;
+            case R.id.nav_reset_pw:
+                openFindLunchPage(getString(R.string.url_path_reset_pw));
+                break;
             case R.id.nav_contact_support:
                 emailHelper.composeEmail(new String[]{getString(R.string.email_contact)},
                         getString(R.string.text_support_email_subject),
