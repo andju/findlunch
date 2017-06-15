@@ -332,4 +332,41 @@ class ReservationController {
 		
 		return addPoints;
 	}
+	
+	/**
+	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
+	 * 
+	 */
+	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
+		
+		PushNotificationManager pushManager = new PushNotificationManager();
+		
+		User user = reservation.getUser();
+		PushToken userToken = tokenRepository.findByUserId(user.getId());
+		
+		if(confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		}
+		if(!confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		} 
+		
+		return false;
+	}
+	
+	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
+		
+		int addPoints = 0;
+		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
+		
+		for(ReservationOffers reOffers : reservation_Offers){
+			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
+		}
+		
+		return addPoints;
+	}
 }
