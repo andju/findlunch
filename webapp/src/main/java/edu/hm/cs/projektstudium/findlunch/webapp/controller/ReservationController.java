@@ -404,4 +404,39 @@ class ReservationController {
 		
 		return "reservations :: reservationOfferTable";
 	}
+	
+	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
+		
+		int addPoints = 0;
+		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
+		
+		for(ReservationOffers reOffers : reservation_Offers){
+			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
+		}
+		
+		return addPoints;
+	}
+	
+	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
+	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
+
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		if(authenticatedUser.getAdministratedRestaurant() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
+			return null;
+		}
+		
+		Reservation reservation = reservationRepository.findOne(Integer.parseInt(reservationId));
+		if(reservation == null){
+			return null;
+		}
+		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
+		if(reservationOffers == null){
+			return null;
+		}
+		model.addAttribute("offers", reservationOffers);
+		
+		return "reservations :: reservationOfferTable";
+	}
 }
