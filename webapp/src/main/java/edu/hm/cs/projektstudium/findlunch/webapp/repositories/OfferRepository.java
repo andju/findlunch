@@ -32,4 +32,12 @@ public interface OfferRepository extends JpaRepository<Offer, Serializable>{
 	 */
 	Offer findByIdAndRestaurant_id(int id, int restaurantId);
 	
+	/**
+	 * Find a Offer by its id
+	 *
+	 * @param id the id of the offer
+	 * @return the offer
+	 */
+	Offer findById(int id);
+	
 }

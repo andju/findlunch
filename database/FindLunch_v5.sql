@@ -635,6 +635,84 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`bill_counter` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `findlunch`.`allergenic`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `findlunch`.`offer_has_allergenic` ;
+DROP TABLE IF EXISTS `findlunch`.`allergenic` ;
+
+CREATE TABLE IF NOT EXISTS `findlunch`.`allergenic` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255) NULL,
+  `short` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `findlunch`.`offer_has_allergenic`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_allergenic` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `offer_id` INT(11) NOT NULL,
+  `allergenic_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_offer_has_allergenic_offer1_idx` (`offer_id` ASC),
+  INDEX `fk_offer_has_allergenic_allergenic1_idx` (`allergenic_id` ASC),
+  CONSTRAINT `fk_offer_has_allergenic_offer1`
+    FOREIGN KEY (`offer_id`)
+    REFERENCES `findlunch`.`offer` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_offer_has_allergenic_allergenic1`
+    FOREIGN KEY (`allergenic_id`)
+    REFERENCES `findlunch`.`allergenic` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `findlunch`.`additives`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `findlunch`.`offer_has_additives` ;
+DROP TABLE IF EXISTS `findlunch`.`additives` ;
+
+CREATE TABLE IF NOT EXISTS `findlunch`.`additives` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255) NULL,
+  `short` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `findlunch`.`offer_has_additives`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_additives` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `additives_id` INT NOT NULL,
+  `offer_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_offer_has_additives_additives1_idx` (`additives_id` ASC),
+  INDEX `fk_offer_has_additives_offer1_idx` (`offer_id` ASC),
+  CONSTRAINT `fk_offer_has_additives_additives1`
+    FOREIGN KEY (`additives_id`)
+    REFERENCES `findlunch`.`additives` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_offer_has_additives_offer1`
+    FOREIGN KEY (`offer_id`)
+    REFERENCES `findlunch`.`offer` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
