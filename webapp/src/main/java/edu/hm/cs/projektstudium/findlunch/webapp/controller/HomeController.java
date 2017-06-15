@@ -27,7 +27,6 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.EmailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
-import edu.hm.cs.projektstudium.findlunch.webapp.push.SseSend;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;;
 
 /**

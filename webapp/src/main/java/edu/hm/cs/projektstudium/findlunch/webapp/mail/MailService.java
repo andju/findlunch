@@ -10,6 +10,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ResetPasswordRepository;
 
@@ -22,12 +23,28 @@ public class MailService {
 	@Autowired
 	ResetPasswordRepository resetPasswordRepository;
 
-	public void sendResetPwMail(User user, String resetLink) throws MailException{
-		SimpleMailMessage mail = configureMail(user, resetLink);
+	public void sendNewReservationMail(User user, Reservation reservatin) {
+		SimpleMailMessage mail = configureReservtionMail(user, reservatin);
 		javaMailSender.send(mail);
 	}
 	
-	private SimpleMailMessage configureMail(User user, String resetLink){
+	public void sendResetPwMail(User user, String resetLink) throws MailException{
+		SimpleMailMessage mail = configurePasswordMail(user, resetLink);
+		javaMailSender.send(mail);
+	}
+	
+	private SimpleMailMessage configureReservtionMail(User user, Reservation reservation) {
+		ResourceBundle messages = getResurceBundel();
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(user.getUsername());
+		mail.setSubject(messages.getString("reservation.title"));
+		String text = MessageFormat.format(messages.getString("reservation.text"), "");
+		mail.setText(text);
+		return mail;
+		
+	}
+	
+	private SimpleMailMessage configurePasswordMail(User user, String resetLink){
 		ResourceBundle messages = getResurceBundel();
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getUsername());
@@ -40,17 +57,17 @@ public class MailService {
 	private ResourceBundle getResurceBundel(){
 		Locale currentLocale;
         currentLocale = new Locale("de", "DE");
-        ResourceBundle messages = ResourceBundle.getBundle("messages.resetpassword", currentLocale);
+        ResourceBundle messages = ResourceBundle.getBundle("messages.email", currentLocale);
 		return messages;
 	}
 	
 	public void sendPasswordRestToken(User user){
-		SimpleMailMessage mail = configureCustomerMail(user);
+		SimpleMailMessage mail = configureCustomerPasswordMail(user);
 		javaMailSender.send(mail);
 		
 	}
 
-	private SimpleMailMessage configureCustomerMail(User user) {
+	private SimpleMailMessage configureCustomerPasswordMail(User user) {
 		ResourceBundle messages = getResurceBundel();
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getUsername());
