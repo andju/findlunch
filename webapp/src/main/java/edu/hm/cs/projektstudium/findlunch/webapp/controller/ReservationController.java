@@ -401,6 +401,7 @@ class ReservationController {
 			return null;
 		}
 		model.addAttribute("offers", reservationOffers);
+<<<<<<< Updated upstream
 		
 		return "reservations :: reservationOfferTable";
 	}
@@ -436,6 +437,8 @@ class ReservationController {
 			return null;
 		}
 		model.addAttribute("offers", reservationOffers);
+=======
+>>>>>>> Stashed changes
 		
 		return "reservations :: reservationOfferTable";
 	}
