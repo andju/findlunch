@@ -23,8 +23,12 @@ public class MailService {
 	@Autowired
 	ResetPasswordRepository resetPasswordRepository;
 
-	public void sendNewReservationMail(User user, Reservation reservatin) {
-		SimpleMailMessage mail = configureReservtionMail(user, reservatin);
+	private static final String HTTP = "http://";
+	
+	private static final String HTTPS= "https://";
+	
+	public void sendNewReservationMail(User user, Reservation reservatin, String url) {
+		SimpleMailMessage mail = configureReservtionMail(user, reservatin, url);
 		javaMailSender.send(mail);
 	}
 	
@@ -33,12 +37,12 @@ public class MailService {
 		javaMailSender.send(mail);
 	}
 	
-	private SimpleMailMessage configureReservtionMail(User user, Reservation reservation) {
+	private SimpleMailMessage configureReservtionMail(User user, Reservation reservation, String url) {
 		ResourceBundle messages = getResurceBundel();
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getUsername());
 		mail.setSubject(messages.getString("reservation.title"));
-		String text = MessageFormat.format(messages.getString("reservation.text"), "");
+		String text = MessageFormat.format(messages.getString("reservation.text"), url);
 		mail.setText(text);
 		return mail;
 		
@@ -75,5 +79,9 @@ public class MailService {
 		String text = MessageFormat.format(messages.getString("resetpassword.customer.text"), user.getResetPassword().getToken());
 		mail.setText(text);
 		return mail;
+	}
+	
+	private String getProtocol(boolean https){
+		return https ? HTTPS : HTTP;
 	}
 }

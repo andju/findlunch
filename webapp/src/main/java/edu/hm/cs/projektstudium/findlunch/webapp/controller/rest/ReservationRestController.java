@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.mail.MailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
@@ -77,6 +78,13 @@ public class ReservationRestController {
 	/** The token repository. */
 	@Autowired
 	private PushTokenRepository tokenRepository;
+	
+	@Autowired
+	private MailService mailService;
+	
+	private static final String HTTP = "http://";
+	
+	private static final String HTTPS= "https://";
 	
 	/** The Logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(ReservationRestController.class);
@@ -170,8 +178,9 @@ public class ReservationRestController {
 		
 		reservationRepository.save(reservation);
 		
-		//confirmPush(reservation);
+		String url = getProtocol(request.isSecure()) + request.getServerName()+":"+request.getServerPort() + "/reservations";
 		
+		mailService.sendNewReservationMail(authenticatedUser, reservation, url);
 		
 		if(reservation.isUsedPoints()){
 			//Restaurant restaurant = restaurantRepository.findById(reservation.getRestaurant().getId());
@@ -294,5 +303,10 @@ public class ReservationRestController {
 		}
 		
 		return neededPoints;
+	}
+	
+	//get Protocol for the email
+	private String getProtocol(boolean https){
+		return https ? HTTPS : HTTP;
 	}
 }
