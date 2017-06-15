@@ -272,7 +272,7 @@ class ReservationController {
 		return Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
 	}
 
-	
+	/*
 	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
 	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
@@ -295,7 +295,42 @@ class ReservationController {
 		
 		return "reservations :: reservationOfferTable";
 	}
-	
+	*/
+	/*
+	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
+		
+		PushNotificationManager pushManager = new PushNotificationManager();
+		
+		User user = reservation.getUser();
+		PushToken userToken = tokenRepository.findByUserId(user.getId());
+		
+		if(confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		}
+		if(!confirm && userToken != null){
+			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
+			pushManager.sendFcmNotification(notification);
+			return true;
+		} 
+		
+		return false;
+	}
+	*/
+	/*
+	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
+		
+		int addPoints = 0;
+		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
+		
+		for(ReservationOffers reOffers : reservation_Offers){
+			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
+		}
+		
+		return addPoints;
+	}
+	*/
 	/**
 	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
 	 * 
@@ -320,7 +355,7 @@ class ReservationController {
 		
 		return false;
 	}
-	
+	/*
 	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
 		
 		int addPoints = 0;
@@ -332,44 +367,7 @@ class ReservationController {
 		
 		return addPoints;
 	}
-	
-	/**
-	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
-	 * 
-	 */
-	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
-		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		
-		User user = reservation.getUser();
-		PushToken userToken = tokenRepository.findByUserId(user.getId());
-		
-		if(confirm && userToken != null){
-			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
-			pushManager.sendFcmNotification(notification);
-			return true;
-		}
-		if(!confirm && userToken != null){
-			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
-			pushManager.sendFcmNotification(notification);
-			return true;
-		} 
-		
-		return false;
-	}
-	
-	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
-		
-		int addPoints = 0;
-		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-		
-		for(ReservationOffers reOffers : reservation_Offers){
-			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
-		}
-		
-		return addPoints;
-	}
-	
+	*/
 	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
 		
 		int addPoints = 0;
@@ -401,11 +399,11 @@ class ReservationController {
 			return null;
 		}
 		model.addAttribute("offers", reservationOffers);
-<<<<<<< Updated upstream
+
 		
 		return "reservations :: reservationOfferTable";
 	}
-	
+	/*
 	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
 		
 		int addPoints = 0;
@@ -417,7 +415,8 @@ class ReservationController {
 		
 		return addPoints;
 	}
-	
+	*/
+	/*
 	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
 	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
@@ -437,9 +436,9 @@ class ReservationController {
 			return null;
 		}
 		model.addAttribute("offers", reservationOffers);
-=======
->>>>>>> Stashed changes
+
 		
 		return "reservations :: reservationOfferTable";
 	}
+	*/
 }
