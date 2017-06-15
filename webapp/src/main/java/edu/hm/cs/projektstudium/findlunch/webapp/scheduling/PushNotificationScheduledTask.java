@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,13 @@ import edu.hm.cs.projektstudium.findlunch.webapp.controller.rest.RestaurantRestC
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.KitchenType;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushNotification;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DailyPushNotificationData;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushMessagingInterface;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushNotificationRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 
 
@@ -66,6 +68,8 @@ public class PushNotificationScheduledTask {
 	@Autowired
 	private RestaurantRepository restaurauntRepo;
 
+	@Autowired
+	private PushTokenRepository tokenRepo;
 	
 	/**
 	 * ########################################
@@ -127,17 +131,17 @@ public class PushNotificationScheduledTask {
 					
 					//Create push notification sender base for further push-message processing.
 					PushMessagingInterface senderBase = new PushNotificationManager();
+					PushNotificationManager manager = new PushNotificationManager();
 					
-					// Create a Object that stores the data for the push Notification
-					PushNotification push = new PushNotification();
+					User receiver = p.getUser();
+					p.setFcmToken(tokenRepo.findById(receiver.getId()).toString());
 					
-					// Put the data the the Notification
-					push.generateFromDaily(p, restaurantsForPushCount, pushKitchenTypeIds);
+					JSONObject notification = manager.generateFromDaily(p, restaurantsForPushCount, pushKitchenTypeIds, tokenRepo.findById(receiver.getId()).toString());
 					
 					//Check which push notification token is valid, process data at sender manager.
 					if(!p.getFcmToken().equals(NOT_AVAILABLE)) {
 						
-						senderBase.sendFcmNotification(push);
+						senderBase.sendFcmNotification(notification);
 						//senderBase.sendFcmDailyNotification(p, restaurantsForPushCount, pushKitchenTypeIds);
 					}
 					if(!p.getSnsToken().equals(NOT_AVAILABLE)) {
