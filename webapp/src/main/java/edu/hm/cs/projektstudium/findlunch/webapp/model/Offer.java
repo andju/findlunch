@@ -94,11 +94,6 @@ public class Offer {
 	@JsonView(OfferView.OfferRest.class)
 	private OfferPhoto defaultPhoto;
 	
-	/*
-	@OneToMany(mappedBy="offer", cascade=CascadeType.ALL)
-	List<Reservation> reservation;
-	*/
-	
 	/** The needed point*/
 	@JsonView(OfferView.OfferRest.class)
 	@Min(value=1, message="{offer.neededPoints.invalidMinValue}")
@@ -157,9 +152,11 @@ public class Offer {
 	private OfferCourse offerCourse;
 	*/
 	
+	/** The coursetype */
 	@Column(name="course_type")
 	private int courseType;
 	
+	/** The order of the offer within the coursetype */
 	@Column(name="sort_by")
 	private int order;
 	

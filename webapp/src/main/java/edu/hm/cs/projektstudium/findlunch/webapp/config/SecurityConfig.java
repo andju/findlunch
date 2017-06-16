@@ -87,8 +87,8 @@ public class SecurityConfig {
 					// Add an elementary Content-Security-Policy-Report-Only-header with a reporting URL.
 					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy-Report-Only",
 					"default-src 'self' script-src 'self' 'unsafe-inline' " +
-							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.gstatic.com/firebasejs/ https://fcm.googleapis.com/ ;" +
-							"; report-uri /api/csp-report-uri"+ "; https://localost" + "; /js/**"))
+							"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ ;" +
+							"; report-uri /api/csp-report-uri"+ "; /js/**"))
 					.and()
 					.csrf().disable().requestMatchers()
 					// Add a Content-Security-Policy-violation-report-endpoint
@@ -179,7 +179,7 @@ public class SecurityConfig {
 					// See: https://developers.google.com/recaptcha/docs/faq#im-using-content-security-policy-csp-on-my-website-how-can-i-configure-it-to-work-with-recaptcha
 					.headers().addHeaderWriter(new StaticHeadersWriter("Content-Security-Policy",
 							"default-src 'self' data:; script-src 'self' 'unsafe-inline' " +
-									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://www.gstatic.com/firebasejs/ https://localhost:8443/ https://fcm.googleapis.com/;" +
+									"https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ ;" +
 									"; /js/**"+"child-src https://www.google.com/recaptcha/;"+
 									"style-src 'self' data: 'unsafe-inline'" +
 									"; report-uri /api/csp-report-uri")).and()

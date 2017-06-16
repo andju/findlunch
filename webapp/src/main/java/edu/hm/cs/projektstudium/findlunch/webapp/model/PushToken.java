@@ -8,6 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+/**
+ * The class PushToken
+ * The class represents a firebase push token
+ * @author Niklas Klotz
+ *
+ */
 @Entity
 @Table(name="user_pushtoken")
 public class PushToken {
@@ -17,14 +23,16 @@ public class PushToken {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
+	/** The user*/
 	@Column(name="user_id")
 	@NotNull
 	private int userId;
 	
+	/** The token*/
 	@Column(name="fcm_token")
 	@NotNull
 	private String fcmToken;
-
+	
 	public int getId() {
 		return id;
 	}

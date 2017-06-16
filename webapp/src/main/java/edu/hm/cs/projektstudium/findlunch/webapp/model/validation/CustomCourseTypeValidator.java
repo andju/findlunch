@@ -14,7 +14,10 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 
 /**
- * The class CustomCourseTypeValidator.
+ * The class CustomCourseTypeValidator
+ * 
+ * @author Niklas Klotz
+ *
  */
 @Component
 public class CustomCourseTypeValidator implements Validator{

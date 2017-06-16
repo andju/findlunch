@@ -28,6 +28,13 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 
+/**
+ * The class CourseTypesController
+ * The class is responsible for handling http calls related to the coursetype page
+ * 
+ * @author Niklas Klotz
+ *
+ */
 @Controller
 public class CourseTypesController {
 
@@ -43,10 +50,10 @@ public class CourseTypesController {
 	/**
 	 * Gets the page, that displays the courseType overview.
 	 * 
-	 * @param model
-	 * @param principal
-	 * @param request
-	 * @return
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal currently logged in user
+	 * @param request http request
+	 * @return the page coursetype
 	 */
 	@RequestMapping(path = "/coursetype", method = RequestMethod.GET)
 	public String getCourseTypes(Model model, Principal principal, HttpServletRequest request){
@@ -60,20 +67,17 @@ public class CourseTypesController {
 		}
 		
 			ArrayList<CourseTypes> courseTypes = (ArrayList<CourseTypes>) courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId());
-			//CourseTypeList courseTypesList = new CourseTypeList();
-			//courseTypesList.setCourseTypes(courseTypes);
 			model.addAttribute("courseTypes", courseTypes);
 			return "coursetype";	
-			
 	}
 	
 	/**
 	 * Deletes a coursetype.
-	 * @param courseId
-	 * @param model
-	 * @param principal
-	 * @param request
-	 * @return
+	 * @param courseId the coursetype to be deleted
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return the page coursetype with parameter
 	 */
 	@RequestMapping(path="/coursetype/delete/{courseId}", method=RequestMethod.GET)
 	public String delteCourseType(@PathVariable("courseId") Integer courseId, Model model, Principal principal, HttpServletRequest request){
@@ -85,6 +89,7 @@ public class CourseTypesController {
 			return "redirect:/restaurant/add?required";
 		}
 		
+		// if the given id of coursetyope is not in the database
 		CourseTypes coursetype = courseTypeRepository.findByIdAndRestaurantId(courseId, authenticatedUser.getAdministratedRestaurant().getId());
 		if(coursetype == null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The coursetype with id " + courseId + " could not be found for the given restaurant with id " + authenticatedUser.getAdministratedRestaurant().getId() + "."));
@@ -92,10 +97,12 @@ public class CourseTypesController {
 		}
 		
 		List<Offer> offersInCourse = offerRepository.findByCourseTypeOrderByOrderAsc(coursetype.getId());
+		// if the coursetype contains offers
 		if(!offersInCourse.isEmpty()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The coursetype with id " + courseId + " contains " + offersInCourse.size() + " offers."));
 			return "redirect:/coursetype?containsOffers";
 		}
+		// if the restaurant deleted its last coursetype
 		if(offerRepository.findByCourseTypeOrderByOrderAsc(coursetype.getId()).size()==1){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The restaurant with the Id " + authenticatedUser.getAdministratedRestaurant().getId() + " deleted his last coursetype."));
 			courseTypeRepository.delete(coursetype);
@@ -107,13 +114,13 @@ public class CourseTypesController {
 	}
 	
 	/**
-	 * Sets the value for the coursetype lower.
-	 * @param offerId
-	 * @param model
-	 * @param principal
-	 * @param session
-	 * @param request
-	 * @return
+	 * Sets the value for the coursetype lower within the list of coursetypes.
+	 * @param courseId the coursetype
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param session the session
+	 * @param request http request
+	 * @return redirect to the page coursetype
 	 */
 	@RequestMapping(path="coursetype/up/{courseId}", method=RequestMethod.GET)
 	public String offerUp(@PathVariable("courseId") Integer courseId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
@@ -126,6 +133,7 @@ public class CourseTypesController {
 		
 		int position = course.getSortBy();
 		
+		// it the current possition of the coursetype is not 0, which is the lowest availabile, its order will be changed
 		if(position!=0){
 			for(CourseTypes type : restaurantCourses){
 				if(type.getSortBy()==position-1){
@@ -141,13 +149,13 @@ public class CourseTypesController {
 	}
 	
 	/**
-	 * Sets the value for coursetype higher.
-	 * @param offerId
-	 * @param model
-	 * @param principal
-	 * @param session
-	 * @param request
-	 * @return
+	 * Sets the value for coursetype higher within the list.
+	 * @param courseId the coursetype
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param session the session
+	 * @param request http request
+	 * @return redirect to the page coursetype
 	 */
 	@RequestMapping(path="coursetype/down/{courseId}", method=RequestMethod.GET)
 	public String offerDown(@PathVariable("courseId") Integer courseId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
@@ -160,6 +168,7 @@ public class CourseTypesController {
 		
 		int position = course.getSortBy();
 		
+		// if the current possition of the coursetype is not the highest avaliabile
 		if(position!=restaurantCourses.size()){
 			for(CourseTypes type : restaurantCourses){
 				if(type.getSortBy()==position+1){
@@ -174,6 +183,11 @@ public class CourseTypesController {
 		return "redirect:/coursetype";
 	}
 	
+	/**
+	 * Checks if a coursetype can be deleted
+	 * @param courseId the coursetype
+	 * @return true if can be deleted
+	 */
 	@RequestMapping(path="coursetype/checkDelete/{courseId}", method=RequestMethod.GET)
 	public Boolean checkDelete(@PathVariable("courseId") Integer courseId){
 		

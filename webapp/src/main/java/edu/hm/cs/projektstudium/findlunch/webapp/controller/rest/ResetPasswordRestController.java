@@ -24,6 +24,13 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ResetPasswordRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 
+/**
+ * The Class ResetPasswordRestController.
+ * The Class is responsible for handling API calls to reset the password.
+ * 
+ * @author Deniz Mardin
+ *
+ */
 @RestController
 public class ResetPasswordRestController {
 

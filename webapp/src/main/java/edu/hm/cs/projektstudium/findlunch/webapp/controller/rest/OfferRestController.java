@@ -62,7 +62,7 @@ public class OfferRestController {
 	 * @param request the HttpServletRequest
 	 * @param restaurantId
 	 *            the id of the restaurant
-	 * @return the offers of the given restaurant
+	 * @return the offers of the given restaurant with the corresponding coursetype
 	 */
 	@CrossOrigin
 	@JsonView(OfferView.OfferRest.class)
@@ -85,18 +85,11 @@ public class OfferRestController {
 			if (ts != null) {
 				getValidOffers(c, ts, restaurantId, result);
 			}
-			
-			/*
-			for(Offer offer : result){
-				if(offer.getSold_out()){
-					result.remove(offer);
-				}
-			}
-			*/
 		}
 		
 		Map<String, List<Offer>> offers = new LinkedHashMap<String, List<Offer>>();
 		
+		// Put the orders together with the coursetypes and order them by their sort by value
 		for(CourseTypes course : courseTypeRepo.findByRestaurantIdOrderBySortByAsc(restaurantId)){
 			
 			List<Offer> offersInCourse = new LinkedList<Offer>();

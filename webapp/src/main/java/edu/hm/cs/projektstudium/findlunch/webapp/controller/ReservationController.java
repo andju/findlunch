@@ -162,6 +162,13 @@ class ReservationController {
 		return "redirect:/reservations?success";
 	}
 	
+	/**
+	 * Reject the selected reservations
+	 * @param reservationList List of reservation
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return redirect to the webpage
+	 */
 	@RequestMapping(path = "/reservations", method = RequestMethod.POST, params={"reject"})
 	public String rejectReservationByOwner(@ModelAttribute ReservationList reservationList, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "reservations", reservationList.toString()));
@@ -172,7 +179,7 @@ class ReservationController {
 		List<Reservation> rejectedReservations = new ArrayList<>();
 		
 		for(Reservation r: reservations){
-			// Weil die Checkbox bei checked den wert für confirmed auf true setzt wird hier dieser genommen
+			// Because a checked checkbox always transmitts confirmed for checked reservations
 			if(r.isConfirmed()){
 				Reservation reservation = reservationRepository.findOne(r.getId());
 				if(!reservation.isConfirmed()){ //maybe scanned before with qr-code scanner
@@ -272,68 +279,11 @@ class ReservationController {
 		return Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
 	}
 
-	/*
-	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
-	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
-		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
-
-		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
-		if(authenticatedUser.getAdministratedRestaurant() == null) {
-			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
-			return null;
-		}
-		
-		Reservation reservation = reservationRepository.findOne(Integer.parseInt(reservationId));
-		if(reservation == null){
-			return null;
-		}
-		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
-		if(reservationOffers == null){
-			return null;
-		}
-		model.addAttribute("offers", reservationOffers);
-		
-		return "reservations :: reservationOfferTable";
-	}
-	*/
-	/*
-	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
-		
-		PushNotificationManager pushManager = new PushNotificationManager();
-		
-		User user = reservation.getUser();
-		PushToken userToken = tokenRepository.findByUserId(user.getId());
-		
-		if(confirm && userToken != null){
-			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.toString());
-			pushManager.sendFcmNotification(notification);
-			return true;
-		}
-		if(!confirm && userToken != null){
-			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.toString());
-			pushManager.sendFcmNotification(notification);
-			return true;
-		} 
-		
-		return false;
-	}
-	*/
-	/*
-	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
-		
-		int addPoints = 0;
-		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-		
-		for(ReservationOffers reOffers : reservation_Offers){
-			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
-		}
-		
-		return addPoints;
-	}
-	*/
 	/**
-	 *  Sendet eine Bestätigung der Bestellung an den Kunden.
-	 * 
+	 * Sends a confirmation of the reservation via firebase push to the customer
+	 * @param reservation the reservation
+	 * @param confirm true, if confirmed, false if rejected
+	 * @return
 	 */
 	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
 		
@@ -355,19 +305,12 @@ class ReservationController {
 		
 		return false;
 	}
-	/*
-	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
-		
-		int addPoints = 0;
-		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-		
-		for(ReservationOffers reOffers : reservation_Offers){
-			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
-		}
-		
-		return addPoints;
-	}
-	*/
+	
+	/**
+	 * Gets the pints for the reservation
+	 * @param reservation_Offers the list of offers within the reservation
+	 * @return the points for the reservation
+	 */
 	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
 		
 		int addPoints = 0;
@@ -380,6 +323,14 @@ class ReservationController {
 		return addPoints;
 	}
 	
+	/**
+	 * Gets the details of a given reservation
+	 * @param reservationId the reservation
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return the reservation detials into the corresponding html fragment
+	 */
 	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
 	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
@@ -403,42 +354,4 @@ class ReservationController {
 		
 		return "reservations :: reservationOfferTable";
 	}
-	/*
-	private int getReservationPoints(List<ReservationOffers> reservation_Offers){
-		
-		int addPoints = 0;
-		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-		
-		for(ReservationOffers reOffers : reservation_Offers){
-			addPoints += reOffers.getAmount() * reOffers.getOffer().getPrice() / euroPerPoint.getEuro();
-		}
-		
-		return addPoints;
-	}
-	*/
-	/*
-	@RequestMapping(path="/reservations/details/{reservationId}", method=RequestMethod.GET)
-	public String getReservationDetails(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
-		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
-
-		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
-		if(authenticatedUser.getAdministratedRestaurant() == null) {
-			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
-			return null;
-		}
-		
-		Reservation reservation = reservationRepository.findOne(Integer.parseInt(reservationId));
-		if(reservation == null){
-			return null;
-		}
-		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
-		if(reservationOffers == null){
-			return null;
-		}
-		model.addAttribute("offers", reservationOffers);
-
-		
-		return "reservations :: reservationOfferTable";
-	}
-	*/
 }

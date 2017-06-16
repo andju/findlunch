@@ -30,6 +30,13 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeReposito
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 
+/**
+ * The class CourseTypesDetailsController
+ * The class is responsible for handling http calls to the page coursetype and coursetypedetails
+ *
+ * @author Niklas Klotz
+ *
+ */
 @Controller
 public class CourseTypesDetailController {
 
@@ -43,9 +50,11 @@ public class CourseTypesDetailController {
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 	
+	/** The offer repository */
 	@Autowired
 	private OfferRepository offerRepository;
 	
+	/** The validator */
 	@Autowired
 	private CustomCourseTypeValidator courseTypeValidator;
 	
@@ -76,12 +85,12 @@ public class CourseTypesDetailController {
 	
 	/**
 	 * Gets the page for editing an already existing coursetype.
-	 * @param coursetypeId
-	 * @param model
-	 * @param principal
-	 * @param session
-	 * @param request
-	 * @return
+	 * @param coursetypeId The coursetype
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal Currently logged in user.
+	 * @param session the session
+	 * @param request http request
+	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path="/coursetype/edit/{coursetypeId}", method=RequestMethod.GET)
 	public String getCourseTypesDetailUpdate(@PathVariable("coursetypeId") Integer coursetypeId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
@@ -105,12 +114,12 @@ public class CourseTypesDetailController {
 	
 	/**
 	 *  Save the coursetypes to the database. New coursetypes are stored, edited offers are updated.
-	 * @param coursetype
-	 * @param bindingResult
-	 * @param principal
-	 * @param model
-	 * @param request
-	 * @return
+	 * @param coursetype the coursetype
+	 * @param bindingResult the binding resultes
+	 * @param principal the currently logged in user
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param request http request
+	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path={"/coursetype/edit/{coursetypesId}", "/coursetype/add"}, method=RequestMethod.POST, params={"saveCourse"})
 	public String saveCourseType(@Valid @ModelAttribute("courseType") final CourseTypes courseType, BindingResult bindingResult, Principal principal, Model model, HttpServletRequest request) {
@@ -135,10 +144,10 @@ public class CourseTypesDetailController {
 	
 	/**
 	 * Cancel the process for adding / editing a coursetype.
-	 * @param model
-	 * @param session
-	 * @param request
-	 * @return
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param session the session
+	 * @param request http request
+	 * @return redirect to the page coursetype
 	 */
 	@RequestMapping(path={"/coursetype/edit/{coursetypesId}", "/coursetype/add"}, method=RequestMethod.POST, params={"cancel"})
 	public String cancel(Model model, HttpSession session, HttpServletRequest request) {
@@ -149,12 +158,12 @@ public class CourseTypesDetailController {
 	
 	/**
 	 * Gets the page for an overview of all offers within a coursetype.
-	 * @param coursetypeId
-	 * @param model
-	 * @param principal
-	 * @param session
-	 * @param request
-	 * @return
+	 * @param coursetypeId the coursetype
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param session the session
+	 * @param request http request
+	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path="/coursetype/overview/{coursetypeId}", method=RequestMethod.GET)
 	public String getOffersInCourse(@PathVariable("coursetypeId") Integer coursetypeId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
@@ -167,6 +176,7 @@ public class CourseTypesDetailController {
 			return "redirect:/restaurant/add?required";
 		}
 		
+		// if the given courestype can not be found in the database
 		CourseTypes courseType = courseTypeRepository.findById(coursetypeId);
 		if(courseType == null) {
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The coursetype with id " + courseType + " could not be found"));
@@ -192,20 +202,20 @@ public class CourseTypesDetailController {
 	
 	/**
 	 * Sets the value for the order within the coursetype lower.
-	 * @param offerId
-	 * @param model
-	 * @param principal
-	 * @param session
-	 * @param request
-	 * @return
+	 * @param courseId the coursetype
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param session the session
+	 * @param request http request
+	 * @return the string to the corresponding webpage
 	 */
-	@RequestMapping(path="coursetype/overview/up/{offerId}", method=RequestMethod.GET)
-	public String offerUp(@PathVariable("offerId") Integer offerId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
-		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "offerId", offerId.toString()));
+	@RequestMapping(path="coursetype/overview/up/{courseId}", method=RequestMethod.GET)
+	public String offerUp(@PathVariable("courseId") Integer courseId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "courseId", courseId.toString()));
 		
 		User authenticatedUser = (User)((Authentication) principal).getPrincipal();
 		
-		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(offerId, authenticatedUser.getAdministratedRestaurant().getId());
+		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(courseId, authenticatedUser.getAdministratedRestaurant().getId());
 		
 		int courseTypeId = offer.getCourseType();
 		List<Offer> offersInCourse = offerRepository.findByCourseTypeOrderByOrderAsc(courseTypeId);
@@ -228,20 +238,20 @@ public class CourseTypesDetailController {
 	
 	/**
 	 * Sets the value for the order within the coursetype higher.
-	 * @param offerId
-	 * @param model
-	 * @param principal
-	 * @param session
-	 * @param request
+	 * @param courseId the coursetype
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param session the session
+	 * @param request http request
 	 * @return
 	 */
-	@RequestMapping(path="coursetype/overview/down/{offerId}", method=RequestMethod.GET)
-	public String offerDown(@PathVariable("offerId") Integer offerId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
-		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "offerId", offerId.toString()));
+	@RequestMapping(path="coursetype/overview/down/{courseId}", method=RequestMethod.GET)
+	public String offerDown(@PathVariable("courseId") Integer courseId, Model model, Principal principal, HttpSession session, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "courseId", courseId.toString()));
 		
 		User authenticatedUser = (User)((Authentication) principal).getPrincipal();
 		
-		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(offerId, authenticatedUser.getAdministratedRestaurant().getId());
+		Offer offer = offerRepository.findByIdAndRestaurant_idOrderByOrderAsc(courseId, authenticatedUser.getAdministratedRestaurant().getId());
 		
 		int courseTypeId = offer.getCourseType();
 		List<Offer> offersInCourse = offerRepository.findByCourseTypeOrderByOrderAsc(courseTypeId);

@@ -577,10 +577,10 @@ public class RestaurantController {
 	
 	/**
 	 * Get the QR-Code for an existing restaurant.
-	 * @param model
-	 * @param principal
-	 * @param request
-	 * @return
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return redirect to webpage
 	 */
 	@RequestMapping(path="/restaurant/qrCode", method = RequestMethod.GET)
 	public String getRestaurantQR(Model model, Principal principal, HttpServletRequest request){

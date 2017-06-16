@@ -186,6 +186,12 @@ public class PushNotificationManager implements PushMessagingInterface {
 		return AWS_ENDPOINT_USERDATA;
 	}
 	
+	/**
+	 * Generates a Reservation confirmation push notification
+	 * @param reservation the reservation
+	 * @param token the fcm token
+	 * @return the notification
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject generateReservationConfirm(Reservation reservation, String token){
 		JSONObject notification = new JSONObject();
@@ -198,6 +204,13 @@ public class PushNotificationManager implements PushMessagingInterface {
 		return notification;
 	}
 	
+
+	/**
+	 * Generates a Reservation rejection push notification
+	 * @param reservation the reservation
+	 * @param token the fcm token
+	 * @return the notification
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject generateReservationReject(Reservation reservation, String token){
 		JSONObject notification = new JSONObject();
@@ -210,6 +223,14 @@ public class PushNotificationManager implements PushMessagingInterface {
 		return notification;
 	}
 	
+	/**
+	 * Generates a push notification fot the daily update
+	 * @param p the daily notification
+	 * @param restaurantsForPushCount 
+	 * @param pushKitchenTypeIds
+	 * @param token
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject generateFromDaily(DailyPushNotificationData p, Integer restaurantsForPushCount, List<Integer> pushKitchenTypeIds, String token){
 		JSONObject notification = new JSONObject();

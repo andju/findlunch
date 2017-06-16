@@ -26,6 +26,12 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.validation.CustomUserRese
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ResetPasswordRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 
+/**
+ * The Class ResetPasswordController
+ * 
+ * @author Deniz Mardin
+ *
+ */
 @Controller
 public class ResetPasswordController {
 
