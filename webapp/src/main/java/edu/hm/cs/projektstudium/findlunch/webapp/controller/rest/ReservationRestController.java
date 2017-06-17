@@ -107,6 +107,8 @@ public class ReservationRestController {
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		authenticatedUser = userRepository.findOne(authenticatedUser.getId());	
 		
+		
+		
 		List<ReservationOffers> reservation_Offers = reservation.getReservation_offers();
 		
 		Restaurant restaurant = null;
@@ -124,12 +126,12 @@ public class ReservationRestController {
 				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation has no amount for offer "+reservation_offer.getOffer().getId()));
 				return new ResponseEntity<Integer>(2, HttpStatus.CONFLICT);
 			}
-			
-			Offer offer = reservation_offer.getOffer();
+
+			Offer offer = offerRepository.getOne(reservation_offer.getOffer().getId());
 			
 			// Angebots ID ist nicht in der DB
 			if(offer==null){
-				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No Offer for ID "+reservation_offer.getOffer().getId()));
+				LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "No Offer for ID "+reservation_offer.toString()));
 				return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 			}
 			
@@ -147,10 +149,12 @@ public class ReservationRestController {
 			}
 			restaurant = offer.getRestaurant();
 			
-			reservation_offer.setReservation(reservation);;
+			reservation_offer.setReservation(reservation);
 			
 			calculatedPrice += reservation_offer.getAmount() * offer.getPrice();
+			
 		}
+		
 		
 		// Der Gesamtpreis, welcher in der Customer App berechnet wurde stimmt nicht
 		if(calculatedPrice!=reservation.getTotalPrice()){
@@ -266,16 +270,6 @@ public class ReservationRestController {
 			//keine Reservierung
 			return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 		}
-	}
-	
-	/**
-	 * Sendet eine Email über die neue Bestellung an das Restaurant.
-	 * @param reservation
-	 */
-	private void confirmEmail(Reservation reservation) {
-		
-		
-		
 	}
 	
 	
