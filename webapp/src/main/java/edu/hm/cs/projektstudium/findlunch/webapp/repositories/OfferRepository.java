@@ -34,4 +34,12 @@ public interface OfferRepository extends JpaRepository<Offer, Serializable>{
 	
 	List<Offer> findByCourseTypeOrderByOrderAsc(int courseType_id);
 	
+	/**
+	 * Find a Offer by its id
+	 *
+	 * @param id the id of the offer
+	 * @return the offer
+	 */
+	Offer findById(int id);
+	
 }

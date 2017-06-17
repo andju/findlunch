@@ -214,6 +214,68 @@
 						</td>
 					</tr>
 					<tr>
+						<td><label class="control-label" for="additive"
+							th:text="#{offerDetail.label.additive}">additive</label></td>
+						<td style="width: 15px"><span style="padding-top: 7px"
+							class="glyphicon glyphicon-question-sign" data-placement="left"
+							data-toggle="tooltip"
+							th:title="#{offerDetail.tooltip.additive}"></span></td>
+						<td>
+							<div class="col-md-8">
+								<table class="table table-hover">
+									<thead>
+										<tr>										
+											<th th:text="#{restaurant.label.additives.inside}"></th>
+											<th th:text="#{restaurant.label.additives.desc}"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="additive : ${additives}">
+											<td>
+												<input type="checkbox" th:text="' ' + ${additive.name}"
+												th:field="${offer.additives}" th:value="${additive.id}"
+												id="additives" th:checked="false" />
+											</td>
+											<td th:text="${additive.description}"></td>
+										</tr>
+									
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td><label class="control-label" for="allergenic"
+							th:text="#{offerDetail.label.allergenic}">allergenic</label></td>
+						<td style="width: 15px"><span style="padding-top: 7px"
+							class="glyphicon glyphicon-question-sign" data-placement="left"
+							data-toggle="tooltip"
+							th:title="#{offerDetail.tooltip.allergenic}"></span></td>
+						<td>
+							<div class="col-md-8">
+								<table class="table table-hover">
+									<thead>
+										<tr>										
+											<th th:text="#{restaurant.label.allergenic.inside}"></th>
+											<th th:text="#{restaurant.label.allergenic.desc}"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="allergenic : ${allergenic}">
+											<td>
+												<input type="checkbox" th:text="' ' + ${allergenic.name}"
+												th:field="${offer.allergenic}" th:value="${allergenic.id}"
+												id="allergenic" th:checked="false" />
+											</td>
+											<td th:text="${allergenic.description}"></td>
+										</tr>
+									
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+					<tr>
 						<td><label class="control-label" for="images"
 							th:text="#{offerDetail.label.images}">images</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"

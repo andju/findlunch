@@ -139,6 +139,34 @@ public class Offer {
 		)
 	private List<DayOfWeek> dayOfWeeks;
 
+	/** Additives. */
+	//bi-directional many-to-many association to additives
+	@ManyToMany
+	@JoinTable(
+		name="offer_has_additives"
+		, joinColumns={
+			@JoinColumn(name="offer_id")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="additives_id")
+			}
+		)
+	private List<Additives> additives;
+
+	/** Allergenic. */
+	//bi-directional many-to-many association to additives
+	@ManyToMany
+	@JoinTable(
+		name="offer_has_allergenic"
+		, joinColumns={
+			@JoinColumn(name="offer_id")
+			}
+		, inverseJoinColumns={
+			@JoinColumn(name="allergenic_id")
+			}
+		)
+	private List<Allergenic> allergenic;
+
 	/** The restaurant. */
 	//bi-directional many-to-one association to Restaurant
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -320,6 +348,42 @@ public class Offer {
 	 */
 	public void setDayOfWeeks(List<DayOfWeek> dayOfWeeks) {
 		this.dayOfWeeks = dayOfWeeks;
+	}
+
+	/**
+	 * Gets the additives.
+	 *
+	 * @return additives
+	 */
+	public List<Additives> getAdditives() {
+		return this.additives;
+	}
+
+	/**
+	 * Sets the additives.
+	 *
+	 * @param additives the new additives
+	 */
+	public void setAdditives(List<Additives> additives) {
+		this.additives = additives;
+	}
+
+	/**
+	 * Gets the allergenic.
+	 *
+	 * @return allergenic
+	 */
+	public List<Allergenic> getAllergenic() {
+		return this.allergenic;
+	}
+
+	/**
+	 * Sets the allergenic.
+	 *
+	 * @param additives the new allergenic
+	 */
+	public void setAllergenic(List<Allergenic> allergenic) {
+		this.allergenic = allergenic;
 	}
 
 	/**

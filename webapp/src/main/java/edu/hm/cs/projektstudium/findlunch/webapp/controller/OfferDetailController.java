@@ -1,5 +1,20 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import java.util.Base64;
+import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
@@ -12,6 +27,9 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepositor
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.security.FileUploadRestrictorHelper;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AdditivesRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AllergenicRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +83,14 @@ public class OfferDetailController implements HandlerExceptionResolver {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 	
+	/** The additive repository. */
+	@Autowired
+	private AdditivesRepository additivesRepository;
+	
+	/** The allergenic repository. */
+	@Autowired
+	private AllergenicRepository allergenicRepository;
+	
 	/** Niklas Klotz */
 	@Autowired
 	private CourseTypeRepository courseTypeRepository;
@@ -108,6 +134,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		model.addAttribute("offer", newOffer);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 		model.addAttribute("courseTypes" , courseTypes);
+		model.addAttribute("additives", additivesRepository.findAll());
+		model.addAttribute("allergenic", allergenicRepository.findAll());
 		model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		return "offerDetail";
 	}
@@ -153,6 +181,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		model.addAttribute("offer", offer);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 		model.addAttribute("courseTypes" , courseTypes);
+		model.addAttribute("additives", additivesRepository.findAll());
+		model.addAttribute("allergenic", allergenicRepository.findAll());
 		model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		return "offerDetail";	
 	}
@@ -189,6 +219,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		
 		if(bindingResult.hasErrors()) {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+			model.addAttribute("additives", additivesRepository.findAll());
+			model.addAttribute("allergenic", allergenicRepository.findAll());
 			model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("courseTypes", courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			
@@ -205,6 +237,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		} catch (IOException e) {
 			model.addAttribute("invalidPicture", true);
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+			model.addAttribute("additives", additivesRepository.findAll());
+			model.addAttribute("allergenic", allergenicRepository.findAll());
 			model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 			
@@ -273,6 +307,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		if (Boolean.parseBoolean(session.getAttribute("blockedFileUpload").toString())) {
 			model.addAttribute("blockedFileUpload", true);
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+			model.addAttribute("additives", additivesRepository.findAll());
+			model.addAttribute("allergenic", allergenicRepository.findAll());
 			model.addAttribute("restaurant",
 					restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
@@ -285,6 +321,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		if (!file.getContentType().startsWith("image") || imageFormat.equals("")) {
 			model.addAttribute("invalidPicture", true);
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+			model.addAttribute("additives", additivesRepository.findAll());
+			model.addAttribute("allergenic", allergenicRepository.findAll());
 			model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 			
@@ -300,6 +338,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		} catch (IOException e) {
 			model.addAttribute("invalidPicture", true);
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+			model.addAttribute("additives", additivesRepository.findAll());
+			model.addAttribute("allergenic", allergenicRepository.findAll());
 			model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 			
@@ -311,6 +351,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		offer.setOfferPhotos(offerPhotos);
 		offer.addOfferPhoto(newPhoto);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+		model.addAttribute("additives", additivesRepository.findAll());
+		model.addAttribute("allergenic", allergenicRepository.findAll());
 		model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		return "offerDetail";
@@ -383,6 +425,8 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		offer.removeOfferPhoto(offer.getOfferPhotos().get(imageId));
 		
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+		model.addAttribute("additives", additivesRepository.findAll());
+		model.addAttribute("allergenic", allergenicRepository.findAll());
 		model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		return "offerDetail";

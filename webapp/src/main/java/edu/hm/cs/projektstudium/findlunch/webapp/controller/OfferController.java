@@ -1,9 +1,12 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Additives;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AdditivesRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AllergenicRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
@@ -40,6 +43,14 @@ public class OfferController {
 	@Autowired
 	private DayOfWeekRepository dayOfWeekRepository;
 	
+	/** The additive repository. */
+	@Autowired
+	private AdditivesRepository additivesRepository;
+	
+	/** The allergenic repository. */
+	@Autowired
+	private AllergenicRepository allergenicRepository;
+	
 	/** NIKLAS KLOTZ */
 	@Autowired
 	private CourseTypeRepository courserTypeRepository;
@@ -72,6 +83,8 @@ public class OfferController {
 		List<Offer> offers = (ArrayList<Offer>) offerRepository.findByRestaurant_idOrderByOrderAsc(authenticatedUser.getAdministratedRestaurant().getId());
 		model.addAttribute("offers", offers);
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+		model.addAttribute("additives", additivesRepository.findAll());
+		model.addAttribute("allergenic", allergenicRepository.findAll());
 		//model.addAttribute("courseTypes" , getCourseTypesForOffers(offers));
 		model.addAttribute("courseTypes" , courserTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 		
