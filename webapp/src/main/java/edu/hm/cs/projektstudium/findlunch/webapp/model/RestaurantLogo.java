@@ -33,7 +33,7 @@ public class RestaurantLogo {
 	
 	/** The logo. */
 	@Lob
-	@JsonView(OfferView.OfferPhotoFull.class)
+	@JsonView(RestaurantView.RestaurantRest.class)
 	private byte[] logo;
 	
 	/** The offer. */
@@ -43,7 +43,7 @@ public class RestaurantLogo {
 	
 	/** The thumbnail. */
 	@Lob
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView(RestaurantView.RestaurantRest.class)
 	private byte[] thumbnail;
 	
 	/** The base 64 encoded. */
