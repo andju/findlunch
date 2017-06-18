@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
 /**
@@ -161,6 +162,10 @@ public class Restaurant implements Serializable {
 	@JoinColumn(name = "restaurant_id") }, inverseJoinColumns = { @JoinColumn(name = "user_id") })
 	private List<User> favUsers;
 	
+	/** The default Logo. */
+	@Transient
+	@JsonView(RestaurantView.RestaurantRest.class)
+	private RestaurantLogo defaultLogo;
 	
 	/** The distance. */
 	@Transient
@@ -207,12 +212,36 @@ public class Restaurant implements Serializable {
 	@OneToMany(mappedBy="restaurant")
 	private List<Bill> bills;
 
+	/** The offer photos. */
+	//bi-directional many-to-one association to OfferPhoto
+	@OneToMany(mappedBy="restaurant", cascade=CascadeType.ALL, orphanRemoval=true )
+	private List<RestaurantLogo> restaurantLogos;
+	
 	/**
 	 * Instantiates a new restaurant.
 	 */
 	public Restaurant() {
 		this.admins = new ArrayList<User>();
 
+	}
+	
+	public RestaurantLogo getDefaultLogo() {
+		if(this.restaurantLogos != null && this.restaurantLogos.size() > 0)
+			defaultLogo = this.restaurantLogos.get(0);
+		
+		return defaultLogo;
+	}
+
+	public void setDefaultLogo(RestaurantLogo defaultLogo) {
+		this.defaultLogo = defaultLogo;
+	}
+
+	public List<RestaurantLogo> getRestaurantLogos() {
+		return restaurantLogos;
+	}
+
+	public void setRestaurantLogos(List<RestaurantLogo> restaurantLogos) {
+		this.restaurantLogos = restaurantLogos;
 	}
 
 	/**
@@ -814,5 +843,31 @@ public class Restaurant implements Serializable {
 	 */
 	public void setReservation(List<Reservation> reservation) {
 		this.reservation = reservation;
+	}
+	
+	/**
+	 * Adds the restaurant logo.
+	 *
+	 * @param RestaurantLogo the restuarant logo
+	 * @return the restaurant logo
+	 */
+	public RestaurantLogo addRestaurantLogo(RestaurantLogo restaurantLogo) {
+		getRestaurantLogos().add(restaurantLogo);
+		restaurantLogo.setRestaurant(this);
+
+		return restaurantLogo;
+	}
+
+	/**
+	 * Removes the restaurant logo.
+	 *
+	 * @param RestaurantLogo the restaurant logo
+	 * @return the restaurant logo
+	 */
+	public RestaurantLogo removeRestaurantLogo(RestaurantLogo restaurantLogo) {
+		getRestaurantLogos().remove(restaurantLogo);
+		restaurantLogo.setRestaurant(null);
+
+		return restaurantLogo;
 	}
 }

@@ -302,6 +302,23 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer_photo` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `findlunch`.`restaurant_logo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `findlunch`.`restaurant_logo` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `restaurant_id` INT(11) NOT NULL,
+  `logo` MEDIUMBLOB NOT NULL,
+  `thumbnail` MEDIUMBLOB NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_restaurant_logo_restaurant1_idx` (`restaurant_id` ASC),
+  CONSTRAINT `fk_restaurant_logo_retaurant1`
+    FOREIGN KEY (`restaurant_id`)
+    REFERENCES `findlunch`.`restaurant` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `findlunch`.`time_schedule`

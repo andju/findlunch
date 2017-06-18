@@ -463,23 +463,6 @@ public class Offer {
 	public void setNeededPoints(int neededPoints) {
 		this.neededPoints = neededPoints;
 	}
-	
-	/*
-	public CourseTypes getCourseTypes() {
-		return courseType;
-	}
-
-	public void setCourseTypes(CourseTypes courseType) {
-		this.courseType = courseType;
-	}
-	public CourseTypes getCourseType() {
-		return courseType;
-	}
-
-	public void setCourseType(CourseTypes courseType) {
-		this.courseType = courseType;
-	}
-	*/
 
 	public boolean getSold_out() {
 		return sold_out;

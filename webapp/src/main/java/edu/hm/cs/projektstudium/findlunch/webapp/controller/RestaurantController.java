@@ -1,9 +1,14 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
+import java.applet.AppletContext;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -18,21 +23,35 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.validation.Valid;
 
+import org.apache.catalina.core.ApplicationContext;
+import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -49,8 +68,11 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Account;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.OfferPhoto;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.OpeningTime;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.RestaurantLogo;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.RestaurantType;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
@@ -63,6 +85,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.repositories.KitchenTypeReposit
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantTypeRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.security.FileUploadRestrictorHelper;
 import edu.hm.cs.projektstudium.findlunch.webapp.security.RestaurantUserDetailsService;
 
 /**
@@ -71,6 +94,9 @@ import edu.hm.cs.projektstudium.findlunch.webapp.security.RestaurantUserDetailsS
 @Controller
 public class RestaurantController {
 
+	@Autowired
+	private FileUploadRestrictorHelper fileUploadRestrictorHelper;
+	
 	/** The restaurant repository. */
 	@Autowired
 	private RestaurantRepository restaurantRepository;
@@ -113,7 +139,7 @@ public class RestaurantController {
 	@Autowired
 	private AccountRepository accountRepository;
 	
-
+	private ResourceLoader loader;
 
 	/** The logger. */
 	private final Logger LOGGER = LoggerFactory.getLogger(RestaurantController.class);
@@ -129,7 +155,7 @@ public class RestaurantController {
 	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path = { "/restaurant/add" }, method = RequestMethod.GET)
-	public String addRestaurant(Model model, Principal principal, HttpServletRequest request) {
+	public String addRestaurant(Model model, Principal principal, HttpServletRequest request, HttpSession session) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		User authenticatedUser = (User)((Authentication) principal).getPrincipal();
@@ -140,7 +166,7 @@ public class RestaurantController {
 		} else {
 			Restaurant r = getNewRestaurant();
 			r.setEmail(authenticatedUser.getUsername());
-			
+			session.setAttribute("logoList", r.getRestaurantLogos());
 			model.addAttribute("restaurant", r);
 			model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 			model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -218,7 +244,7 @@ public class RestaurantController {
 	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path = { "/restaurant/edit" }, method = RequestMethod.GET)
-	public String editRestaurant(Model model, Principal principal, HttpServletRequest request) {
+	public String editRestaurant(Model model, Principal principal, HttpSession session, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		User authenticatedUser = (User)((Authentication) principal).getPrincipal();
@@ -263,7 +289,8 @@ public class RestaurantController {
 		}
 		
 		setBase64(restaurant);
-		
+		encodeLogoFromRestaurantToBase64(restaurant);
+		session.setAttribute("logoList", restaurant.getRestaurantLogos());
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -309,10 +336,13 @@ public class RestaurantController {
 	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path = { "/restaurant/add", "/restaurant/edit" }, params = { "addOpeningTime" })
-	public String addOpeningTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
+	public String addOpeningTime(final Restaurant restaurant, final BindingResult bindingResult, HttpSession session, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		setBase64(restaurant);
+		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+		restaurant.setRestaurantLogos(restaurantLogos);
+		session.setAttribute("logoList", restaurant.getRestaurantLogos());
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -354,7 +384,7 @@ public class RestaurantController {
 	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path = { "/restaurant/add", "/restaurant/edit" }, params = { "removeOpeningTime" })
-	public String removeOpeningTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
+	public String removeOpeningTime(final Restaurant restaurant, final BindingResult bindingResult, HttpSession session, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
@@ -375,6 +405,9 @@ public class RestaurantController {
 			t.removeOpeningTime(toRemove);
 		}
 		
+		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+		restaurant.setRestaurantLogos(restaurantLogos);
+		session.setAttribute("logoList", restaurant.getRestaurantLogos());
 		setBase64(restaurant);
 		model.addAttribute("restaurant", restaurant);
 		return "restaurant";
@@ -395,10 +428,13 @@ public class RestaurantController {
 	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path = { "/restaurant/add", "/restaurant/edit" }, params = { "removeOfferTime" })
-	public String removeOfferTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
+	public String removeOfferTime(final Restaurant restaurant, final BindingResult bindingResult, HttpSession session, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		setBase64(restaurant);
+		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+		restaurant.setRestaurantLogos(restaurantLogos);
+		session.setAttribute("logoList", restaurant.getRestaurantLogos());
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -431,10 +467,13 @@ public class RestaurantController {
 	 * @return the string for the corresponding HTML page
 	 */
 	@RequestMapping(path = { "/restaurant/add", "/restaurant/edit" }, params = { "addOfferTime" })
-	public String addOfferTime(final Restaurant restaurant, final BindingResult bindingResult, final Model model, final HttpServletRequest request) {
+	public String addOfferTime(final Restaurant restaurant, final BindingResult bindingResult, HttpSession session, final Model model, final HttpServletRequest request) {
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		setBase64(restaurant);
+		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+		restaurant.setRestaurantLogos(restaurantLogos);
+		session.setAttribute("logoList", restaurant.getRestaurantLogos());
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -466,11 +505,14 @@ public class RestaurantController {
 	 * 			Currently logged in user.
 	 * @return  the string for the corresponding HTML page
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(method = RequestMethod.POST, path = { "/restaurant/add", "/restaurant/edit" }, params = { "saveRestaurant" })
 	public String saveRestaurant(@Valid final Restaurant restaurant, BindingResult bindingResult, final Model model, Principal principal, HttpServletRequest request) {
 		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
+		HttpSession session = request.getSession();
 		setBase64(restaurant);
+		restaurant.setRestaurantLogos((List<RestaurantLogo>) session.getAttribute("logoList"));
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
 		model.addAttribute("restaurantTypes", getRestaurantTypes());
@@ -515,7 +557,30 @@ public class RestaurantController {
 			accountRepository.save(account);
 		}
 		//
+		if(restaurant.getRestaurantLogos().isEmpty()) {
+			addDefaultLogo(restaurant);
+		}
+		
+		for(RestaurantLogo p : restaurant.getRestaurantLogos()) {
+			p.setRestaurant(restaurant);;
+		}
+		
+		try {
+			createThumbnails(restaurant);
+		} catch (IOException e) {
+			encodeLogoFromRestaurantToBase64(restaurant);
+			session.setAttribute("logoList", restaurant.getRestaurantLogos());
+			model.addAttribute("restaurant", restaurant);
+			model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
+			model.addAttribute("restaurantTypes", getRestaurantTypes());
+			model.addAttribute("countries", countryRepository.findAll());
+			model.addAttribute("invalidPicture", true);
+			restaurant.setRestaurantLogos((List<RestaurantLogo>)session.getAttribute("photoList"));
+			
+			return "restaurant";
+		}
 
+		session.removeAttribute("logoList");
 		restaurantRepository.save(restaurant);
 		
 		// Update UserDetails
@@ -526,6 +591,90 @@ public class RestaurantController {
 		return "redirect:/home?success";
 	}
 
+	/**
+	 * Handles the upload of a new logo. Resolves the image format, generates the base64 string for the website. Stores the newly added image to the session.
+	 *
+	 * @param request the HttpServletRequest
+	 * @param restaurant
+	 * 			restaurant object to be saved. Populated by the content of the html form field.
+	 * @param model
+	 * 			Model in which necessary object are placed to be displayed on the website.
+	 * @param file
+	 * 			Uploaded file.
+	 * @param session
+	 * 			Session of the current user. Used to store restaurant logos.
+	 * @param principal
+	 * 			Currently logged in user.
+	 * @return the string for the corresponding HTML page
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(path={"/restaurant/add", "/restaurant/edit"}, method=RequestMethod.POST, params={"addLogo"})
+	public String addLogo(final Restaurant restaurant, Model model, @RequestParam("img") MultipartFile file, Principal principal, HttpServletRequest request) {
+		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		HttpSession session = request.getSession();
+		
+		String imageFormat = resolveImageFormat(file.getContentType());
+
+		fileUploadRestrictorHelper.uploadAttempt(request.getRemoteAddr(), session.getId());
+		session.setAttribute("blockedFileUpload", fileUploadRestrictorHelper.isBlocked(request.getRemoteAddr(),
+				session.getId()));
+		if (Boolean.parseBoolean(session.getAttribute("blockedFileUpload").toString())) {
+			model.addAttribute("blockedFileUpload", true);
+			model.addAttribute("restaurant", restaurant);
+			model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
+			model.addAttribute("restaurantTypes", getRestaurantTypes());
+			model.addAttribute("countries", countryRepository.findAll());
+			restaurant.setRestaurantLogos((List<RestaurantLogo>)session.getAttribute("logoList"));
+
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(),
+					"FileUploadLimit reached"));
+			return "restaurant";
+		}
+
+		if (!file.getContentType().startsWith("image") || imageFormat.equals("")) {
+			setBase64(restaurant);
+			model.addAttribute("invalidPicture", true);
+			model.addAttribute("restaurant", restaurant);
+			model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
+			model.addAttribute("restaurantTypes", getRestaurantTypes());
+			model.addAttribute("countries", countryRepository.findAll());
+			
+			restaurant.setRestaurantLogos((List<RestaurantLogo>)session.getAttribute("logoList"));
+			
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The logo type was invalid. Only images are allowed, but type was: " + file.getContentType() + " with image format: " + imageFormat));
+			return "restaurant";
+		}
+		
+		RestaurantLogo newLogo = new RestaurantLogo();
+		try {
+			newLogo.setLogo(file.getBytes());
+			newLogo.setBase64Encoded(Base64.getEncoder().encodeToString(file.getBytes()));
+			newLogo.setImageFormat(imageFormat);
+		} catch (IOException e) {
+			setBase64(restaurant);
+			model.addAttribute("invalidPicture", true);
+			model.addAttribute("restaurant", restaurant);
+			model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
+			model.addAttribute("restaurantTypes", getRestaurantTypes());
+			model.addAttribute("countries", countryRepository.findAll());
+			restaurant.setRestaurantLogos((List<RestaurantLogo>)session.getAttribute("logoList"));
+			
+			LOGGER.error(LogUtils.getExceptionMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), e));
+			return "restaurant";
+		}
+		
+		List<RestaurantLogo> restaurantLogos = (List<RestaurantLogo>) session.getAttribute("logoList");
+		restaurant.setRestaurantLogos(restaurantLogos);
+		restaurant.addRestaurantLogo(newLogo);
+		setBase64(restaurant);
+		model.addAttribute("restaurant", restaurant);
+		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
+		model.addAttribute("restaurantTypes", getRestaurantTypes());
+		model.addAttribute("countries", countryRepository.findAll());
+		session.setAttribute("logoList", restaurant.getRestaurantLogos());
+		return "restaurant";
+	}
+	
 	/**
 	 * Handles a time schedule from a restaurant. Removes TimeSchedules with no OfferTimes;
 	 * Sets the restaurant for each valid TimeSchedule;
@@ -714,5 +863,173 @@ public class RestaurantController {
         String rN = Long.toString(midSeed).substring(0, 9);
         return Integer.parseInt(rN);
     }
+	
+	/**
+	 * In order to prevent information disclosure this method was added. Without this method a full stack trace
+	 * was shown to the user when a file bigger than the defined multipart.maxFileSize was sent by the user.
+	 * This stack trace could reveal some sensitive information to a potential attacker.
+	 * This is a quite unclean approach but shows the problematic.
+	 *
+	 * @param httpServletRequest the HttpServletRequest
+	 * @param httpServletResponse the HttpServletResponse
+	 * @param o an Object
+	 * @param ex an Exception
+     *
+	 * @return a defined ModelAndView
+	 */
+	@ResponseBody
+	public ModelAndView resolveException(final HttpServletRequest httpServletRequest,
+										 final HttpServletResponse httpServletResponse, final Object o,
+										 final Exception ex) {
+		if (ex instanceof MultipartException) {
+			final ModelAndView modelAndView = new ModelAndView("filesize_error");
+			NotificationController.sendMessageToTelegram("Someone tried to upload a file bigger than ten megabyte."
+					+ " The IP-address was: " + httpServletRequest.getRemoteAddr() + " The session-ID was: "
+					+ httpServletRequest.getSession().getId());
+			ex.printStackTrace();
+			return modelAndView;
+		}
 
+		// Spring-Security has to handle this exception.
+		if (ex instanceof AccessDeniedException) {
+			return null;
+		}
+
+		/*NotificationController.sendMessageToTelegram("Exception in OfferDetailController."
+				+ " The IP-address was: " + httpServletRequest.getRemoteAddr() + " The session-ID was: "
+				+ httpServletRequest.getSession().getId());
+		return new ModelAndView("error");*/
+		ex.printStackTrace();
+		// If it is not a MultipartException, the exception should be handled by something else and not this method.
+		return null;
+	}
+	
+	/**
+	 * Deletes an restaurant logo from the session. It is deleted from the database after the offer is saved.
+	 *
+	 * @param request the HttpServletRequest
+	 * @param restuarant
+	 * 			Restaurant object to be saved. Populated by the content of the html form field.
+	 * @param model
+	 * 			Model in which necessary object are placed to be displayed on the website.
+	 * @param imageId
+	 * 			Id of the images to be deleted.
+	 * @param session
+	 * 			Session of the current user. Used to store restaurant logo.
+	 * @param principal
+	 * 			Currently logged in user.
+	 * @return the string for the corresponding HTML page
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(path={"/restaurant/add", "/restaurant/edit"}, method=RequestMethod.POST, params={"deleteLogo"})
+	public String deleteImage(final Restaurant restaurant, Model model, @RequestParam("deleteLogo") Integer imageId, Principal principal, HttpServletRequest request) {
+		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		HttpSession session = request.getSession();
+		User authenticatedUser = (User) ((Authentication)principal).getPrincipal();
+		
+		restaurant.setRestaurantLogos((List<RestaurantLogo>) session.getAttribute("logoList"));
+		restaurant.removeRestaurantLogo(restaurant.getRestaurantLogos().get(imageId));
+		
+		if(restaurant.getRestaurantLogos().isEmpty()){
+			addDefaultLogo(restaurant);
+		}
+		
+		setBase64(restaurant);
+		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
+		model.addAttribute("restaurant", restaurant);
+		model.addAttribute("kitchenTypes", kitchenTypeRepository.findAllByOrderByNameAsc());
+		model.addAttribute("restaurantTypes", getRestaurantTypes());
+		model.addAttribute("countries", countryRepository.findAll());
+		session.setAttribute("logoList",restaurant.getRestaurantLogos());
+		return "restaurant";
+	}
+	
+	/**
+	 * Encode photos from restaurant to base 64.
+	 *
+	 * @param restaurant the restaurant
+	 */
+	private void encodeLogoFromRestaurantToBase64(Restaurant restaurant) {
+		
+		for(RestaurantLogo logo : restaurant.getRestaurantLogos()) {
+			String base64Encoded = Base64.getEncoder().encodeToString(logo.getLogo()); 
+			logo.setBase64Encoded(base64Encoded);
+		}
+	}
+	
+	/**
+	 * Creates the thumbnails for logos with a size of 200*200.
+	 *
+	 * @param restaurant the restaurant
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	private void createThumbnails(Restaurant restaurant) throws IOException{
+		
+		for(RestaurantLogo logo : restaurant.getRestaurantLogos()) {
+			if(logo.getThumbnail() == null) {
+				InputStream inputStream = new ByteArrayInputStream(logo.getLogo());
+				
+				BufferedImage img = ImageIO.read(inputStream);
+				BufferedImage thumbNail = Scalr.resize(img, 200);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write(thumbNail,logo.getImageFormat() , baos);
+				logo.setThumbnail(baos.toByteArray());
+				inputStream.close();
+				baos.close();	
+			}
+		}
+	}
+	
+	/**
+	 * Resolve logo format using the contentType of the image.
+	 *
+	 * @param imageContentType the image content type
+	 * @return the string
+	 */
+	private String resolveImageFormat(String imageContentType) {
+		
+		String temp = imageContentType.toLowerCase();
+		
+		if(temp.endsWith("jpeg")) {
+			return "JPEG";
+		} else if(temp.endsWith("jpg")) {
+			return "JPG";
+		} else if(temp.endsWith("png")) {
+			return "PNG";
+		} else if(temp.endsWith("gif")) {
+			return "GIF";
+		} else if(temp.endsWith("tiff")) {
+			return "TIFF";
+		} else {
+			return "";
+		}
+	}
+
+	/**
+	 * Adds the default logo to the restaurant
+	 * @param restaurant the restaurant
+	 * @author Niklas Klotz
+	 */
+	private void addDefaultLogo(Restaurant restaurant) {
+		try{	
+			File file = ResourceUtils.getFile("classpath:static/images/restaurantDefault.png");
+			String imageFormat = "png";
+			RestaurantLogo defaultLogo = new RestaurantLogo();
+			byte[] bytes = new byte[(int) file.length()];
+			FileInputStream fis =new FileInputStream(file);
+			fis.read(bytes);
+			defaultLogo.setLogo(bytes);
+			defaultLogo.setBase64Encoded(Base64.getEncoder().encodeToString(bytes));
+			defaultLogo.setImageFormat(imageFormat);
+			defaultLogo.setRestaurant(restaurant);
+			
+			List<RestaurantLogo> defaultLogos = new ArrayList<>();
+			defaultLogos.add(defaultLogo);
+			restaurant.setRestaurantLogos(defaultLogos);
+			fis.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+	
 }

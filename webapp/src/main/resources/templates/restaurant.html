@@ -20,7 +20,7 @@
 			th:text="#{restaurant.required}">restaurant.required</div>
 
 
-		<form th:object="${restaurant}" method="post" action="#">
+		<form th:object="${restaurant}" method="post" action="#" enctype="multipart/form-data">
 			<input type="hidden" th:field="${restaurant.id}" />
 			<div class="table-responsive">
 				<table class="table">
@@ -460,6 +460,61 @@
 										th:errors="${restaurant.customerId}"></div>
 								</div>
 							</td>
+						</tr>
+						<tr>
+							<td><label class="control-label" for="images"
+								th:text="#{Restaurant.label.images}">images</label></td>
+							<td style="width: 15px"><span style="padding-top: 7px"
+								class="glyphicon glyphicon-question-sign" data-placement="left"
+								data-toggle="tooltip" th:title="#{Restaurant.tooltip.images}"></span>
+							</td>
+							<td>
+							<div class="form-group col-md-8">
+								<div th:if="${blockedFileUpload}" class="alert alert-danger"
+									 role="alert" th:text="#{restaurant.upload.blockedFileUpload}"></div>
+								<div th:if="${invalidPicture}" class="alert alert-danger"
+									role="alert" th:text="#{restaurant.upload.invalidFileType}"></div>
+								<div class="fileinput fileinput-new" data-provides="fileinput">
+									<div class="fileinput-preview thumbnail"
+										data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+									<div>
+										<span class="btn btn-default btn-file"><span
+											class="fileinput-new"
+											th:text="#{restaurant.button.selectImage}">Select
+												image</span><span class="fileinput-exists"
+											th:text="#{restaurant.button.changeImage}">Change</span><input
+											type="file" name="img" accept="image/*" /></span> <a href="#"
+											class="btn btn-default fileinput-exists"
+											data-dismiss="fileinput"
+											th:text="#{restaurant.button.removeImage}">Remove</a>
+										<button class="btn btn-default btn-file fileinput-exists"
+											type="submit" name="addLogo"
+											th:text="#{restaurant.button.addImage}" />
+									</div>
+								</div>
+								<table class="table">
+									<thead>
+										<tr>
+											<th th:text="#{label.preview}">Preview</th>
+											<th th:text="#{label.action}">Operations</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="picture,status : *{restaurantLogos}">
+											<td><img
+												th:src="*{'data:image/jpeg;base64,' + restaurantLogos[__${status.index}__].base64Encoded}"
+												class="img-thumbnail" width="200" height="200" /></td>
+											<td>
+												<button type="submit" class="btn btn-default"
+													name="deleteLogo" th:value="${status.index}">
+													<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
 						</tr>
 						<!-- uuid -->
 						<tr>

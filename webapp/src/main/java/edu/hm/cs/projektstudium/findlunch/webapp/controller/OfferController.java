@@ -150,19 +150,4 @@ public class OfferController {
 		offerRepository.save(offer);
 		return "redirect:/offer?availabile";		
 	}
-	
-	/*
-	public List<CourseTypes> getCourseTypesForOffers(List<Offer> offers){
-		
-		List<CourseTypes> courseTypes = new ArrayList<CourseTypes>();
-		
-		for(Offer offer : offers){
-			
-			if(!courseTypes.contains(offer.getCourseTypes())){
-				courseTypes.add(courserTypeRepository.findById(offer.getCourseTypes().getId()));
-			}
-		}		
-		return courseTypes;
-	}
-	*/
 }

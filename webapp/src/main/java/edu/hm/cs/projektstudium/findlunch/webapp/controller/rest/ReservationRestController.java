@@ -157,7 +157,7 @@ public class ReservationRestController {
 		
 		
 		// Der Gesamtpreis, welcher in der Customer App berechnet wurde stimmt nicht
-		if(calculatedPrice!=reservation.getTotalPrice()){
+		if((calculatedPrice+reservation.getDonation())!=reservation.getTotalPrice()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation price is incorrect"));
 			return new ResponseEntity<Integer>(6, HttpStatus.CONFLICT);
 		}
