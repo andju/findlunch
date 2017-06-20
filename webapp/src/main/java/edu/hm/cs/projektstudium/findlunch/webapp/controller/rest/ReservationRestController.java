@@ -63,6 +63,10 @@ public class ReservationRestController {
 	@Autowired
 	private ReservationRepository reservationRepository;
 	
+	/** The reservationStatus repository. */
+	@Autowired
+	private ReservationStatusRepository reservationStatusRepository;
+	
 	/** The euroPerPoint repository. */
 	@Autowired
 	private EuroPerPointRepository euroPerPointRepository;
@@ -157,7 +161,7 @@ public class ReservationRestController {
 		
 		
 		// Der Gesamtpreis, welcher in der Customer App berechnet wurde stimmt nicht
-		if((calculatedPrice+reservation.getDonation())!=reservation.getTotalPrice()){
+		if(calculatedPrice!=reservation.getTotalPrice()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation price is incorrect"));
 			return new ResponseEntity<Integer>(6, HttpStatus.CONFLICT);
 		}
@@ -165,9 +169,8 @@ public class ReservationRestController {
 		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1); //holt den euro pro punkt mit der id
 		
 		reservation.setReservationNumber(generateReservationNumber());
-		reservation.setReservationTime(new Date());
-		reservation.setConfirmed(false);
-		reservation.setRejected(false);
+		reservation.setReservationStatus(reservationStatusRepository.findById(0));
+		reservation.setTimestampReceived(new Date());
 		reservation.setUser(authenticatedUser);
 		reservation.setReservation_offers(reservation_Offers);
 		reservation.setRestaurant(restaurant);
@@ -235,7 +238,7 @@ public class ReservationRestController {
 		}
 		LocalDateTime midnight = LocalDate.now().atStartOfDay();
 		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
-		List<Reservation> reservations = reservationRepository.findByUserIdAndReservationTimeAfterAndUsedPointsFalseAndRejectedFalseAndConfirmedFalse(authenticatedUser.getId(), startOfDay);
+		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKey(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_NEW);
 		
 		if(!reservations.isEmpty()){
 			for(Reservation reservation : reservations){
@@ -256,8 +259,8 @@ public class ReservationRestController {
 					points.setPoints(points.getPoints() +amountOfPoints.intValue());
 				}
 				
-					reservation.setRejected(false);
-					reservation.setConfirmed(true);
+				reservation.setReservationStatus(reservationStatusRepository.findById(1));
+				reservation.setTimestampResponded(new Date());;
 				
 					
 				reservationRepository.save(reservation);
@@ -272,7 +275,26 @@ public class ReservationRestController {
 		}
 	}
 	
+	/**
+	 * Get reservations for the logged in user.
+	 * @param principal the principal to get the authenticated user
+	 * @param request the HttpServletRequest
+	 * @return the response entity representing a status code
+	 */
+	@CrossOrigin
+	@PreAuthorize("isAuthenticated()")
+	@JsonView(ReservationView.ReservationRest.class)
+	@RequestMapping(path = "api/getCustomerReservations", method = RequestMethod.GET)
+	public ResponseEntity<List<Reservation>> getUserCustomerReservations(Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		authenticatedUser = userRepository.findOne(authenticatedUser.getId());
 	
+		List<Reservation> reservations = reservationRepository.findByUserIdOrderByRestaurantIdAscReservationStatusKeyAsc(authenticatedUser.getId());
+		
+		return new ResponseEntity<List<Reservation>>(reservations, HttpStatus.OK);
+	}
 	
     /**
      * Generate an unique reservation number for the reservation.

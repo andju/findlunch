@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes"></head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{reservationOverview.label}">daily bussiness</h1>
+		<div>
+			<form action="/reservationOverview" method="get" id="filterDateForm" enctype="multipart/form-data">
+				<table>
+					<tr>
+						<td>
+							<label for="startDate" th:text="#{reservationOverview.label.filterStartDate}">filterStartDate</label>
+							<div class='input-group date'
+								th:id="datetimepickerStartDate" style="width:200px">
+				    			<input type='text' name="startDate" th:value="${startDate}" 
+									class="form-control" id="startDate" /> <span
+									class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</td>
+						<td>&nbsp;&nbsp;</td>
+						<td>
+							<label for="endDate" th:text="#{reservationOverview.label.filterEndDate}">filterEndDate</label>
+							<div class='input-group date' th:id="datetimepickerEndDate" style="width:200px">
+				    			<input type='text' name="endDate" th:value="${endDate}" 
+									class="form-control" id="endDate" /> <span
+									class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</td>
+						<td>&nbsp;&nbsp;</td>
+						<td>
+							<button type="submit" class="btn btn-success">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							</button>
+						</td>
+					</tr>
+				</table>
+				<input type="hidden"
+				   th:name="${_csrf.parameterName}"
+				   th:value="${_csrf.token}" />
+			</form>
+		</div>
+		
+		<h2 th:text="#{reservationOverview.label.top}">confirmed reservations</h2>
+		<input type="text" id="searchReservationTable"
+			th:placeholder="#{reservations.placeholder.search}"
+			class="form-control input-lg"></input>
+		<!-- <br />  -->
+		<form action="#" th:object="${wrapper}" method="post">
+		<div style="height: 100%; overflow: auto;">
+			<table class="table table-hover" id="reservationTable">
+				<thead>
+					<tr>
+						<th th:text="#{reservations.label.oderId}">Id</th>
+						<th th:text="#{reservations.label.customername}">name</th>
+						<th th:text="#{reservations.label.datetime}">date with time</th>
+						<th th:text="#{reservations.label.price}">price</th>
+						<th th:text="#{reservations.label.donation}">customer donation</th>
+						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
+						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
+						<th th:text="#{reservations.label.restaurantWaitingtime}">Restaurant Waitingtime</th>
+						<th th:text="#{reservations.label.details}">reservation details</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="reservation, stat: *{reservations}">				
+						<div th:switch="${reservation.isConfirmed()}">
+							<div th:case="true">
+								<td th:text="${reservation.getReservationNumber()}"></td>
+								<td th:text="${reservation.getUser().getUsername()}"></td>
+								<td th:text="${#dates.format(reservation.timestampReceived, 'dd.MM.yyyy HH:mm')}"></td> 
+								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
+								<td th:text="${reservation.getMaxWaitingtimeRestaurant()}"></td>
+								<td>
+									<button type="button" class="btn btn-success" th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
+										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									</button>
+								</td>	
+							</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<div id="modalHolder">
+		
+			</div>
+		</form>
+		
+		<br />
+		
+		<h2 th:text="#{reservationOverview.label.bottom}">rejected reservations</h2>
+		<input type="text" id="searchReservationTable2"
+			th:placeholder="#{reservations.placeholder.search}"
+			class="form-control input-lg"></input>
+		<br/>
+		<form action="#" th:object="${wrapper}" method="post">
+		<div style="height: 100%; overflow: auto;">
+			<table class="table table-hover" id="reservationTable2">
+				<thead>
+					<tr>
+						<th th:text="#{reservations.label.oderId}">Id</th>
+						<th th:text="#{reservations.label.customername}">name</th>
+						<th th:text="#{reservations.label.datetime}">date with time</th>
+						<th th:text="#{reservations.label.price}">price</th>
+						<th th:text="#{reservations.label.donation}">customer donation</th>
+						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
+						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
+						<th th:text="#{reservations.label.details}">reservation details</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="reservation, stat: *{reservations}">				
+						<div th:switch="${reservation.isRejected()}">
+							<div th:case="true">
+								<td th:text="${reservation.getReservationNumber()}"></td>
+								<td th:text="${reservation.getUser().getUsername()}"></td>
+								<td th:text="${#dates.format(reservation.timestampReceived, 'dd.MM.yyyy HH:mm')}"></td> 
+								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
+								<td>
+									<button type="button" class="btn btn-success" th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
+										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+									</button>
+								</td>	
+							</div>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+		</form>
+	</div>
+	
+	<div th:fragment="reservationOfferTable" id="reservationModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+        			<h4 class="modal-title" th:text="#{reservations.label.details}">Modal Header</h4>
+      			</div>
+      			<div class="modal-body">
+      				<table class="table table-hover">
+						<thead>
+							<tr>
+								<td th:text="#{reservations.label.food}"></td>
+								<td th:text="#{reservations.label.amount}"></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="offer : ${offers}">
+								<td th:text="${offer.offer.getTitle()}"></td>
+								<td th:text="${offer.amount}"></td>
+							</tr>
+						</tbody>
+					</table>
+     		 	</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      			</div>
+    		</div>
+		</div>
+	</div>
+
+
+	<script th:inline="javascript" type="text/javascript">
+		/*<![CDATA[*/
+		var $rows = $('#reservationTable tbody tr');
+		$('#searchReservationTable').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+
+		var $rows2 = $('#reservationTable2 tbody tr');
+		$('#searchReservationTable2').keyup(
+				function() {
+					var val = '^(?=.*\\b'
+							+ $.trim($(this).val()).split(/\s+/).join(
+									'\\b)(?=.*\\b') + ').*$', reg = RegExp(val,
+							'i'), text;
+
+					$rows2.show().filter(function() {
+						text = $(this).text().replace(/\s+/g, ' ');
+						return !reg.test(text);
+					}).hide();
+				});
+		/*]]>*/
+		
+		$(function() {
+			$('#datetimepickerStartDate').datetimepicker({
+				locale : 'de'
+			});
+			$('#datetimepickerEndDate').datetimepicker({
+				locale : 'de'
+			});
+			$("#datetimepickerStartDate").on(
+					"dp.change",
+					function(e) {
+						$('#datetimepickerEndDate').data("DateTimePicker")
+								.minDate(e.date);
+					});
+			$("#datetimepickerEndDate").on(
+					"dp.change",
+					function(e) {
+						$('#datetimepickerStartDate').data("DateTimePicker")
+								.maxDate(e.date);
+					});
+		});
+	</script>
+	
+	<script th:inline="javascript" type="text/javascript">
+
+	function openReservationModal(id) {
+		
+		$.ajax({
+			url: "/reservationOverview/details/"+id,
+			success: function(data) {
+				$("#modalHolder").html(data);
+				$("#reservationModal").modal("show");
+			}
+		});
+	}
+	</script>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

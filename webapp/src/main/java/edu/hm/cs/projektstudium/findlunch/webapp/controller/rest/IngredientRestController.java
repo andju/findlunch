@@ -76,7 +76,7 @@ public class IngredientRestController {
 			Principal principal, HttpServletRequest request) {
 
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
-		Offer offer = offerRepository.findById(offerId);
+		Offer offer = offerRepository.findOne(offerId);
 		
 		return offer.getAllergenic();
 	}
@@ -108,7 +108,7 @@ public class IngredientRestController {
 			Principal principal, HttpServletRequest request) {
 
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
-		Offer offer = offerRepository.findById(offerId);
+		Offer offer = offerRepository.findOne(offerId);
 		
 		return offer.getAdditives();
 	}

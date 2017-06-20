@@ -47,12 +47,12 @@ public class Offer {
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	private int id;
 
 	/** The description. */
 	@Lob
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	@NotBlank(message="{offer.description.notBlank}")
 	@Size(min=2, max=500, message= "{offer.description.lengthInvalid}")
 	private String description;
@@ -66,12 +66,12 @@ public class Offer {
 
 	/** The preparation time. */
 	@Column(name="preparation_time")
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	@Min(value=1, message="{offer.preparationTime.invalidMinValue}")
 	private int preparationTime;
 
 	/** The price. */
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	@NumberFormat(style=Style.DEFAULT)
 	@DecimalMin(value="0.5", message="{offer.price.invalidMinValue}")
 	private float price;
@@ -84,18 +84,18 @@ public class Offer {
 	private Date startDate;
 
 	/** The title. */
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	@NotBlank(message="{offer.title.notBlank}")
 	@Size(min=2, max=60, message= "{offer.title.lengthInvalid}")
 	private String title;
 
 	/** The default photo. */
 	@Transient
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	private OfferPhoto defaultPhoto;
 	
 	/** The needed point*/
-	@JsonView(OfferView.OfferRest.class)
+	@JsonView({OfferView.OfferRest.class, ReservationView.ReservationRest.class})
 	@Min(value=1, message="{offer.neededPoints.invalidMinValue}")
 	private int neededPoints;
 	
@@ -141,6 +141,7 @@ public class Offer {
 
 	/** Additives. */
 	//bi-directional many-to-many association to additives
+	@JsonView(OfferView.OfferRest.class)
 	@ManyToMany
 	@JoinTable(
 		name="offer_has_additives"
@@ -155,6 +156,7 @@ public class Offer {
 
 	/** Allergenic. */
 	//bi-directional many-to-many association to additives
+	@JsonView(OfferView.OfferRest.class)
 	@ManyToMany
 	@JoinTable(
 		name="offer_has_allergenic"

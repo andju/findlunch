@@ -5,7 +5,7 @@
 
 	<div th:replace="fragments/navigation :: navbar"></div>
 	<div style="margin-left: 25px; margin-right: 25px;">
-		<h1 th:text="#{reservations.label}">daily bussiness</h1>
+		<h1 th:text="#{reservations.label.new}">daily bussiness</h1>
 		
 		<div th:if="${param.success}" class="alert alert-success"
 			th:text="#{success.reservations.confirmed}" role="alert">success.offer.confirmed</div>
@@ -32,9 +32,10 @@
 						<th th:text="#{reservations.label.price}">price</th>
 						<th th:text="#{reservations.label.donation}">customer donation</th>
 						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
+						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
 						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
 						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
-						<th th:text="#{reservations.label.choice}">reservation selection</th>
+						<!-- <th th:text="#{reservations.label.choice}">reservation selection</th> -->
 						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
@@ -45,25 +46,29 @@
 							<div th:case="false">
 								<td th:text="${reservation.getReservationNumber()}"></td>
 								<td th:text="${reservation.getUser().getUsername()}"></td>
-								<td th:text="${#dates.format(reservation.reservationTime, 'HH:mm')}"></td> 
+								<td th:text="${#dates.format(reservation.timestampReceived, 'HH:mm')}"></td> 
 								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
 								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
 								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
 								<td>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" />
-									<input type="checkbox" th:field="*{reservations[__${stat.index}__].confirmed}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].rejected}" />
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
-								</td>
-								<td>
 									<button type="button" class="btn btn-success" th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</button>
-								</td>		
+									<button type="button" class="btn btn-success" th:onclick="'javascript:openStatusConfirmModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+									</button>
+									<button type="button" class="btn btn-success" th:onclick="'javascript:openStatusRejectModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+									</button>
+								</td>	
 							</div>
 							 <div th:case="true">
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" /> 
@@ -79,8 +84,6 @@
 				</tbody>
 			</table>
 			</div>
-			<button type="submit" class="btn btn-success" th:text="#{reservations.button.confirm}" name="confrim" style="float: right; margin-right: 25px;"></button>
-			<button type="reject" class="btn btn-success" th:text="#{reservations.button.reject}" name="reject" style="float: right; margin-right: 25px;"></button>
 			<input type="hidden"
 				th:name="${_csrf.parameterName}"
 				th:value="${_csrf.token}" />
@@ -105,12 +108,9 @@
 						<th th:text="#{reservations.label.oderId}">Id</th>
 						<th th:text="#{reservations.label.customername}">name</th>
 						<th th:text="#{reservations.label.datetime}">date with time</th>
-						<!-- <th th:text="#{reservations.label.price}">price</th> -->
 						<th th:text="#{reservations.label.donation}">customer donation</th>
 						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
-						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
-						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
-						<th th:text="#{reservations.label.choice}">reservation selection</th>
+						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
 						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
@@ -121,24 +121,27 @@
 							<div th:case="true">
 								<td th:text="${reservation.getReservationNumber()}"></td>
 								<td th:text="${reservation.getUser().getUsername()}"></td>
-								<td th:text="${#dates.format(reservation.reservationTime, 'HH:mm')}"></td> 
+								<td th:text="${#dates.format(reservation.timestampReceived, 'HH:mm')}"></td> 
 								<!-- <td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> -->
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> <!-- reservation.getDonation() + reservation.getTotalPrice() -->
+								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
 								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
 								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
 								<td>
-									<input type="checkbox" th:field="*{reservations[__${stat.index}__].confirmed}"/>
-									<input type="hidden" th:field="*{reservations[__${stat.index}__].id}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].donation}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].totalPrice}"/>
 									<input type="hidden" th:field="*{reservations[__${stat.index}__].usedPoints}"/>
-								</td>
-								<td>
 									<button type="button" class="btn btn-success" th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 									</button>
-								</td>			
+									<button type="button" class="btn btn-success" th:onclick="'javascript:openStatusConfirmModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+									</button>
+									<button type="button" class="btn btn-success" th:onclick="'javascript:openStatusRejectModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+									</button>
+								</td>
 							</div>
 						<div th:case="false">
 							<input type="hidden" th:field="*{reservations[__${stat.index}__].id}" /> 
@@ -152,8 +155,6 @@
 				</tbody>
 			</table>
 			</div>
-			<button type="submit" class="btn btn-success" th:text="#{reservations.button.confirm}" name="confrimFreeReservation" style="float: right; margin-right: 25px;"></button>
-			<button type="reject" class="btn btn-success" th:text="#{reservations.button.reject}" name="reject" style="float: right; margin-right: 25px;"></button>
 			<input type="hidden"
 				th:name="${_csrf.parameterName}"
 				th:value="${_csrf.token}" />
@@ -189,6 +190,62 @@
      		 	</div>
       			<div class="modal-footer">
         			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      			</div>
+    		</div>
+		</div>
+	</div>
+
+	<div th:fragment="reservationStatusReject" id="reservationStatusRejectModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form id="reservationStatusRejectForm">
+	      			<div class="modal-header">
+	        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        			<h4 class="modal-title" th:text="#{reservations.label.statusReject}">Modal Header</h4>
+	      			</div>
+	      			<div class="modal-body">
+	      				<span th:text="#{reservation.rejectmodal.description}"></span>
+	      				<br /><br />
+	      				<select name="rejectReason" id="rsrm_rsn">
+			                <option th:each="status : ${statusList}"
+	                        th:value="${status.id}" th:text="${status.status}">reson</option>
+      					</select>
+	      				<input type="hidden" id="rsrm_rid" name="reservationId" th:value="${reservationId}" /> 
+	     		 	</div>
+	     		 </form>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right; margin-right: 25px;" >Close</button>
+      				<button type="button" class="btn btn-success" th:text="#{reservations.button.reject}" name="reject" th:onclick="'javascript:saveReservationStatusReject();'" style="float: right; margin-right: 25px;"></button>
+      			</div>
+    		</div>
+		</div>
+	</div>
+
+	<div th:fragment="reservationStatusConfirmed" id="reservationStatusConfirmModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form id="reservationStatusConfirmForm">
+	      			<div class="modal-header">
+	        			<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        			<h4 class="modal-title" th:text="#{reservations.label.statusConfirm}">Modal Header</h4>
+	      			</div>
+	      			<div class="modal-body">
+	      				<span th:text="#{reservation.confirmmodal.customer}"></span> 
+	      				<span th:text="${waitTimeCust}"></span> 
+	      				<span th:text="#{reservation.confirmmodal.minute}"></span>
+	      				<br /><br />
+	      				<span th:text="#{reservation.confirmmodal.retaurant}"></span><br />
+      					<select name="waittimeRestaurant" id="rscm_wat">
+			                <option th:each="wartezeit : ${wartezeiten}"
+	                        th:value="${wartezeit}" th:text="${wartezeit}">reson</option> Minuten
+      					</select>
+      					<span th:text="#{reservation.confirmmodal.minute}"></span><br />
+	      				<input type="hidden" id="rscm_rid" name="reservationId" th:value="${reservationId}" /> 
+	     		 	</div>
+				</form>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-default" data-dismiss="modal" style="float: right; margin-right: 25px;" >Close</button>
+      				<button type="button" class="btn btn-success" th:text="#{reservations.button.confirm}" name="reject" th:onclick="'javascript:saveReservationStatusConfirm();'" style="float: right; margin-right: 25px;"></button>
       			</div>
     		</div>
 		</div>
@@ -235,11 +292,60 @@
 			success: function(data) {
 				$("#modalHolder").html(data);
 				$("#reservationModal").modal("show");
-				}
-			});
-		
-		}
+			}
+		});
+	}
 	
+	function openStatusRejectModal(id) {
+		$.ajax({
+			url: "/reservations/rejectModal/"+id,
+			success: function(data) {
+				$("#modalHolder").html(data);
+				$("#reservationStatusRejectModal").modal("show");
+			}
+		});
+	}
+
+	function openStatusConfirmModal(id) {
+		$.ajax({
+			url: "/reservations/confirmModal/"+id,
+			success: function(data) {
+				$("#modalHolder").html(data);
+				$("#reservationStatusConfirmModal").modal("show");
+			}
+		});
+	}
+	
+	function saveReservationStatusReject(){
+		reasonId = document.getElementById("rsrm_rsn").value;
+		reservationId = document.getElementById("rsrm_rid").value;
+		
+		$.ajax({
+			url: "/reservations/saveReservationStatusReject/"+reservationId+"/"+reasonId,
+			success : function(data) {
+	            location.reload();
+	        },
+	        error : function() {
+	        	location.reload();
+	        }
+		});			
+	}
+	
+	function saveReservationStatusConfirm(){
+		waittimeR = document.getElementById("rscm_wat").value;
+		reservationId = document.getElementById("rscm_rid").value;
+		
+		$.ajax({
+			url: "/reservations/saveReservationStatusConfirm/"+reservationId+"/"+waittimeR,
+			success : function(data) {
+	            location.reload();
+	        },
+	        error : function() {
+	        	location.reload();
+	        }
+		});			
+	}
+
 	</script>
 
 	<div th:replace="fragments/footer :: footer"></div>

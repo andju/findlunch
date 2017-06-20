@@ -2,7 +2,6 @@ package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,46 +14,44 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.ReservationView;
 
 @Entity
 public class Reservation {
 	
 	/** The id. */
 	@Id
+	@JsonView({ReservationView.ReservationRest.class})
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
 	/** The donation. */
+	@JsonView({ReservationView.ReservationRest.class})
 	private float donation;
 
 	/** The total price. */
+	@JsonView({ReservationView.ReservationRest.class})
 	private float totalPrice;
 	
-	/** The reservation time. */
-	@JsonIgnore
-	private Date reservationTime;
-	
-	/** Is confirmed. */
-	private boolean confirmed;
-	
-	/** Is rejected. */
-	private boolean rejected;
-	
 	/** Is used points. */
+	@JsonView({ReservationView.ReservationRest.class})
 	private boolean usedPoints;
 	
 	/** The reservation number*/
+	@JsonView({ReservationView.ReservationRest.class})
 	private int reservationNumber;
 
 	/** The user.*/
-	//	@JsonIgnore
+	// @JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	private User user;
 	
 	/** The offers within the reservation */
 	@OneToMany(mappedBy="reservation", cascade=CascadeType.ALL)
+	@JsonView({ReservationView.ReservationRest.class})
 	private List<ReservationOffers> reservation_offers;
 	
 	/** The euroPerPoint.*/
@@ -69,8 +66,35 @@ public class Reservation {
 	
 	/** The bill.*/
 	@ManyToOne(fetch=FetchType.EAGER)
+	@JsonView({ReservationView.ReservationRest.class})
 	private Bill bill;
 
+	/** The reservationStatus.*/
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JsonView({ReservationView.ReservationRest.class})
+	@JoinColumn(name="reservation_status_id")
+	private ReservationStatus reservationStatus;
+	
+	/** The max_waitingtime_customer. */
+	@JsonView({ReservationView.ReservationRest.class})
+	@Column(name="max_waitingtime_customer")
+	private int maxWaitingtimeCustomer;
+	
+	/** The max_waitingtime_restaurant. */
+	@JsonView({ReservationView.ReservationRest.class})
+	@Column(name="max_waitingtime_restaurant")
+	private int maxWaitingtimeRestaurant;
+	
+	/** The reservation time. */
+	@JsonView({ReservationView.ReservationRest.class})
+	@Column(name="timestamp_received")
+	private Date timestampReceived;
+	
+	/** The reservation time. */
+	@JsonView({ReservationView.ReservationRest.class})
+	@Column(name="timestamp_responded")
+	private Date timestampResponded;
+	
 	/**
 	 * Gets the euroPerPoint.
 	 * @return The euroPerPoint
@@ -106,22 +130,6 @@ public class Reservation {
 	}
 
 	/**
-	 * Gets the reservation time.
-	 * @return The reservation time
-	 */
-	public Date getReservationTime() {
-		return reservationTime;
-	}
-
-	/**
-	 * Sets the reservation Time.
-	 * @param reservationTime The reservation time to set
-	 */
-	public void setReservationTime(Date reservationTime) {
-		this.reservationTime = reservationTime;
-	}
-
-	/**
 	 * Gets the user.
 	 * @return The user
 	 */
@@ -135,39 +143,6 @@ public class Reservation {
 	 */
 	public void setUser(User user) {
 		this.user = user;
-	}
-	
-	/**
-	 * Checks if a reservation confirmed.
-	 * @return true, if it is confirmed
-	 */
-	public boolean isConfirmed() {
-		return confirmed;
-	}
-
-	/**
-	 * Sets confirm of the reservation
-	 * @param confirmed true, if it is confirmed
-	 */
-	public void setConfirmed(boolean confirmed) {
-		this.confirmed = confirmed;
-	}
-	
-	
-	/**
-	 * Checks if a reservation is rejected by the restaurant.
-	 * @return true, if rejected
-	 */
-	public boolean isRejected() {
-		return rejected;
-	}
-
-	/**
-	 * Sets rejected for the reservation
-	 * @param rejected true, if rejected
-	 */
-	public void setRejected(boolean rejected) {
-		this.rejected = rejected;
 	}
 	
 	/**
@@ -249,7 +224,7 @@ public class Reservation {
 	public void setBill(Bill bill) {
 		this.bill = bill;
 	}
-
+	
 	/**
 	 * Gets the reservation number.
 	 * @return The reservation number
@@ -272,6 +247,90 @@ public class Reservation {
 
 	public void setReservation_offers(List<ReservationOffers> reservation_offers) {
 		this.reservation_offers = reservation_offers;
+	}
+
+	/**
+	 * @return the reservationStatus
+	 */
+	public ReservationStatus getReservationStatus() {
+		return reservationStatus;
+	}
+
+	/**
+	 * @param reservationStatus the reservationStatus to set
+	 */
+	public void setReservationStatus(ReservationStatus reservationStatus) {
+		this.reservationStatus = reservationStatus;
+	}
+	
+	/**
+	 * @return the maxWaitingtimeCustomer
+	 */
+	public int getMaxWaitingtimeCustomer() {
+		return maxWaitingtimeCustomer;
+	}
+
+	/**
+	 * @param maxWaitingtimeCustomer the maxWaitingtimeCustomer to set
+	 */
+	public void setMaxWaitingtimeCustomer(int maxWaitingtimeCustomer) {
+		this.maxWaitingtimeCustomer = maxWaitingtimeCustomer;
+	}
+
+	/**
+	 * @return the maxWaitingtimeRestaurant
+	 */
+	public int getMaxWaitingtimeRestaurant() {
+		return maxWaitingtimeRestaurant;
+	}
+
+	/**
+	 * @param maxWaitingtimeRestaurant the maxWaitingtimeRestaurant to set
+	 */
+	public void setMaxWaitingtimeRestaurant(int maxWaitingtimeRestaurant) {
+		this.maxWaitingtimeRestaurant = maxWaitingtimeRestaurant;
+	}
+
+	/**
+	 * @return the timestampReceived
+	 */
+	public Date getTimestampReceived() {
+		return timestampReceived;
+	}
+
+	/**
+	 * @param timestampReceived the timestampReceived to set
+	 */
+	public void setTimestampReceived(Date timestampReceived) {
+		this.timestampReceived = timestampReceived;
+	}
+
+	/**
+	 * @return the timestampResponded
+	 */
+	public Date getTimestampResponded() {
+		return timestampResponded;
+	}
+
+	/**
+	 * @param timestampResponded the timestampResponded to set
+	 */
+	public void setTimestampResponded(Date timestampResponded) {
+		this.timestampResponded = timestampResponded;
+	}
+
+	/**
+	 * @return boolean true when Reservation is Confirmed
+	 */
+	public boolean isConfirmed(){
+		return reservationStatus.getKey() == 1;
+	}
+	
+	/**
+	 * @return boolean true when Reservation is Rejected
+	 */
+	public boolean isRejected(){
+		return reservationStatus.getKey() == 2;
 	}
 	
 }

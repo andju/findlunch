@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,6 +57,7 @@ public class ResetPasswordController {
 	
 	private static final String HTTPS= "https://";
 	
+	@CrossOrigin
 	@RequestMapping(path ="/resetpassword", method = RequestMethod.GET)
 	public String getResetPassword(Model model, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -64,6 +66,7 @@ public class ResetPasswordController {
 		return "resetpassword";
 	}
 	
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.POST, path="/resetpassword", params = "resetUserPassword")
 	public String resetPassword(HttpServletRequest request, User user){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -122,12 +125,14 @@ public class ResetPasswordController {
 		return false;
 	}
 	
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.POST, path="/resetpassword", params = "resetUserPasswordcancel")
 	public String resetPasswordCancel(HttpServletRequest request, User user){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		return "redirect:/home";
 	}
 	
+	@CrossOrigin
 	@RequestMapping(path ="/resetpassword/{token}", method = RequestMethod.GET)
 	public String setNewPassword(@PathVariable("token") String token, HttpServletRequest request, final Model model){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -140,6 +145,7 @@ public class ResetPasswordController {
 		return "resetpassword";
 	}
 	
+	@CrossOrigin
 	@RequestMapping(path="/resetpassword/{token}", method = RequestMethod.POST)
 	public String saveNewPassword(@PathVariable("token") String token, HttpServletRequest request, User user, BindingResult bindingResult, final Model model){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -166,6 +172,7 @@ public class ResetPasswordController {
 		return "redirect:/home?resetSuccessful";
 	}
 	
+	@CrossOrigin
 	@RequestMapping(path="/resetpassword/{token}", method = RequestMethod.POST, params = "cancel")
 	public String saveNewPasswordCancel(HttpServletRequest request, User user){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));

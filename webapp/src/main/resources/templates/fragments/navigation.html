@@ -34,10 +34,21 @@
 								<a th:href="@{/coursetype}" th:text="#{menu.label.couse_types}" role="menuitem">course_types</a>
 							</li>
 						</ul>
+					</li>
+					<li class="dropdown" sec:authorize="isAuthenticated()"><a
+						th:text="#{menu.label.reservations}" 
+						href="#" class="dropdown-toggle" data-toggle="dropdown"
+						role="button" aria-haspopup="true" aria-expanded="false">
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li sec:authorize="isAuthenticated()"
+								th:class="${#httpServletRequest.servletPath}=='/reservations'? active">
+								<a th:href="@{/reservations}" th:text="#{menu.label.reservationNew}">Reservations</a></li>
+							<li th:class="${#httpServletRequest.servletPath}=='/reservationOverview'? active">
+								<a th:href="@{/reservationOverview}" th:text="#{menu.label.reservationOverview}" role="menuitem">Overview</a>
+							</li>
+						</ul>
 					</li>	
-					<li sec:authorize="isAuthenticated()"
-						th:class="${#httpServletRequest.servletPath}=='/reservations'? active"><a
-						th:href="@{/reservations}" th:text="#{menu.label.reservations}">Reservations</a></li>
 					<li sec:authorize="hasAuthority('Anbieter')"
 						th:class="${#httpServletRequest.servletPath}=='/bill'? active"><a
 						th:href="@{/bill}" th:text="#{menu.label.bill}">Bill</a></li>

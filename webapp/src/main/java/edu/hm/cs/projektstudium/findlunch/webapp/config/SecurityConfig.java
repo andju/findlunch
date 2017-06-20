@@ -109,6 +109,7 @@ public class SecurityConfig {
 					.antMatchers(HttpMethod.GET, "/api/get_points")
 					.antMatchers(HttpMethod.POST, "/api/get_reset_token")
 					.antMatchers(HttpMethod.PUT, "/api/reset_password/**")
+					.antMatchers(HttpMethod.GET, "/api/getCustomerReservations")
 				.and().httpBasic().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		}

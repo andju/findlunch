@@ -8,6 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.ReservationView;
+
 /**
  * The class ReservationOffers
  * The class represnets a list of offers within a reservation
@@ -30,6 +34,7 @@ public class ReservationOffers {
 	
 	/** The Offer */
 	@ManyToOne(fetch=FetchType.EAGER)
+	@JsonView({ReservationView.ReservationRest.class})
 	@JoinColumn(name="offer_id")
 	private Offer offer;
 	
