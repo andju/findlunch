@@ -77,7 +77,7 @@ INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `restaurant
 (100, 'ionic@ionic.com', '$2a$10$AM5MLDZLCINLkGqWSQdIkeI/RR2DzlIWXP8UMLmJTNfjnrBFO7meu', NULL, 2, NULL);
 
 -- offer
-INSERT IGNORE INTO `findlunch`.`offer` (`id`, `restaurant_id`, `course_id`, `title`, `description`, `price`, `preparation_time`, `start_date`, `end_date`, `needed_points`) VALUES
+INSERT IGNORE INTO `findlunch`.`offer` (`id`, `restaurant_id`, `course_type`, `title`, `description`, `price`, `preparation_time`, `start_date`, `end_date`, `needed_points`) VALUES
 (1, 11, 1,'Champignonreispfanne (Tg1) ', 'vegan', '1.00', 2, '2017-01-08', '2017-08-31', 30),
 (2, 11, 1, 'Hackbällchen mit Paprikasauce (Tg3)', 'Rindfleisch und Schweinefleisch', '1.90', 4, '2017-01-08', '2017-08-31', 35),
 (3, 11, 1, 'Pfannkuchen mit Schokosauce (Tg2)', 'fleischlos', '1.59', 3, '2017-01-08', '2017-08-31', 25),
@@ -91,7 +91,9 @@ INSERT IGNORE INTO `findlunch`.`offer` (`id`, `restaurant_id`, `course_id`, `tit
 (11, 13, 1, 'Früchtetee', 'mit Himbeeren und Erdbeeren', '1.30', 2, '2017-01-08', '2017-08-31', 15),
 (12, 13, 1, 'Nussschnecke', 'jeden Tag frisch', '1.80', 1, '2017-01-08', '2017-08-31', 20),
 (13, 13, 1, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-08-31', 8),
-(101, 101, 1, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-08-31', 8);
+(101, 101, 4, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-08-31', 8);
+(102, 101, 2, 'Wiener mit Semmel oder Kartoffelsalat', 'klein', '2.90', 2, '2017-01-08', '2017-08-31', 15),
+(103, 101, 1, 'Fleischpflanzerlsemmel', 'Frisch', '2.50', 3, '2017-01-08', '2017-08-31', 23),
 
 -- offer has day
 INSERT IGNORE INTO `findlunch`.`offer_has_day_of_week` (`offer_id`, `day_of_week_id`) VALUES
@@ -416,3 +418,86 @@ INSERT IGNORE INTO `findlunch`.`offer_has_allergenic` (`offer_id`, `allergenic_i
 (101, 5),
 (101, 6),
 (101, 7);
+
+
+-- reservation_status
+INSERT IGNORE INTO `findlunch`.`reservation_status` (`id`, `status`, `statusKey`) VALUES
+(0, 'neu angelegt', 0),
+(1, 'bestätigt', 1),
+(2, 'abgelehnt, Der Anbieter hat die Bestellung abgelehnt.', 2),
+(3, 'abgelehnt, Die gewünschte Wartezeit kann nicht eingehalten werden.', 2),
+(4, 'abgelehnt, Das Produkt ist leider ausverkauft.', 2),
+(5, 'abgelehnt, Der Anbieter hat momentan geschlossen. ', 2),
+(6, 'abgelehnt, Der Anbieter ist bereits ausgebucht.', 2),
+(7, 'abgelehnt, Der Anbieter ist im Urlaub.', 2),
+(8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2);
+
+-- reservation --
+INSERT IGNORE INTO `findlunch`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`max_waitingtime_customer`,`max_waitingtime_restaurant`,`timestamp_received`,`timestamp_responded`,`reservation_status_id`) VALUES
+(1, 1, 4.90, 0.00, 0, 2, 1, 101, 20, -1, DATE_ADD(now(), INTERVAL -3 MINUTE), null, 0),
+(2, 2, 9.30, 0.00, 0, 9, 1, 101, 25, -1, DATE_ADD(now(), INTERVAL -2 MINUTE), null, 0),
+(3, 3, 9.30, 0.00, 0, 2, 1, 101, 15, -1, DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0),
+(4, 4, 1.00, 0.00, 0, 9, 1, 101, 25, -1, DATE_ADD(now(), INTERVAL -0.5 MINUTE), null, 0),
+(5, 5, 1.00, 0.00, 0, 2, 1, 101, 25, -1, DATE_ADD(now(), INTERVAL -0.5 DAY), null, 0),
+(6, 6, 9.30, 0.00, 0, 9, 1, 101, 15, -1, DATE_ADD(now(), INTERVAL -1 DAY), null, 0),
+(7, 7, 0.00, 0.00, 1, 2, 1, 101, 15, -1, DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0),
+(8, 8, 9.30, 0.00, 0, 9, 1, 101, 20, -1, DATE_ADD(now(), INTERVAL -1 DAY), null, 2),
+(9, 9, 9.30, 0.00, 0, 9, 1, 101, 10, 10, DATE_ADD(now(), INTERVAL -1 HOUR), DATE_ADD(now(), INTERVAL -0.09 HOUR), 1),
+(10, 10, 9.30, 0.00, 0, 2, 1, 101, 15, 15, DATE_ADD(now(), INTERVAL -2 HOUR), DATE_ADD(now(), INTERVAL -1.08 HOUR), 1),
+(11, 11, 9.30, 0.00, 0, 2, 1, 101, 15, 15, DATE_ADD(now(), INTERVAL -3 HOUR), DATE_ADD(now(), INTERVAL -2.09 HOUR), 1),
+(12, 12, 9.30, 0.00, 0, 9, 1, 101, 30, 25, DATE_ADD(now(), INTERVAL -1 DAY), DATE_ADD(now(), INTERVAL -0.09 DAY), 1),
+(13, 13, 9.30, 0.00, 0, 2, 1, 101, 20, 15, DATE_ADD(now(), INTERVAL -1.2 DAY), DATE_ADD(now(), INTERVAL -1.1 DAY), 1),
+(14, 14, 9.30, 0.00, 0, 9, 1, 101, 25, 25, DATE_ADD(now(), INTERVAL -1.4 DAY), DATE_ADD(now(), INTERVAL -1.3 DAY), 1),
+(15, 15, 9.30, 0.00, 0, 9, 1, 101, 15, 15, DATE_ADD(now(), INTERVAL -1.6 DAY), DATE_ADD(now(), INTERVAL -1.5 DAY), 1);
+  
+INSERT IGNORE INTO `findlunch`.`reservation_offers` (`id`,`reservation_id`,`offer_id`,`amount`) VALUES
+(1, 1, 101, 2),
+(2, 1, 102, 1),
+(3, 2, 101, 1),
+(4, 2, 102, 2),
+(5, 2, 103, 1),
+(6, 3, 101, 3),
+(7, 3, 102, 2),
+(8, 3, 103, 1),
+(9, 4, 101, 1),
+(10, 4, 101, 2),
+(11, 5, 102, 1),
+(12, 5, 101, 1),
+(13, 5, 102, 2),
+(14, 6, 103, 1),
+(15, 6, 101, 3),
+(16, 7, 102, 2),
+(17, 7, 103, 1),
+(18, 7, 101, 1),
+(19, 8, 101, 2),
+(20, 8, 102, 1),
+(21, 8, 101, 1),
+(22, 9, 102, 2),
+(23, 9, 103, 1),
+(24, 9, 101, 3),
+(25, 10, 102, 2),
+(26, 10, 103, 1),
+(27, 10, 101, 1),
+(28, 11, 101, 2),
+(29, 11, 102, 1),
+(30, 11, 101, 1),
+(31, 11, 102, 2),
+(32, 12, 103, 1),
+(33, 12, 101, 3),
+(34, 12, 102, 2),
+(35, 12, 103, 1),
+(36, 13, 101, 1),
+(37, 13, 101, 2),
+(38, 13, 102, 1),
+(39, 14, 101, 1),
+(40, 14, 102, 2),
+(41, 14, 103, 1),
+(42, 14, 101, 3),
+(43, 14, 102, 2),
+(44, 15, 103, 1),
+(45, 15, 101, 1),
+(46, 15, 101, 2),
+(47, 15, 102, 1),
+(48, 15, 101, 1),
+(49, 15, 102, 2),
+(50, 15, 103, 1);

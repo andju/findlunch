@@ -20,27 +20,29 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.ReservationView;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.mail.MailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationStatus;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.EuroPerPointRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationStatusRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 /**
@@ -62,6 +64,10 @@ public class ReservationRestController {
 	/** The reservation repository. */
 	@Autowired
 	private ReservationRepository reservationRepository;
+	
+	/** The reservationStatus repository. */
+	@Autowired
+	private ReservationStatusRepository reservationStatusRepository;
 	
 	/** The euroPerPoint repository. */
 	@Autowired
@@ -165,9 +171,8 @@ public class ReservationRestController {
 		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1); //holt den euro pro punkt mit der id
 		
 		reservation.setReservationNumber(generateReservationNumber());
-		reservation.setReservationTime(new Date());
-		reservation.setConfirmed(false);
-		reservation.setRejected(false);
+		reservation.setReservationStatus(reservationStatusRepository.findById(0));
+		reservation.setTimestampReceived(new Date());
 		reservation.setUser(authenticatedUser);
 		reservation.setReservation_offers(reservation_Offers);
 		reservation.setRestaurant(restaurant);
@@ -235,7 +240,7 @@ public class ReservationRestController {
 		}
 		LocalDateTime midnight = LocalDate.now().atStartOfDay();
 		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
-		List<Reservation> reservations = reservationRepository.findByUserIdAndReservationTimeAfterAndUsedPointsFalseAndRejectedFalseAndConfirmedFalse(authenticatedUser.getId(), startOfDay);
+		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKey(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_NEW);
 		
 		if(!reservations.isEmpty()){
 			for(Reservation reservation : reservations){
@@ -256,10 +261,9 @@ public class ReservationRestController {
 					points.setPoints(points.getPoints() +amountOfPoints.intValue());
 				}
 				
-					reservation.setRejected(false);
-					reservation.setConfirmed(true);
-				
-					
+				reservation.setReservationStatus(reservationStatusRepository.findById(1));
+				reservation.setTimestampResponded(new Date());;
+
 				reservationRepository.save(reservation);
 				pointsRepository.save(points);
 				
@@ -272,7 +276,26 @@ public class ReservationRestController {
 		}
 	}
 	
-	
+	/**
+	 * Get reservations for the logged in user.
+	 * @param principal the principal to get the authenticated user
+	 * @param request the HttpServletRequest
+	 * @return the response entity representing a status code
+	 */
+	@CrossOrigin
+	@PreAuthorize("isAuthenticated()")
+	@JsonView(ReservationView.ReservationRest.class)
+	@RequestMapping(path = "api/getCustomerReservations", method = RequestMethod.GET)
+	public ResponseEntity<List<Reservation>> getUserCustomerReservations(Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getInfoStringWithParameterList(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		authenticatedUser = userRepository.findOne(authenticatedUser.getId());
+		
+		List<Reservation> reservations = reservationRepository.findByUserIdOrderByRestaurantIdAscReservationStatusKeyAsc(authenticatedUser.getId());
+		
+		return new ResponseEntity<List<Reservation>>(reservations, HttpStatus.OK);
+	}
 	
     /**
      * Generate an unique reservation number for the reservation.

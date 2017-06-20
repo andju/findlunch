@@ -52,6 +52,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.model.BookingReason;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.DonationPerMonth;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.MinimumProfit;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationStatus;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AccountRepository;
@@ -169,7 +170,7 @@ public class BillScheduledTask {
 		
 		List<Restaurant> restaurants = restaurantRepository.findAll();
 		for(Restaurant restaurant : restaurants) {
-			List<Reservation> reservations = reservationRepository.findByRestaurantIdAndConfirmedTrueAndBillIdOrderByReservationTimeAsc(restaurant.getId(), null);
+			List<Reservation> reservations = reservationRepository.findByRestaurantIdAndReservationStatusKeyAndBillIdOrderByTimestampReceivedAsc(restaurant.getId(), ReservationStatus.RESERVATION_KEY_CONFIRMED, null);
 			
 			if(reservations.size() > 0 ) {
 				List<DonationPerMonth> donationsOfSupplier = donationPerMonthRepository.findByRestaurantIdAndBillIdOrderByDateDesc(restaurant.getId(), null);
@@ -198,7 +199,7 @@ public class BillScheduledTask {
 					//to create only one bill per month, change the comment form the @Scheduled in the header of this method
 					else{
 						Reservation oldestReservation = reservations.get(0);
-						start = oldestReservation.getReservationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+						start = oldestReservation.getTimestampReceived().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 					}
 
 					startDate = getStartDateOfMonth(start);
@@ -264,7 +265,7 @@ public class BillScheduledTask {
 							table.addCell(new Phrase(Integer.toString(i), font));
 							table.addCell(new Phrase(Integer.toString(reservation.getReservationNumber()), font));
 							//table.addCell(new Phrase(reservation.getOffer().getTitle(), font));
-							table.addCell(new Phrase(sdf.format(reservation.getReservationTime()), font));
+							table.addCell(new Phrase(sdf.format(reservation.getTimestampReceived()), font));
 							table.addCell(new Phrase(reservation.getUser().getUsername(), font));
 							//table.addCell(new Phrase(Integer.toString(reservation.getAmount()), font));
 							//table.addCell(new Phrase(floatToString(reservation.getOffer().getPrice()), font));

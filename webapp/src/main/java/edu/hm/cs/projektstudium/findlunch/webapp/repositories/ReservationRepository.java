@@ -20,7 +20,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param midnight date
 	 * @return List of reservation
 	 */
-	public List<Reservation> findByUserIdAndReservationTimeAfterAndConfirmedFalse(int userId, Date midnight);
+	public List<Reservation> findByUserIdAndTimestampReceivedAfterAndReservationStatusKey(int userId, Date midnight, int statuskey);
 	
 	/**
 	 * Find all reservations that are not confirmed and after the given date.
@@ -28,7 +28,17 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param reservationTime date
 	 * @return List of reservation
 	 */
-	public List<Reservation> findByRestaurantIdAndConfirmedFalseAndRejectedFalseAndReservationTimeAfter(int restaurantId, Date reservationTime);
+	public List<Reservation> findByRestaurantIdAndReservationStatusKeyAndTimestampReceivedAfter(int restaurantId, int statuskey, Date reservationTime);
+	
+	/**
+	 * Find all reservations that are confirmed or rejected and between the given dates.
+	 * @param restaurantId
+	 * @param statuskey
+	 * @param reservationTimeStart
+	 * @param reservationTimeEnd
+	 * @return
+	 */
+	public List<Reservation> findByRestaurantIdAndReservationStatusKeyNotAndTimestampReceivedBetweenOrderByTimestampReceivedAsc(int restaurantId, int statuskey, Date reservationTimeStart, Date reservationTimeEnd);
 	
 	/**
 	 * Find all confirmed reservations from a restaurant.
@@ -36,7 +46,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param billId Id of bill
 	 * @return List of reservation (order by reservationTime ascending)
 	 */
-	public List<Reservation> findByRestaurantIdAndConfirmedTrueAndBillIdOrderByReservationTimeAsc(int restaurantId, Integer billId);
+	public List<Reservation> findByRestaurantIdAndReservationStatusKeyAndBillIdOrderByTimestampReceivedAsc(int restaurantId, int statuskey, Integer billId);
 	
 	/**
 	 * Find all reservations which are new, nor rejected neighter confirmed and not paied by points
@@ -44,5 +54,23 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param midnight date
 	 * @return List of corresponding reservations
 	 */
-	public List<Reservation> findByUserIdAndReservationTimeAfterAndUsedPointsFalseAndRejectedFalseAndConfirmedFalse(int userId, Date midnight);
+	public List<Reservation> findByUserIdAndTimestampReceivedAfterAndUsedPointsFalseAndReservationStatusKey(int userId, Date midnight, int statuskey);
+
+	/**
+	 * Find all reservations that are between the given dates.
+	 * @param reservationTime date
+	 * @param reservationTime date
+	 * @return List of reservation
+	 */
+	public List<Reservation> findByRestaurantIdAndTimestampReceivedBetween(int restaurantId, Date reservationTimeAfter, Date reservationTimeBefore);
+	
+	/**
+	 * Find all reservations from a restaurant for the guven user.
+	 * @param restaurantId
+	 * @param userId
+	 * @param statuskey
+	 * @return
+	 */
+	public List<Reservation> findByUserIdOrderByRestaurantIdAscReservationStatusKeyAsc(int userId);
+	
 }

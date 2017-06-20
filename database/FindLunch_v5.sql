@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer` (
   `needed_points` INT NOT NULL,
   `sold_out` TINYINT(1) NOT NULL,
   `course_type` INT(11) NOT NULL,
-  `sort_by` INT(11) NOT NULL DEFAULT 1,
+  `sort` INT(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   INDEX `fk_product_restaurant1_idx` (`restaurant_id` ASC),
   CONSTRAINT `fk_product_restaurant1`
@@ -512,14 +512,22 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `findlunch`.`reservation_status`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `findlunch`.`reservation_status` (
+  `id` INT(11) NOT NULL,
+  `status` VARCHAR(255) NULL DEFAULT NULL,
+  `statkey` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
 -- Table `findlunch`.`reservation`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
+ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `reservation_number` INT(11) NOT NULL,
-  `reservation_time` DATETIME NOT NULL,
-  `confirmed` TINYINT(1) NOT NULL DEFAULT 0,
-  `rejected` TINYINT(1) NOT NULL DEFAULT 0,
   `total_price` DECIMAL(5,2) NOT NULL,
   `donation` DECIMAL(5,2) NOT NULL,
   `used_points` TINYINT(1) NOT NULL,
@@ -527,11 +535,17 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   `euro_per_point_id` INT NOT NULL,
   `bill_id` INT(11) NULL DEFAULT NULL,
   `restaurant_id` INT(11) NOT NULL,
+  `max_waitingtime_customer` INT(5) NULL DEFAULT NULL,
+  `max_waitingtime_restaurant` int(5) DEFAULT '-1',
+  `timestamp_received` DATETIME NULL DEFAULT NULL,
+  `timestamp_responded` DATETIME NULL DEFAULT NULL,
+  `reservation_status_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_reservation_user1_idx` (`user_id` ASC),
   INDEX `fk_reservation_euro_per_point1_idx` (`euro_per_point_id` ASC),
   INDEX `fk_reservation_bill1_idx` (`bill_id` ASC),
   INDEX `fk_reservation_restaurant1_idx` (`restaurant_id` ASC),
+  INDEX `fk_reservation_reservation_status1_idx` (`reservation_status_id` ASC),
   UNIQUE INDEX `reservation_number_UNIQUE` (`reservation_number` ASC),
   CONSTRAINT `fk_reservation_user1`
     FOREIGN KEY (`user_id`)
@@ -551,6 +565,11 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   CONSTRAINT `fk_reservation_restaurant1`
     FOREIGN KEY (`restaurant_id`)
     REFERENCES `findlunch`.`restaurant` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_reservation_reservation_status1`
+    FOREIGN KEY (`reservation_status_id`)
+    REFERENCES `findlunch`.`reservation_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -677,8 +696,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `findlunch`.`allergenic`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `findlunch`.`offer_has_allergenic` ;
-DROP TABLE IF EXISTS `findlunch`.`allergenic` ;
+-- DROP TABLE IF EXISTS `findlunch`.`offer_has_allergenic` ;
+-- DROP TABLE IF EXISTS `findlunch`.`allergenic` ;
 
 CREATE TABLE IF NOT EXISTS `findlunch`.`allergenic` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -694,10 +713,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_allergenic` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `offer_id` INT(11) NOT NULL,
   `allergenic_id` INT NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`allergenic_id`, `offer_id`),
   INDEX `fk_offer_has_allergenic_offer1_idx` (`offer_id` ASC),
   INDEX `fk_offer_has_allergenic_allergenic1_idx` (`allergenic_id` ASC),
   CONSTRAINT `fk_offer_has_allergenic_offer1`
@@ -733,10 +751,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_additives` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `additives_id` INT NOT NULL,
   `offer_id` INT(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`additives_id`, `offer_id`),
   INDEX `fk_offer_has_additives_additives1_idx` (`additives_id` ASC),
   INDEX `fk_offer_has_additives_offer1_idx` (`offer_id` ASC),
   CONSTRAINT `fk_offer_has_additives_additives1`
@@ -751,6 +768,10 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`offer_has_additives` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Abschluss des Skriptes
+-- -----------------------------------------------------
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

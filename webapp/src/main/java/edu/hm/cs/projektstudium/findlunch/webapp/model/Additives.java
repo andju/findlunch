@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.PushNotificationView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
@@ -26,22 +27,22 @@ public class Additives {
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class, OfferView.OfferRest.class})
 	private int id;
 
 	/** The name. */
 	@Column(name="name")
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class, OfferView.OfferRest.class})
 	private String name;
 
 	/** The description. */
 	@Column(name="description")
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class, OfferView.OfferRest.class})
 	private String description;
 
 	/** The short Key. */
 	@Column(name="short")
-	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class})
+	@JsonView({RestaurantView.RestaurantRest.class, PushNotificationView.PushNotificationRest.class, OfferView.OfferRest.class})
 	private String shortKey;
 
 	/** The offers. */

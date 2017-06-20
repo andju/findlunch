@@ -5,14 +5,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.*;
-import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,31 +21,24 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationList;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationStatus;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.EuroPerPointRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationStatusRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 
@@ -62,13 +52,13 @@ class ReservationController {
 	@Autowired
 	private ReservationRepository reservationRepository;
 	
+	/** The reservationStatus repository. */
+	@Autowired
+	private ReservationStatusRepository reservationStatusRepository;
+	
 	/** The restaurant repository. */
 	@Autowired
 	private RestaurantRepository restaurantRepository;
-	
-	/** The offer repository. */
-	@Autowired
-	private OfferRepository offerRepository;
 	
 	/** The euroPerPoint repository. */
 	@Autowired
@@ -107,7 +97,7 @@ class ReservationController {
 		}
 		else{
 			ArrayList<Reservation> reservations = (ArrayList<Reservation>) reservationRepository
-					.findByRestaurantIdAndConfirmedFalseAndRejectedFalseAndReservationTimeAfter(authenticatedUser.getAdministratedRestaurant().getId(), getMidnightDateOfToday()); //reservationRepository.findAll(); //reservation form restaurant
+					.findByRestaurantIdAndReservationStatusKeyAndTimestampReceivedAfter(authenticatedUser.getAdministratedRestaurant().getId(), ReservationStatus.RESERVATION_KEY_NEW, getMidnightDateOfToday()); //reservationRepository.findAll(); //reservation form restaurant
 				
 				ReservationList r = new ReservationList();
 				r.setReservations(reservations);
@@ -152,11 +142,10 @@ class ReservationController {
 		
 		for(Reservation r: confirmedReservations){
 			Reservation reservation = reservationRepository.findOne(r.getId());
-			reservation.setConfirmed(true);
-			reservation.setRejected(false);
+			reservation.setReservationStatus(reservationStatusRepository.findById(1));
 			reservationRepository.save(reservation);
 			increaseConsumerPoints(reservation);
-			confirmPush(reservation, true);
+			confirmPush(reservation);
 			
 		}
 		return "redirect:/reservations?success";
@@ -195,12 +184,68 @@ class ReservationController {
 			
 			for(Reservation r: rejectedReservations){
 				Reservation reservation = reservationRepository.findOne(r.getId());
-				reservation.setConfirmed(false);
-				reservation.setRejected(true);
+				reservation.setReservationStatus(reservationStatusRepository.findById(2));
 				reservationRepository.save(reservation);
-				confirmPush(reservation, false);
+				confirmPush(reservation);
 			}
 			return "redirect:/reservations?successReject";
+		
+	}
+	
+	/**
+	 * Reject the submitted reservation
+	 * @param reservationId
+	 * @param reasonId
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return redirect to the webpage
+	 */
+	@RequestMapping(path = "/reservations/saveReservationStatusReject/{reservationId}/{reasonId}", method = RequestMethod.GET)
+	public String rejectReservationByOwnerAJAX(@PathVariable("reservationId") String reservationId, @PathVariable("reasonId") String reasonId, ModelMap model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		
+		int res_id = Integer.parseInt(reservationId);
+		int reason_id = Integer.parseInt(reasonId);
+		
+		Reservation reservation = reservationRepository.findOne(res_id);
+		reservation.setReservationStatus(reservationStatusRepository.findOne(reason_id));
+		reservation.setTimestampResponded(new Date());
+		reservationRepository.save(reservation);
+		confirmPush(reservation);
+		
+		return "redirect:/reservations?successReject";
+		
+	}
+	
+	
+	/**
+	 * Confirm the submitted reservation
+	 * @param reservationId
+	 * @param waittimeRestaurant
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return redirect to the webpage
+	 */
+	@RequestMapping(path = "/reservations/saveReservationStatusConfirm/{reservationId}/{waittimeR}", method = RequestMethod.GET)
+	public String confirmReservationByOwnerAJAX(@PathVariable("reservationId") String reservationId, @PathVariable("waittimeR") String waittimeR, ModelMap model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
+		
+		int res_id = Integer.parseInt(reservationId);
+		int waittime_rest = Integer.parseInt(waittimeR);
+		
+		Reservation reservation = reservationRepository.findOne(res_id);
+		reservation.setReservationStatus(reservationStatusRepository.findById(1));
+		reservation.setMaxWaitingtimeRestaurant(waittime_rest);
+		reservation.setTimestampResponded(new Date());
+		
+		reservationRepository.save(reservation);
+		confirmPush(reservation);
+		
+		if(!reservation.isUsedPoints()){
+			increaseConsumerPoints(reservation);
+		}
+		
+		return "redirect:/reservations?successReject";
 		
 	}
 	
@@ -211,7 +256,7 @@ class ReservationController {
 	 * @param requestrequest the HttpServletRequest
 	 * @return the string for the corresponding HTML page
 	 */
-	@RequestMapping(path = "/reservations", method = RequestMethod.POST, params={"confrimFreeReservation"})
+	@RequestMapping(path = "/reservations", method = RequestMethod.POST, params={"confirmFreeReservation"})
 	public String confirmFreeReservationByOwner(@ModelAttribute ReservationList reservationList, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "reservations", reservationList.toString()));
 		
@@ -234,9 +279,9 @@ class ReservationController {
 		
 		for(Reservation r: freeReservations){
 			Reservation reservation = reservationRepository.findOne(r.getId());
-			reservation.setConfirmed(true);
+			reservation.setReservationStatus(reservationStatusRepository.findById(1));
 			reservationRepository.save(reservation);
-			confirmPush(reservation, true);
+			confirmPush(reservation);
 			//calculateConsumerPoints(reservation);
 		}
 		return "redirect:/reservations?success";
@@ -249,7 +294,6 @@ class ReservationController {
 	private void increaseConsumerPoints(Reservation reservation) {
 		
 		Restaurant restaurant = restaurantRepository.findOne(reservation.getRestaurant().getId());
-		EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 		User consumer = userRepository.findOne(reservation.getUser().getId());
 		int reservationPoints = getReservationPoints(reservation.getReservation_offers());
 		
@@ -285,19 +329,20 @@ class ReservationController {
 	 * @param confirm true, if confirmed, false if rejected
 	 * @return
 	 */
-	private Boolean confirmPush(Reservation reservation, Boolean confirm) {
+	private Boolean confirmPush(Reservation reservation) {
 		
 		PushNotificationManager pushManager = new PushNotificationManager();
 		
 		User user = reservation.getUser();
 		PushToken userToken = tokenRepository.findByUserId(user.getId());
 		
-		if(confirm && userToken != null){
+		if(reservation.isConfirmed() && userToken != null){
 			JSONObject notification = pushManager.generateReservationConfirm(reservation, userToken.getFcm_token());
 			pushManager.sendFcmNotification(notification);
 			return true;
 		}
-		if(!confirm && userToken != null){
+
+		if(reservation.isRejected() && userToken != null){
 			JSONObject notification = pushManager.generateReservationReject(reservation, userToken.getFcm_token());
 			pushManager.sendFcmNotification(notification);
 			return true;
@@ -353,5 +398,74 @@ class ReservationController {
 
 		
 		return "reservations :: reservationOfferTable";
+	}
+	
+	/**
+	 * Gets data for the reservation Reject Modal
+	 * @param reservationId the reservation
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return the reservation detials into the corresponding html fragment
+	 */
+	@RequestMapping(path="/reservations/rejectModal/{reservationId}", method=RequestMethod.GET)
+	public String getReservationDeclineModal(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
+
+		return setStatusModalData(reservationId, model, principal, request, ReservationStatus.RESERVATION_KEY_REJECTED);
+	}
+	
+	/**
+	 * Gets data for the reservation Confirm Modal
+	 * @param reservationId the reservation
+	 * @param model Model in which necessary object are placed to be displayed on the website.
+	 * @param principal the currently logged in user
+	 * @param request http request
+	 * @return the reservation detials into the corresponding html fragment
+	 */
+	@RequestMapping(path="/reservations/confirmModal/{reservationId}", method=RequestMethod.GET)
+	public String getReservationConfirmModal(@PathVariable("reservationId") String reservationId, ModelMap model, Principal principal, HttpServletRequest request){
+		LOGGER.info(LogUtils.getDefaultInfoStringWithPathVariable(request, Thread.currentThread().getStackTrace()[1].getMethodName(), " reservationId ", reservationId.toString()));
+		
+		return setStatusModalData(reservationId, model, principal, request, ReservationStatus.RESERVATION_KEY_CONFIRMED);
+	}
+
+	private String setStatusModalData(String reservationId, ModelMap model, Principal principal,
+			HttpServletRequest request, int reservationStatusKey) {
+		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
+		if(authenticatedUser.getAdministratedRestaurant() == null) {
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The user " + authenticatedUser.getUsername() + " has no restaurant. A restaurant has to be added before offers can be selected."));
+			return null;
+		}
+		
+		Reservation reservation = reservationRepository.findOne(Integer.parseInt(reservationId));
+		if(reservation == null){
+			return null;
+		}
+		List<ReservationOffers> reservationOffers = reservation.getReservation_offers();
+		if(reservationOffers == null){
+			return null;
+		}
+		
+		List<Integer> wartezeiten = new ArrayList<Integer>();
+		for (int i = 5; i <= reservation.getMaxWaitingtimeCustomer(); i=i+5) {
+			wartezeiten.add(i);
+		}
+		model.addAttribute("wartezeiten", wartezeiten);
+		
+		model.addAttribute("waitTimeCust", reservation.getMaxWaitingtimeCustomer());
+		model.addAttribute("reservationId", reservationId);
+		model.addAttribute("offers", reservationOffers);
+
+		List<ReservationStatus> listRs = reservationStatusRepository.findByKey(reservationStatusKey);
+		model.addAttribute("statusList", listRs);
+		
+		if(reservationStatusKey == ReservationStatus.RESERVATION_KEY_REJECTED){
+			return "reservations :: reservationStatusReject";
+		}else if(reservationStatusKey == ReservationStatus.RESERVATION_KEY_CONFIRMED){
+			return "reservations :: reservationStatusConfirmed";
+		}else{
+			return null;
+		}
 	}
 }
