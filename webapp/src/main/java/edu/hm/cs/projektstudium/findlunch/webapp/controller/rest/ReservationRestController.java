@@ -20,27 +20,29 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.RequestMethod;
+import com.fasterxml.jackson.annotation.JsonView;
 
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.ReservationView;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.mail.MailService;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.EuroPerPoint;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.PointId;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.PushToken;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Reservation;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationOffers;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.ReservationStatus;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.push.PushNotificationManager;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.EuroPerPointRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PushTokenRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.ReservationStatusRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.RestaurantRepository;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.UserRepository;
 /**
