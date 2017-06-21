@@ -592,7 +592,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
 ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `findlunch`.`reservation`
+-- Table `findlunch`.`reservation_offers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `findlunch`.`reservation_offers` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,

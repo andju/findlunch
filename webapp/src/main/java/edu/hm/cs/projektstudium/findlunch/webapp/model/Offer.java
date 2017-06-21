@@ -185,7 +185,7 @@ public class Offer {
 	private int courseType;
 	
 	/** The order of the offer within the coursetype */
-	@Column(name="sort_by")
+	@Column(name="sort")
 	private int order;
 	
 	/** The offer photos. */

@@ -35,7 +35,7 @@ public class ReservationStatus {
 	
 	/** The key. */
 	@JsonView({ReservationView.ReservationRest.class})
-	@Column(name="statuskey")
+	@Column(name="statkey")
 	private int key;
 
 	/** The reservations.*/
