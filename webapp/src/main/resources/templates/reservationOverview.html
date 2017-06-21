@@ -62,8 +62,7 @@
 						<th th:text="#{reservations.label.price}">price</th>
 						<th th:text="#{reservations.label.donation}">customer donation</th>
 						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
-						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
-						<th th:text="#{reservations.label.restaurantWaitingtime}">Restaurant Waitingtime</th>
+						<th th:text="#{reservations.label.collectTime}">Customer Collect Time</th>
 						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
@@ -78,8 +77,7 @@
 								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
-								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
-								<td th:text="${reservation.getMaxWaitingtimeRestaurant()}"></td>
+								<td th:text="${#dates.format(reservation.getCollectTime(), 'dd.MM.yyyy HH:mm')}"></td>
 								<td>
 									<button type="button" class="btn btn-success" th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -114,7 +112,7 @@
 						<th th:text="#{reservations.label.price}">price</th>
 						<th th:text="#{reservations.label.donation}">customer donation</th>
 						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
-						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
+						<th th:text="#{reservations.label.collectTime}">Customer Collect Time</th>
 						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
@@ -129,7 +127,7 @@
 								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
-								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
+								<td th:text="${#dates.format(reservation.getCollectTime(), 'dd.MM.yyyy HH:mm')}"></td>
 								<td>
 									<button type="button" class="btn btn-success" th:onclick="'javascript:openReservationModal(\''+*{reservations[__${stat.index}__].id}+'\');'">
 										<span class="glyphicon glyphicon-search" aria-hidden="true"></span>

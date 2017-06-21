@@ -71,6 +71,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param statuskey
 	 * @return
 	 */
-	public List<Reservation> findByUserIdOrderByRestaurantIdAscReservationStatusKeyAsc(int userId);
+	public List<Reservation> findByUserIdOrderByRestaurantIdAscTimestampReceivedAsc(int userId);
 	
 }

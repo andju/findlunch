@@ -32,7 +32,7 @@
 						<th th:text="#{reservations.label.price}">price</th>
 						<th th:text="#{reservations.label.donation}">customer donation</th>
 						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
-						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
+						<th th:text="#{reservations.label.collectTime}">Customer Collect Time</th>
 						<!-- <th th:text="#{reservations.label.confirmed}">finished reservation</th> -->
 						<!-- <th th:text="#{reservations.label.isfree}">free reservation</th> -->
 						<!-- <th th:text="#{reservations.label.choice}">reservation selection</th> -->
@@ -50,7 +50,7 @@
 								<td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation() + reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
-								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
+								<td th:text="${#dates.format(reservation.collectTime, 'HH:mm')}"></td> 
 								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
 								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
 								<td>
@@ -110,7 +110,7 @@
 						<th th:text="#{reservations.label.datetime}">date with time</th>
 						<th th:text="#{reservations.label.donation}">customer donation</th>
 						<th th:text="#{reservations.label.priceWithDonation}">price included with Donation</th>
-						<th th:text="#{reservations.label.customerWaitingtime}">Customer Waitingtime</th>
+						<th th:text="#{reservations.label.collectTime}">Customer Collect Time</th>
 						<th th:text="#{reservations.label.details}">reservation details</th>
 					</tr>
 				</thead>
@@ -125,7 +125,7 @@
 								<!-- <td><span th:text="${#numbers.formatDecimal(reservation.getTotalPrice(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> -->
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
 								<td><span th:text="${#numbers.formatDecimal(reservation.getDonation(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td> <!-- reservation.getDonation() + reservation.getTotalPrice() -->
-								<td th:text="${reservation.getMaxWaitingtimeCustomer()}"></td>
+								<td th:text="${#dates.format(reservation.collectTime, 'HH:mm')}"></td> 
 								<!-- <td th:text="${reservation.isConfirmed()}"></td> -->
 								<!-- <td th:text="${reservation.isUsedPoints()}" ></td> -->
 								<td>
@@ -230,16 +230,8 @@
 	        			<h4 class="modal-title" th:text="#{reservations.label.statusConfirm}">Modal Header</h4>
 	      			</div>
 	      			<div class="modal-body">
-	      				<span th:text="#{reservation.confirmmodal.customer}"></span> 
-	      				<span th:text="${waitTimeCust}"></span> 
-	      				<span th:text="#{reservation.confirmmodal.minute}"></span>
-	      				<br /><br />
 	      				<span th:text="#{reservation.confirmmodal.retaurant}"></span><br />
-      					<select name="waittimeRestaurant" id="rscm_wat">
-			                <option th:each="wartezeit : ${wartezeiten}"
-	                        th:value="${wartezeit}" th:text="${wartezeit}">reson</option> Minuten
-      					</select>
-      					<span th:text="#{reservation.confirmmodal.minute}"></span><br />
+      					<span th:text="${collectTime}"></span><br />
 	      				<input type="hidden" id="rscm_rid" name="reservationId" th:value="${reservationId}" /> 
 	     		 	</div>
 				</form>
@@ -332,11 +324,10 @@
 	}
 	
 	function saveReservationStatusConfirm(){
-		waittimeR = document.getElementById("rscm_wat").value;
 		reservationId = document.getElementById("rscm_rid").value;
 		
 		$.ajax({
-			url: "/reservations/saveReservationStatusConfirm/"+reservationId+"/"+waittimeR,
+			url: "/reservations/saveReservationStatusConfirm/"+reservationId,
 			success : function(data) {
 	            location.reload();
 	        },
