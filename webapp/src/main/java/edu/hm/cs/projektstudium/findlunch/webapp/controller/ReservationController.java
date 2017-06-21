@@ -1,6 +1,8 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -226,27 +228,19 @@ class ReservationController {
 	 * @param request http request
 	 * @return redirect to the webpage
 	 */
-	@RequestMapping(path = "/reservations/saveReservationStatusConfirm/{reservationId}/{waittimeR}", method = RequestMethod.GET)
-	public String confirmReservationByOwnerAJAX(@PathVariable("reservationId") String reservationId, @PathVariable("waittimeR") String waittimeR, ModelMap model, Principal principal, HttpServletRequest request){
+	@RequestMapping(path = "/reservations/saveReservationStatusConfirm/{reservationId}", method = RequestMethod.GET)
+	public String confirmReservationByOwnerAJAX(@PathVariable("reservationId") String reservationId,ModelMap model, Principal principal, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
 		
 		int res_id = Integer.parseInt(reservationId);
-		int waittime_rest = Integer.parseInt(waittimeR);
 		
 		Reservation reservation = reservationRepository.findOne(res_id);
 		reservation.setReservationStatus(reservationStatusRepository.findById(1));
-		reservation.setMaxWaitingtimeRestaurant(waittime_rest);
-		reservation.setTimestampResponded(new Date());
 		
 		reservationRepository.save(reservation);
 		confirmPush(reservation);
 		
-		if(!reservation.isUsedPoints()){
-			increaseConsumerPoints(reservation);
-		}
-		
 		return "redirect:/reservations?successReject";
-		
 	}
 	
 	/**
@@ -447,13 +441,8 @@ class ReservationController {
 			return null;
 		}
 		
-		List<Integer> wartezeiten = new ArrayList<Integer>();
-		for (int i = 5; i <= reservation.getMaxWaitingtimeCustomer(); i=i+5) {
-			wartezeiten.add(i);
-		}
-		model.addAttribute("wartezeiten", wartezeiten);
-		
-		model.addAttribute("waitTimeCust", reservation.getMaxWaitingtimeCustomer());
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		model.addAttribute("collectTime", df.format(reservation.getCollectTime()));
 		model.addAttribute("reservationId", reservationId);
 		model.addAttribute("offers", reservationOffers);
 

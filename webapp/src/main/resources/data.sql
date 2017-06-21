@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -- Insert Users and Restaurant value for demo!!!--
 
 -- TEST BESTELLUNG:
@@ -452,3 +453,6 @@ INSERT IGNORE INTO `findlunch`.`reservation_offers` (`id`,`reservation_id`,`offe
 (7, 3, 102, 2),
 (8, 3, 103, 1),
 (9, 4, 101, 1);
+=======
+/*/
+>>>>>>> refs/heads/ftr_abholzeitpunkt

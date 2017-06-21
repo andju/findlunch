@@ -295,7 +295,7 @@ public class ReservationRestController {
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		authenticatedUser = userRepository.findOne(authenticatedUser.getId());
 	
-		List<Reservation> reservations = reservationRepository.findByUserIdOrderByRestaurantIdAscReservationStatusKeyAsc(authenticatedUser.getId());
+		List<Reservation> reservations = reservationRepository.findByUserIdOrderByRestaurantIdAscTimestampReceivedAsc(authenticatedUser.getId());
 		
 		return new ResponseEntity<List<Reservation>>(reservations, HttpStatus.OK);
 	}
