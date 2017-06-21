@@ -76,7 +76,7 @@
 								<td th:text="${#dates.format(bill.getEndDate(), 'dd.MM.yyyy')}"></td>
 								<td>
 									<a
-									th:href="@{/bill/{id}(id=${bill.id})}"><button
+									th:href="@{/bill/{id}(id=${bill.id})}" target="_blank"><button
 											type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span></button></a>
 								</td>
 							</div>

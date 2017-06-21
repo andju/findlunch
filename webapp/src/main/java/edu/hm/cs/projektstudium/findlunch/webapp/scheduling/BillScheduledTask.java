@@ -244,11 +244,11 @@ public class BillScheduledTask {
 						Font font = new Font(Font.DEFAULTSIZE, 11, Font.BOLD);
 				        table.addCell(new Phrase(messages.getString("bill.pos"), font));
 				        table.addCell(new Phrase(messages.getString("bill.bestNr"), font));
-				        table.addCell(new Phrase(messages.getString("bill.product"), font));
+				        //table.addCell(new Phrase(messages.getString("bill.product"), font));
 				        table.addCell(new Phrase(messages.getString("bill.date"), font));
 				        table.addCell(new Phrase(messages.getString("bill.customerString"), font));
-				        table.addCell(new Phrase(messages.getString("bill.unit"), font));
-				        table.addCell(new Phrase(messages.getString("bill.price"), font));
+				        //table.addCell(new Phrase(messages.getString("bill.unit"), font));
+				        //table.addCell(new Phrase(messages.getString("bill.price"), font));
 				        table.addCell(new Phrase(messages.getString("bill.totalPrice"), font));
 				        table.addCell(new Phrase(messages.getString("bill.customerDonation"), font));
 				        table.setHeaderRows(1);
