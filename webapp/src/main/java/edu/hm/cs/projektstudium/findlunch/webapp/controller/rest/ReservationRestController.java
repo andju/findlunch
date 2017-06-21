@@ -218,7 +218,7 @@ public class ReservationRestController {
 	
 	
 	/**
-	 * Confirm a reservation for a given user.
+	 * Collects the points for a given user.
 	 * @param restaurantUuid UUID from Restaurant
 	 * @param principal the principal to get the authenticated user
 	 * @param request the HttpServletRequest
@@ -238,37 +238,39 @@ public class ReservationRestController {
 			//restaurant nicht gefunden
 			return new ResponseEntity<Integer>(3, HttpStatus.CONFLICT);
 		}
+		
 		LocalDateTime midnight = LocalDate.now().atStartOfDay();
 		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
-		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKey(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_NEW);
+		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKeyAndPointsCollectedFalse(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_NEW);
 		
 		if(!reservations.isEmpty()){
 			for(Reservation reservation : reservations){
-				EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 				
-				Float amountOfPoints= new Float(reservation.getTotalPrice()*euroPerPoint.getEuro());
-				PointId pointId = new PointId();
-				pointId.setUser(authenticatedUser);
-				pointId.setRestaurant(reservation.getRestaurant());
+				if(reservation.getReservationStatus().getKey() == ReservationStatus.RESERVATION_KEY_CONFIRMED){
+					EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
 					
-				Points points = pointsRepository.findByCompositeKey(pointId);
-				if(points == null){ //user get First time points
-					points = new Points();
-					points.setCompositeKey(pointId);
-					points.setPoints(amountOfPoints.intValue());
+					Float amountOfPoints= new Float(reservation.getTotalPrice()*euroPerPoint.getEuro());
+					PointId pointId = new PointId();
+					pointId.setUser(authenticatedUser);
+					pointId.setRestaurant(reservation.getRestaurant());
+						
+					Points points = pointsRepository.findByCompositeKey(pointId);
+					if(points == null){ //user get First time points
+						points = new Points();
+						points.setCompositeKey(pointId);
+						points.setPoints(amountOfPoints.intValue());
+					}
+					else{//add new points to the old points
+						points.setPoints(points.getPoints() +amountOfPoints.intValue());
+					}
+					reservationRepository.save(reservation);
+					pointsRepository.save(points);
 				}
-				else{//add new points to the old points
-					points.setPoints(points.getPoints() +amountOfPoints.intValue());
+				else {
+					//keine Reservierung
+					return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
 				}
-				
-				reservation.setReservationStatus(reservationStatusRepository.findById(1));
-				reservation.setTimestampResponded(new Date());;
-				
-					
-				reservationRepository.save(reservation);
-				pointsRepository.save(points);
-				
-			}
+			}	
 			return new ResponseEntity<Integer>(0, HttpStatus.OK);
 		}
 		else{

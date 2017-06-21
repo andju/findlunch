@@ -39,6 +39,10 @@ public class Reservation {
 	@JsonView({ReservationView.ReservationRest.class})
 	private boolean usedPoints;
 	
+	/** Points are Collected by the cusomer */
+	@Column(name="points_collected")
+	private boolean pointsCollected;
+	
 	/** The reservation number*/
 	@JsonView({ReservationView.ReservationRest.class})
 	private int reservationNumber;
@@ -332,5 +336,12 @@ public class Reservation {
 	public boolean isRejected(){
 		return reservationStatus.getKey() == 2;
 	}
-	
+
+	public boolean isPointsCollected() {
+		return pointsCollected;
+	}
+
+	public void setPointsCollected(boolean pointsCollected) {
+		this.pointsCollected = pointsCollected;
+	}
 }

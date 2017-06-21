@@ -548,6 +548,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   `total_price` DECIMAL(5,2) NOT NULL,
   `donation` DECIMAL(5,2) NOT NULL,
   `used_points` TINYINT(1) NOT NULL,
+  `points_collected` TINYINT(1) NOT NULL,
   `user_id` INT(11) NOT NULL,
   `euro_per_point_id` INT NOT NULL,
   `bill_id` INT(11) NULL DEFAULT NULL,

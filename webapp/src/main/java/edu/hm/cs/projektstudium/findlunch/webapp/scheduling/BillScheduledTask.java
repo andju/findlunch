@@ -265,61 +265,11 @@ public class BillScheduledTask {
 							font = new Font(Font.DEFAULTSIZE, 11, Font.NORMAL);
 							table.addCell(new Phrase(Integer.toString(i), font));
 							table.addCell(new Phrase(Integer.toString(reservation.getReservationNumber()), font));
-							//table.addCell(new Phrase(reservation.getOffer().getTitle(), font));
 							table.addCell(new Phrase(sdf.format(reservation.getTimestampReceived()), font));
 							table.addCell(new Phrase(reservation.getUser().getUsername(), font));
-							//table.addCell(new Phrase(Integer.toString(reservation.getAmount()), font));
-							//table.addCell(new Phrase(floatToString(reservation.getOffer().getPrice()), font));
 							table.addCell(new Phrase(floatToString(reservation.getTotalPrice()), font));
 							table.addCell(new Phrase(floatToString(reservation.getDonation()), font));
 						}
-						
-						//---------------------
-							int i = 0;
-							
-							for(Reservation reservation : reservations){
-									i++;
-								
-								 	PdfPTable table1 = new PdfPTable(6);
-							        table1.setWidthPercentage(100);
-							        int[] columnWidths1 = new int[]{4, 8, 12, 20,  8, 15};
-							        table1.getDefaultCell().setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
-							        table1.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-						
-									Font font1 = new Font(Font.DEFAULTSIZE, 11, Font.BOLD);
-							        table1.addCell(new Phrase(messages.getString("bill.pos"), font1));
-							        table1.addCell(new Phrase(messages.getString("bill.bestNr"), font1));
-							        table1.addCell(new Phrase(messages.getString("bill.date"), font1));
-							        table1.addCell(new Phrase(messages.getString("bill.customerString"), font1));
-							        table1.addCell(new Phrase(messages.getString("bill.totalPrice"), font1));
-							        table1.addCell(new Phrase(messages.getString("bill.customerDonation"), font1));
-							        table1.setHeaderRows(1);
-							        
-							        restaurantEarning = round(restaurantEarning + reservation.getTotalPrice(),2);
-									customDonationBrutto = round(customDonationBrutto + reservation.getDonation(),2);
-									
-									font = new Font(Font.DEFAULTSIZE, 11, Font.NORMAL);
-									table.addCell(new Phrase(Integer.toString(i), font));
-									table.addCell(new Phrase(Integer.toString(reservation.getReservationNumber()), font));
-									//table.addCell(new Phrase(reservation.getOffer().getTitle(), font));
-									table.addCell(new Phrase(sdf.format(reservation.getTimestampReceived()), font));
-									table.addCell(new Phrase(reservation.getUser().getUsername(), font));
-									//table.addCell(new Phrase(Integer.toString(reservation.getAmount()), font));
-									//table.addCell(new Phrase(floatToString(reservation.getOffer().getPrice()), font));
-									table.addCell(new Phrase(floatToString(reservation.getTotalPrice()), font));
-									table.addCell(new Phrase(floatToString(reservation.getDonation()), font));
-									
-									for(ReservationOffers offer : reservation.getReservation_offers()){
-										table.addCell(new Phrase("",font));
-										table.addCell(new Phrase(offer.getOffer().getTitle(), font));
-										table.addCell(new Phrase(Integer.toString(offer.getAmount()),font));
-										table.addCell(new Phrase("",font));
-										table.addCell(new Phrase("",font));
-										table.addCell(new Phrase("",font));
-									}
-							}
-							
-						//---------------------
 						
 				        table.setWidths(columnWidths);
 				        doc.add(table);

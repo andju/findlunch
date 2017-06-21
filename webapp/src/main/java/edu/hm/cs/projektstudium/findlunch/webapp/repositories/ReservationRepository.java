@@ -20,7 +20,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
 	 * @param midnight date
 	 * @return List of reservation
 	 */
-	public List<Reservation> findByUserIdAndTimestampReceivedAfterAndReservationStatusKey(int userId, Date midnight, int statuskey);
+	public List<Reservation> findByUserIdAndTimestampReceivedAfterAndReservationStatusKeyAndPointsCollectedFalse(int userId, Date midnight, int statuskey);
 	
 	/**
 	 * Find all reservations that are not confirmed and after the given date.

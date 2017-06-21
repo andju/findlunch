@@ -433,6 +433,7 @@ INSERT IGNORE INTO `findlunch`.`reservation_status` (`id`, `status`, `statkey`) 
 (6, 'abgelehnt, Der Anbieter ist bereits ausgebucht.', 2),
 (7, 'abgelehnt, Der Anbieter ist im Urlaub.', 2),
 (8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2);
+(9, 'Nicht Bearbeitet', 3)
 
 -- reservation --
 INSERT IGNORE INTO `findlunch`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`max_waitingtime_customer`,`timestamp_received`,`reservation_status_id`) VALUES
