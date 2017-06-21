@@ -432,15 +432,15 @@ INSERT IGNORE INTO `findlunch`.`reservation_status` (`id`, `status`, `statkey`) 
 (5, 'abgelehnt, Der Anbieter hat momentan geschlossen. ', 2),
 (6, 'abgelehnt, Der Anbieter ist bereits ausgebucht.', 2),
 (7, 'abgelehnt, Der Anbieter ist im Urlaub.', 2),
-(8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2);
-(9, 'Nicht Bearbeitet', 3)
+(8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2),
+(9, 'Nicht Bearbeitet', 3);
 
 -- reservation --
-INSERT IGNORE INTO `findlunch`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`max_waitingtime_customer`,`timestamp_received`,`reservation_status_id`) VALUES
-(1, 1, 4.90, 0.00, 0, 2, 1, 101, 20, DATE_ADD(now(), INTERVAL -3 MINUTE), 0),
-(2, 2, 9.30, 0.00, 0, 9, 1, 101, 25, DATE_ADD(now(), INTERVAL -2 MINUTE), 0),
-(3, 3, 9.30, 0.00, 0, 2, 1, 101, 15, DATE_ADD(now(), INTERVAL -1 MINUTE), 0),
-(4, 4, 1.00, 0.00, 0, 9, 1, 101, 25, DATE_ADD(now(), INTERVAL -0.5 MINUTE), 0);
+INSERT IGNORE INTO `findlunch`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`points_collected`, `user_id`,`euro_per_point_id`, `bill_id`, `restaurant_id`, `collect_time`, `timestamp_received`,`timestamp_responded`,`reservation_status_id`) VALUES
+(1, 1, 4.90, 10.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +20 MINUTE),DATE_ADD(now(), INTERVAL -20 MINUTE),NULL, 0),
+(2, 2, 9.30, 0.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +20 MINUTE),DATE_ADD(now(), INTERVAL -40 MINUTE),NULL, 0),
+(3, 3, 9.30, 0.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +31 MINUTE),DATE_ADD(now(), INTERVAL -2 MINUTE),NULL, 0),
+(4, 4, 1.00, 0.00, 0, 0, 100, 1, NULL, 101, DATE_ADD(now(), INTERVAL +6 MINUTE),DATE_ADD(now(), INTERVAL -9 MINUTE),NULL, 0);
   
 INSERT IGNORE INTO `findlunch`.`reservation_offers` (`id`,`reservation_id`,`offer_id`,`amount`) VALUES
 (1, 1, 101, 2),
@@ -452,3 +452,6 @@ INSERT IGNORE INTO `findlunch`.`reservation_offers` (`id`,`reservation_id`,`offe
 (7, 3, 102, 2),
 (8, 3, 103, 1),
 (9, 4, 101, 1);
+
+INSERT IGNORE INTO `findlunch`.`user_pushtoken` (`id`, `user_id`, `fcm_token`) VALUES 
+('1', '100', 'eVvkYMnfv5s:APA91bHpUqLqwBXwaJlkqVQLRPA8Dbj8Hms2DaVWBhlbhbl20dpkTmpdEVBSggddg6ALNdEMfagoSOzYIA1zrBxAhTWSn5ipIKxDTlmItjE55OEwCk7F8Ve6hSBx6c7ITFG_vltwK-db\"');

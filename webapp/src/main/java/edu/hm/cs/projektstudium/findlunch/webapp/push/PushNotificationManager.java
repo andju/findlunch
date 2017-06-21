@@ -217,7 +217,25 @@ public class PushNotificationManager implements PushMessagingInterface {
 		notification.put("to", token);
 		JSONObject data = new JSONObject();
 		data.put("titel:","Deine Bestellung: "+reservation.getReservationNumber());
-		data.put("body:", "Deine Bestellung "+reservation.getReservationNumber()+ " wurd durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt. Begründung: "+reservation.getReservationStatus().getStatus());
+		data.put("body:", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde durch das Restaurant "+reservation.getRestaurant().getName()+" abgelehnt. Begründung: "+reservation.getReservationStatus().getStatus());
+		data.put("icon:", "/images/FL.png");
+		notification.put("data", data);
+		return notification;
+	}
+	
+	/**
+	 * Generates a Reservation rejection push notification
+	 * @param reservation the reservation
+	 * @param token the fcm token
+	 * @return the notification
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject generateReservationNotProcessed(Reservation reservation, String token) {
+		JSONObject notification = new JSONObject();
+		notification.put("to", token);
+		JSONObject data = new JSONObject();
+		data.put("titel:","Deine Bestellung: "+reservation.getReservationNumber());
+		data.put("body:", "Deine Bestellung "+reservation.getReservationNumber()+ " wurde nicht durch das Restaurant "+reservation.getRestaurant().getName()+" nicht rechtzeitig bearbeitet");
 		data.put("icon:", "/images/FL.png");
 		notification.put("data", data);
 		return notification;

@@ -70,10 +70,6 @@ public class SendFcmNotification extends PushNotificationManager implements Runn
 				.addHeader("Authorization", "key="+FCM_SENDER_ID).build();
 		try {
 			
-			//Console log info
-			//LOGGER.info("Push sent: " + messageObject.toString());
-			LOGGER.info("Push sent: " + push.toString());
-			
 			//Execute request.
 			Response response = client.newCall(request).execute();
 			response.body().close();

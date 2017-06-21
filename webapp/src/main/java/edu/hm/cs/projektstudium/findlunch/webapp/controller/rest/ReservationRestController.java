@@ -177,6 +177,7 @@ public class ReservationRestController {
 		reservation.setReservation_offers(reservation_Offers);
 		reservation.setRestaurant(restaurant);
 		reservation.setEuroPerPoint(euroPerPoint);
+		reservation.setPointsCollected(false);
 		
 		if(!reservation.isUsedPoints()){
 			reservation.setTotalPrice(calculatedPrice);

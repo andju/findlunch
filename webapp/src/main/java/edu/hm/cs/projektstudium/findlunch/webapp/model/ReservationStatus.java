@@ -21,6 +21,7 @@ public class ReservationStatus {
 	public static final int RESERVATION_KEY_NEW = 0;
 	public static final int RESERVATION_KEY_CONFIRMED = 1;
 	public static final int RESERVATION_KEY_REJECTED = 2;
+	public static final int RESERVATION_KEY_UNPROCESSED = 3;
 	
 	/** The id. */
 	@Id
