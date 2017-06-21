@@ -235,9 +235,9 @@ public class BillScheduledTask {
 						doc.add(new Paragraph(billspace+nL+nL, boldFont));
 						doc.add(new Paragraph(messages.getString("bill.introduction") + nL +nL));
 						
-				        PdfPTable table = new PdfPTable(9);
+				        PdfPTable table = new PdfPTable(6);
 				        table.setWidthPercentage(100);
-				        int[] columnWidths = new int[]{8, 13, 16, 12, 20, 6, 8, 8, 9};
+				        int[] columnWidths = new int[]{4, 8, 12, 20,  8, 15};
 				        table.getDefaultCell().setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
 				        table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 			
