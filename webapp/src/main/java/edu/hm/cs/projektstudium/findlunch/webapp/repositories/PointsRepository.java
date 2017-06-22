@@ -28,4 +28,12 @@ public interface PointsRepository extends JpaRepository<Points, Serializable>{
 	 */
 	public List<Points> findByCompositeKey_User_Id(int Id);
 
+	/**
+	 * Find List of Points from a user for a Restaurant.
+	 * @param Id userId of the user
+	 * @param Id restaurantId of the restaurant
+	 * @return List of points
+	 */
+	public List<Points> findByCompositeKey_User_IdAndCompositeKey_Restaurant_Id(int userId, int restaurantId);
+
 }

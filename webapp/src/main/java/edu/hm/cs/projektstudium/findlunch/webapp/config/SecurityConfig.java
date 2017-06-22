@@ -107,6 +107,7 @@ public class SecurityConfig {
 					.antMatchers(HttpMethod.POST, "/api/register_reservation")
 					.antMatchers(HttpMethod.PUT, "/api/confirm_reservation/**")
 					.antMatchers(HttpMethod.GET, "/api/get_points")
+					.antMatchers(HttpMethod.GET, "/api/get_points_restaurant/**")
 					.antMatchers(HttpMethod.POST, "/api/get_reset_token")
 					.antMatchers(HttpMethod.PUT, "/api/reset_password/**")
 					.antMatchers(HttpMethod.GET, "/api/getCustomerReservations")
