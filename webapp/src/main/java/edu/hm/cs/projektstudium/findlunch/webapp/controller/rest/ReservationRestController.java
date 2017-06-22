@@ -113,8 +113,6 @@ public class ReservationRestController {
 		User authenticatedUser = (User) ((Authentication) principal).getPrincipal();
 		authenticatedUser = userRepository.findOne(authenticatedUser.getId());	
 		
-		
-		
 		List<ReservationOffers> reservation_Offers = reservation.getReservation_offers();
 		
 		Restaurant restaurant = null;
@@ -123,6 +121,18 @@ public class ReservationRestController {
 		if(reservation_Offers.isEmpty()){
 			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "Reservation does not contain any offer"));
 			return new ResponseEntity<Integer>(1, HttpStatus.CONFLICT);
+		}
+		
+		// Kein Abholzeitpunkt angegeben
+		if(null == reservation.getCollectTime()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation has no CollectTime set"));
+			return new ResponseEntity<Integer>(9, HttpStatus.CONFLICT);
+		}
+		
+		// Abholzeitpunkt liegt in der Vergangenheit
+		if(reservation.getCollectTime().before(new Date())){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation CollectTime is set in past"));
+			return new ResponseEntity<Integer>(10, HttpStatus.CONFLICT);
 		}
 		
 		for(ReservationOffers reservation_offer : reservation_Offers) {
