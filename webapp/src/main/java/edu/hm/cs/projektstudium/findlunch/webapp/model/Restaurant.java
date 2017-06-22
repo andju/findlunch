@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.OfferView;
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.ReservationView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
 /**
@@ -47,11 +47,11 @@ public class Restaurant implements Serializable {
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonView(RestaurantView.RestaurantRest.class)
+	@JsonView({RestaurantView.RestaurantRest.class, ReservationView.ReservationRest.class})
 	private int id;
 
 	/** The city. */
-	@JsonView(RestaurantView.RestaurantRest.class)
+	@JsonView({RestaurantView.RestaurantRest.class, ReservationView.ReservationRest.class})
 	@NotBlank(message = "{restaurant.city.notBlank}")
 	@Size(min=2, max=60, message= "{restaurant.city.sizeError}")
 	@Pattern(regexp = "[\\p{L} ]*", message="{restaurant.city.patternMismatch}")
@@ -74,7 +74,7 @@ public class Restaurant implements Serializable {
 	private float locationLongitude;
 
 	/** The name. */
-	@JsonView(RestaurantView.RestaurantRest.class)
+	@JsonView({RestaurantView.RestaurantRest.class, ReservationView.ReservationRest.class})
 	@NotBlank(message = "{restaurant.name.notBlank}")
 	@Size(min=2, max=60, message= "{restaurant.name.sizeError}")
 	@Pattern(regexp = "[\\p{L}0-9-&´`'\"(). ]*", message="{restaurant.name.patternMismatch}")

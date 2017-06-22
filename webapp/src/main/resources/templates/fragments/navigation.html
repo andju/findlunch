@@ -47,6 +47,9 @@
 							<li th:class="${#httpServletRequest.servletPath}=='/reservationOverview'? active">
 								<a th:href="@{/reservationOverview}" th:text="#{menu.label.reservationOverview}" role="menuitem">Overview</a>
 							</li>
+							<li th:class="${#httpServletRequest.servletPath}=='/reservationStatistik'? active">
+								<a th:href="@{/reservationStatistik}" th:text="#{menu.label.reservationStatistik}" role="menuitem">Status</a>
+							</li>
 						</ul>
 					</li>	
 					<li sec:authorize="hasAuthority('Anbieter')"

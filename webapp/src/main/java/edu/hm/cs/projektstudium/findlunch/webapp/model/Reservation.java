@@ -64,6 +64,7 @@ public class Reservation {
 	private EuroPerPoint euroPerPoint;
 	
 	/** The restaurant.*/
+	@JsonView({ReservationView.ReservationRest.class})
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="restaurant_id")
 	private Restaurant restaurant;
@@ -308,14 +309,21 @@ public class Reservation {
 	 * @return boolean true when Reservation is Confirmed
 	 */
 	public boolean isConfirmed(){
-		return reservationStatus.getKey() == 1;
+		return reservationStatus.getKey() == ReservationStatus.RESERVATION_KEY_CONFIRMED;
 	}
 	
 	/**
 	 * @return boolean true when Reservation is Rejected
 	 */
 	public boolean isRejected(){
-		return reservationStatus.getKey() == 2;
+		return reservationStatus.getKey() == ReservationStatus.RESERVATION_KEY_REJECTED;
+	}
+	
+	/**
+	 * @return boolean true when Reservation is Unprocessed
+	 */
+	public boolean isUnprocessed(){
+		return reservationStatus.getKey() == ReservationStatus.RESERVATION_KEY_UNPROCESSED;
 	}
 
 	public boolean isPointsCollected() {

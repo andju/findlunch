@@ -61,6 +61,17 @@ INSERT IGNORE INTO `findlunch`.`restaurant` (`id`, `customer_id`, `name`, `stree
 (13, 276767662, 'Soon Coffe', 'Lothstraße', '15', '80335', 'München', 'DE', 48.1542, 11.5532, 'soon@soon.com', '33425235', 'www.aa.de', 3, '2188dd55-69e2-4fa4-ab58-f7358398e6e7', 0x89504e470d0a1a0a0000000d49484452000000fa000000fa0100000000a0976790000002224944415478daed993d8e84300c858d28527284dc042e86c4485c6ce6263902650a84f73d9bd50c2bb4c536585a52a0217c456cf9f92723fafb7aca0ddcc00dfc6b40b0b2be96b6e0e521f835726b0a0524d535e3f10005c05e559760c053c62c0d775eaaa54ab7eeafe1808156e8d26a1d96312890cccb1be2005444c0e26113866aa75a1b002701732d60ca4ad0d3fb7122bd8b015bb5c78e0cc8018887e924895d0db8e81791da77b30a1ec59c1e0ad8a45569742e088589d9548bf49fae0e00e0056bb05377ab9815351ed0f9b10ba8355b36e55e28c0d213b6e7c2c8c809a6e43d72e30075e0b11b5d052915caeabb1f753306b0a003d9ac0d712faff2c38a0040b367a662f18a440a796d1ff1100190c60ba530518d826f7075348052477384ba09f9cf9a081ce41f0180f2ed1b3b101a4065217c6301e8d52756f8315b9b94f6d6586301ece52ae3c14b12ec39ca3f020029b51e14e6ea64c0a7ab23005e2d8525891aabe22b16501b6b4320aa6ad59246a56312bb1e40a21f394ece5ee1dd8acf6c1f04d895c56f0c5f0f8f50000ad183f3cf23f3ecc5c6497d060358d22d1e8a5f21e05b39e6870000bd2c267a344c56dc85d36f2c40f7e95cac6e16ab46e1807de67510d98a89ea58580300efdb83ea374678a4f3eb850b01ab9b3dba760b0aaff03181efd6985d53ab310136ec6ce225c386560f83790880f100e5af9cce4dfe7629aca10053965dc1c0d5ad17f7c3a41601b8ffe0b8811bb881bf005f90ae3281ae9564d70000000049454e44ae426082),
 (101, 118829006, 'Ionic Cafe', 'Lothstraße', '64', '80335', 'München', 'DE', 48.1543, 11.5569, 'restaurant@ionic.com', '0000', NULL, NULL, '8df50fb6-a0ff-4f9e-989a-2a9bea222435', 0x99504e470d0a1a0a0000000d49484452000000fa000000fa0100000000a0976790000002224944415478daed993d8e84300c858d28527284dc042e86c4485c6ce6263902650a84f73d9bd50c2bb4c536585a52a0217c456cf9f92723fafb7aca0ddcc00dfc6b40b0b2be96b6e0e521f835726b0a0524d535e3f10005c05e559760c053c62c0d775eaaa54ab7eeafe1808156e8d26a1d96312890cccb1be2005444c0e26113866aa75a1b002701732d60ca4ad0d3fb7122bd8b015bb5c78e0cc8018887e924895d0db8e81791da77b30a1ec59c1e0ad8a45569742e088589d9548bf49fae0e00e0056bb05377ab9815351ed0f9b10ba8355b36e55e28c0d213b6e7c2c8c809a6e43d72e30075e0b11b5d052915caeabb1f753306b0a003d9ac0d712faff2c38a0040b367a662f18a440a796d1ff1100190c60ba530518d826f7075348052477384ba09f9cf9a081ce41f0180f2ed1b3b101a4065217c6301e8d52756f8315b9b94f6d6586301ece52ae3c14b12ec39ca3f020029b51e14e6ea64c0a7ab23005e2d8525891aabe22b16501b6b4320aa6ad59246a56312bb1e40a21f394ece5ee1dd8acf6c1f04d895c56f0c5f0f8f50000ad183f3cf23f3ecc5c6497d060358d22d1e8a5f21e05b39e6870000bd2c267a344c56dc85d36f2c40f7e95cac6e16ab46e1807de67510d98a89ea58580300efdb83ea374678a4f3eb850b01ab9b3dba760b0aaff03181efd6985d53ab310136ec6ce225c386560f83790880f100e5af9cce4dfe7629aca10053965dc1c0d5ad17f7c3a41601b8ffe0b8811bb881bf005f90ae3281ae9564d70000000049454e44ae426082);
 
+-- restaurant_has_kitchen_type Data
+INSERT IGNORE INTO `findlunch`.`restaurant_has_kitchen_type` (`restaurant_id`, `kitchen_type_id`) VALUES
+(101,5);
+
+
+INSERT IGNORE INTO `findlunch`.`course_types` (`id`, `restaurant_id`, `name`, `sort_by`) VALUES 
+(1, 101, 'Vorspeise', 1),
+(2, 101, 'Hauptspeise', 2),
+(3, 101, 'Nachspeise', 3),
+(4, 101, 'Getränk', 4),
+(5, 101, 'Beilage', 5);
 
 -- User Data
 INSERT IGNORE INTO `findlunch`.`user` (`id`, `username`, `password`, `restaurant_id`, `user_type_id`, `account_id`) VALUES
@@ -91,9 +102,9 @@ INSERT IGNORE INTO `findlunch`.`offer` (`id`, `restaurant_id`, `course_type`, `t
 (11, 13, 1, 'Früchtetee', 'mit Himbeeren und Erdbeeren', '1.30', 2, '2017-01-08', '2017-08-31', 15),
 (12, 13, 1, 'Nussschnecke', 'jeden Tag frisch', '1.80', 1, '2017-01-08', '2017-08-31', 20),
 (13, 13, 1, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-08-31', 8),
-(101, 101, 4, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-08-31', 8);
+(101, 101, 4, 'Schwarzer Kaffe', 'aus Brasilien', '1.00', 1, '2017-01-08', '2017-08-31', 8),
 (102, 101, 2, 'Wiener mit Semmel oder Kartoffelsalat', 'klein', '2.90', 2, '2017-01-08', '2017-08-31', 15),
-(103, 101, 1, 'Fleischpflanzerlsemmel', 'Frisch', '2.50', 3, '2017-01-08', '2017-08-31', 23),
+(103, 101, 1, 'Fleischpflanzerlsemmel', 'Frisch', '2.50', 3, '2017-01-08', '2017-08-31', 23);
 
 -- offer has day
 INSERT IGNORE INTO `findlunch`.`offer_has_day_of_week` (`offer_id`, `day_of_week_id`) VALUES
@@ -421,7 +432,7 @@ INSERT IGNORE INTO `findlunch`.`offer_has_allergenic` (`offer_id`, `allergenic_i
 
 
 -- reservation_status
-INSERT IGNORE INTO `findlunch`.`reservation_status` (`id`, `status`, `statusKey`) VALUES
+INSERT IGNORE INTO `findlunch`.`reservation_status` (`id`, `status`, `statKey`) VALUES
 (0, 'neu angelegt', 0),
 (1, 'bestätigt', 1),
 (2, 'abgelehnt, Der Anbieter hat die Bestellung abgelehnt.', 2),
@@ -430,25 +441,26 @@ INSERT IGNORE INTO `findlunch`.`reservation_status` (`id`, `status`, `statusKey`
 (5, 'abgelehnt, Der Anbieter hat momentan geschlossen. ', 2),
 (6, 'abgelehnt, Der Anbieter ist bereits ausgebucht.', 2),
 (7, 'abgelehnt, Der Anbieter ist im Urlaub.', 2),
-(8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2);
+(8, 'abgelehnt, Das Restaurant bei dem Sie bestellen ist umgezogen.', 2),
+(9, 'nicht abgeholt', 3);
 
 -- reservation --
-INSERT IGNORE INTO `findlunch`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`collect_time`,`timestamp_received`,`timestamp_responded`,`reservation_status_id`) VALUES
-(1, 1, 4.90, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -3 MINUTE), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -3 MINUTE), null, 0),
-(2, 2, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -2 MINUTE), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -2 MINUTE), null, 0),
-(3, 3, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 MINUTE), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0),
-(4, 4, 1.00, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -0.5 MINUTE), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -0.5 MINUTE), null, 0),
-(5, 5, 1.00, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -0.5 DAY), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -0.5 DAY), null, 0),
-(6, 6, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), null, 0),
-(7, 7, 0.00, 0.00, 1, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 MINUTE), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0),
-(8, 8, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), null, 2),
-(9, 9, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 HOUR), INTERVAL 10 MINUTE), DATE_ADD(now(), INTERVAL -1 HOUR), DATE_ADD(now(), INTERVAL -0.09 HOUR), 1),
-(10, 10, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -2 HOUR), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -2 HOUR), DATE_ADD(now(), INTERVAL -1.08 HOUR), 1),
-(11, 11, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -3 HOUR), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -3 HOUR), DATE_ADD(now(), INTERVAL -2.09 HOUR), 1),
-(12, 12, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 30 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), DATE_ADD(now(), INTERVAL -0.09 DAY), 1),
-(13, 13, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.2 DAY), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -1.2 DAY), DATE_ADD(now(), INTERVAL -1.1 DAY), 1),
-(14, 14, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.4 DAY), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -1.4 DAY), DATE_ADD(now(), INTERVAL -1.3 DAY), 1),
-(15, 15, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.6 DAY), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1.6 DAY), DATE_ADD(now(), INTERVAL -1.5 DAY), 1);
+INSERT IGNORE INTO `findlunch`.`reservation` (`id`,`reservation_number`,`total_price`,`donation`,`used_points`,`user_id`,`euro_per_point_id`,`restaurant_id`,`collect_time`,`timestamp_received`,`timestamp_responded`,`reservation_status_id`,`points_collected`) VALUES
+(1, 1, 4.90, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -3 MINUTE), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -3 MINUTE), null, 0, 0),
+(2, 2, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -2 MINUTE), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -2 MINUTE), null, 0, 0),
+(3, 3, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 MINUTE), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0, 0),
+(4, 4, 1.00, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -0.5 MINUTE), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -0.5 MINUTE), null, 0, 0),
+(5, 5, 1.00, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -0.5 DAY), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -0.5 DAY), null, 0, 0),
+(6, 6, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), null, 0, 0),
+(7, 7, 0.00, 0.00, 1, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 MINUTE), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1 MINUTE), null, 0, 0),
+(8, 8, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), null, 2, 0),
+(9, 9, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 HOUR), INTERVAL 10 MINUTE), DATE_ADD(now(), INTERVAL -1 HOUR), DATE_ADD(DATE_ADD(now(), INTERVAL -1 HOUR), INTERVAL 10 MINUTE), 1, 1),
+(10, 10, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -2 HOUR), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -2 HOUR), DATE_ADD(DATE_ADD(now(), INTERVAL -2 HOUR), INTERVAL 15 MINUTE), 1, 1),
+(11, 11, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -3 HOUR), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -3 HOUR), DATE_ADD(DATE_ADD(now(), INTERVAL -3 HOUR), INTERVAL 10 MINUTE), 1, 1),
+(12, 12, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 30 MINUTE), DATE_ADD(now(), INTERVAL -1 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1 DAY), INTERVAL 5 MINUTE), 1, 0),
+(13, 13, 9.30, 0.00, 0, 2, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.2 DAY), INTERVAL 20 MINUTE), DATE_ADD(now(), INTERVAL -1.2 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1.2 DAY), INTERVAL 10 MINUTE), 1, 0),
+(14, 14, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.4 DAY), INTERVAL 25 MINUTE), DATE_ADD(now(), INTERVAL -1.4 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1.4 DAY), INTERVAL 15 MINUTE), 1, 0),
+(15, 15, 9.30, 0.00, 0, 9, 1, 101, DATE_ADD(DATE_ADD(now(), INTERVAL -1.6 DAY), INTERVAL 15 MINUTE), DATE_ADD(now(), INTERVAL -1.6 DAY), DATE_ADD(DATE_ADD(now(), INTERVAL -1.6 DAY), INTERVAL 10 MINUTE), 1, 0);
   
 INSERT IGNORE INTO `findlunch`.`reservation_offers` (`id`,`reservation_id`,`offer_id`,`amount`) VALUES
 (1, 1, 101, 2),

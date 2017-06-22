@@ -9,6 +9,13 @@ import java.util.ArrayList;
  * , da java.util.ArrayList nicht erkannt wird von Thymeleaf*/
 public class ReservationList {
 
+	public ReservationList() {
+	}
+	
+	public ReservationList(ArrayList<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
 	/** The list of reservations.*/
 	private ArrayList<Reservation> reservations = new ArrayList<Reservation>();
 	

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/head :: includes"></head>
+<body>
+
+	<div th:replace="fragments/navigation :: navbar"></div>
+	<div style="margin-left: 25px; margin-right: 25px;">
+		<h1 th:text="#{reservationOverview.label}">daily bussiness</h1>
+		<div>
+			<form action="/reservationStatistik" method="get" id="filterDateForm" enctype="multipart/form-data">
+				<table>
+					<tr>
+						<td>
+							<label for="startDate" th:text="#{reservationOverview.label.filterStartDate}">filterStartDate</label>
+							<div class='input-group date'
+								th:id="datetimepickerStartDate" style="width:200px">
+				    			<input type='text' name="startDate" th:value="${startDate}" 
+									class="form-control" id="startDate" /> <span
+									class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</td>
+						<td>&nbsp;&nbsp;</td>
+						<td>
+							<label for="endDate" th:text="#{reservationOverview.label.filterEndDate}">filterEndDate</label>
+							<div class='input-group date' th:id="datetimepickerEndDate" style="width:200px">
+				    			<input type='text' name="endDate" th:value="${endDate}" 
+									class="form-control" id="endDate" /> <span
+									class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</td>
+						<td>&nbsp;&nbsp;</td>
+						<td>
+							<button type="submit" class="btn btn-success">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							</button>
+						</td>
+					</tr>
+				</table>
+				<input type="hidden"
+				   th:name="${_csrf.parameterName}"
+				   th:value="${_csrf.token}" />
+			</form>
+			<br />
+		</div>
+		<div th:each="statistik : ${statistik}">
+			<table class="table table-bordered table-striped">
+				<th colspan="2">
+					<span th:text="#{${statistik.getLabel()}}"></span>
+				</th>
+				<tr>
+					<td style="width: 50%;"><span th:text="#{reservationStatistik.label.reservationCount}"></span></td>
+					<td><span th:text="${statistik.getReservationCount()}"></span></td>
+				</tr>
+				<tr th:if="${statistik.getPercent() > 0}">
+					<td><span th:text="#{reservationStatistik.label.Percent}"></span></td>
+					<td><span th:text="${#numbers.formatDecimal(statistik.getPercent(), 1, 'POINT', 2, 'COMMA')}"> </span> &#037;</td>
+				</tr>
+				<tr th:if="${statistik.getTotalValue() > 0}">
+					<td><span th:text="#{reservationStatistik.label.reservationTotalValue}"></span></td>
+					<td><span th:text="${#numbers.formatDecimal(statistik.getTotalValue(), 1, 'POINT', 2, 'COMMA')}"> </span> &euro;</td>
+				</tr>
+				<tr th:if="${statistik.getAverageRespondeTime() > 0}">
+					<td><span th:text="#{reservationStatistik.label.reservationAverageRespondeTime}"></span></td>
+					<td><span th:text="${statistik.getAverageRespondeTime()}"></span> <span th:text="#{reservationStatistik.label.minutes}"></span></td>
+				</tr>
+			</table>
+			<br />
+		</div>
+	</div>
+	
+	<script th:inline="javascript" type="text/javascript">
+		$(function() {
+			$('#datetimepickerStartDate').datetimepicker({
+				locale : 'de'
+			});
+			$('#datetimepickerEndDate').datetimepicker({
+				locale : 'de'
+			});
+			$("#datetimepickerStartDate").on(
+				"dp.change",
+				function(e) {
+					$('#datetimepickerEndDate').data("DateTimePicker")
+							.minDate(e.date);
+				});
+			$("#datetimepickerEndDate").on(
+				"dp.change",
+				function(e) {
+					$('#datetimepickerStartDate').data("DateTimePicker")
+							.maxDate(e.date);
+				});
+		});
+	</script>
+	
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

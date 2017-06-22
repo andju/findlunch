@@ -1,15 +1,11 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller;
 
-import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.Additives;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.CourseTypes;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
-import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AdditivesRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AllergenicRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
-import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +15,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.Offer;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AdditivesRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.AllergenicRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.CourseTypeRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.DayOfWeekRepository;
+import edu.hm.cs.projektstudium.findlunch.webapp.repositories.OfferRepository;
 
 /**
  * The class is responsible for handling http calls related to offer overview page.

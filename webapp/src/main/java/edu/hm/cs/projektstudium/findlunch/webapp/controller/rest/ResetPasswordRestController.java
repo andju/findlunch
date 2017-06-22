@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,7 @@ public class ResetPasswordRestController {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(ResetPasswordRestController.class);
 	
+	@CrossOrigin
 	@RequestMapping(path ="api/get_reset_token", method = RequestMethod.POST)
 	public ResponseEntity<Integer> getResetPassword(HttpServletRequest request, @RequestBody User u){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -70,7 +72,8 @@ public class ResetPasswordRestController {
 //		return new ResponseEntity<Integer>(1, HttpStatus.CONFLICT);
 		return new ResponseEntity<>(0, HttpStatus.OK);
 	}
-	
+
+	@CrossOrigin
 	@RequestMapping(path ="api/reset_password/{token}", method = RequestMethod.PUT)
 	public ResponseEntity<Integer> resetPassword(@PathVariable("token") String token,/*@Valid*/ @RequestBody User u, HttpServletRequest request){
 		LOGGER.info(LogUtils.getDefaultInfoString(request, Thread.currentThread().getStackTrace()[1].getMethodName()));
