@@ -51,7 +51,8 @@ public class ReservationScheduledTask {
 		
 		for(Reservation reservation : reservations){
 			
-			if(now.after(reservation.getCollectTime())&&reservation.getReservationStatus().getKey()!=ReservationStatus.RESERVATION_KEY_UNPROCESSED){
+			reservation.getReservationStatus();
+			if(now.after(reservation.getCollectTime())&&reservation.getReservationStatus().getKey()==ReservationStatus.RESERVATION_KEY_NEW){
 				reservation.setReservationStatus(reservationStatusRepository.findById(9));
 				reservationRepository.save(reservation);
 				sendPush(reservation);
@@ -68,7 +69,11 @@ public class ReservationScheduledTask {
 		
 		User user = reservation.getUser();
 		PushToken userToken = tokenRepository.findByUserId(user.getId());
+		if(userToken!=null) {
 		JSONObject notification = pushManager.generateReservationNotProcessed(reservation, userToken.getFcm_token());
 		pushManager.sendFcmNotification(notification);
+		}
+		else
+			LOGGER.info(LogUtils.getDefaultSchedulerMessage(Thread.currentThread().getStackTrace()[1].getMethodName(), "No FMC Token for user "+user.getUsername()+" found. Could not send a Notification."));
 	}
 }
