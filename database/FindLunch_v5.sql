@@ -460,6 +460,9 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 -- Table `findlunch`.`points`
 -- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Table `findlunch`.`points`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `findlunch`.`points` (
   `user_id` INT(11) NOT NULL,
   `restaurant_id` INT(11) NOT NULL,
@@ -477,8 +480,6 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`points` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-
 -- -----------------------------------------------------
 -- Table `findlunch`.`euro_per_point`
 -- -----------------------------------------------------
@@ -549,6 +550,7 @@ CREATE TABLE IF NOT EXISTS `findlunch`.`reservation` (
   `donation` DECIMAL(5,2) NOT NULL,
   `used_points` TINYINT(1) NOT NULL,
   `points_collected` TINYINT(1) NOT NULL,
+  `points` DECIMAL(5,2) DEFAULT 0.0,
   `user_id` INT(11) NOT NULL,
   `euro_per_point_id` INT NOT NULL,
   `bill_id` INT(11) NULL DEFAULT NULL,

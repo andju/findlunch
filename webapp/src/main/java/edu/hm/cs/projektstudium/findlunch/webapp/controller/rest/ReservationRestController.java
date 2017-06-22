@@ -242,14 +242,13 @@ public class ReservationRestController {
 		
 		LocalDateTime midnight = LocalDate.now().atStartOfDay();
 		Date startOfDay = Date.from(midnight.atZone(ZoneId.systemDefault()).toInstant());
-		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKeyAndPointsCollectedFalse(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_NEW);
+		List<Reservation> reservations = reservationRepository.findByUserIdAndTimestampReceivedAfterAndReservationStatusKeyAndPointsCollectedFalse(authenticatedUser.getId(), startOfDay, ReservationStatus.RESERVATION_KEY_CONFIRMED);
 		
 		if(!reservations.isEmpty()){
 			for(Reservation reservation : reservations){
 				
-				if(reservation.getReservationStatus().getKey() == ReservationStatus.RESERVATION_KEY_CONFIRMED){
+				
 					EuroPerPoint euroPerPoint = euroPerPointRepository.findOne(1);
-					
 					Float amountOfPoints= new Float(reservation.getTotalPrice()*euroPerPoint.getEuro());
 					PointId pointId = new PointId();
 					pointId.setUser(authenticatedUser);
@@ -264,13 +263,10 @@ public class ReservationRestController {
 					else{//add new points to the old points
 						points.setPoints(points.getPoints() +amountOfPoints.intValue());
 					}
+					reservation.setPointsCollected(true);
+					reservation.setPoints(amountOfPoints);
 					reservationRepository.save(reservation);
 					pointsRepository.save(points);
-				}
-				else {
-					//keine Reservierung
-					return new ResponseEntity<Integer>(4, HttpStatus.CONFLICT);
-				}
 			}	
 			return new ResponseEntity<Integer>(0, HttpStatus.OK);
 		}

@@ -43,6 +43,11 @@ public class Reservation {
 	@Column(name="points_collected")
 	private boolean pointsCollected;
 	
+	/** The points collected by the customer */
+	@Column(name="points")
+	@JsonView({ReservationView.ReservationRest.class})
+	private float points;
+	
 	/** The reservation number*/
 	@JsonView({ReservationView.ReservationRest.class})
 	private int reservationNumber;
@@ -333,4 +338,13 @@ public class Reservation {
 	public void setPointsCollected(boolean pointsCollected) {
 		this.pointsCollected = pointsCollected;
 	}
+
+	public float getPoints() {
+		return points;
+	}
+
+	public void setPoints(float points) {
+		this.points = points;
+	}
+	
 }
