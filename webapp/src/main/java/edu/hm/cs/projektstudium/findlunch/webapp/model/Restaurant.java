@@ -112,7 +112,7 @@ public class Restaurant implements Serializable {
 	@NotBlank(message = "{restaurant.zip.notBlank}")
 	@NumberFormat(style = Style.NUMBER, pattern = "#####")
 	@Size(min=5, max=5, message = "{restaurant.zip.size}")
-	@Pattern(regexp = "[0-9]+", message="{restaurant.zip.patternMismatch}")
+	@Pattern(regexp = "^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$", message="{restaurant.zip.patternMismatch}")
 	private String zip;
 
 	/** The offers. */
