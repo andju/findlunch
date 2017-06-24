@@ -135,6 +135,18 @@ public class ReservationRestController {
 			return new ResponseEntity<Integer>(10, HttpStatus.CONFLICT);
 		}
 		
+		// Kein Abholzeitpunkt angegeben
+		if(null == reservation.getCollectTime()){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation has no CollectTime set"));
+			return new ResponseEntity<Integer>(9, HttpStatus.CONFLICT);
+		}
+		
+		// Abholzeitpunkt liegt in der Vergangenheit
+		if(reservation.getCollectTime().before(new Date())){
+			LOGGER.error(LogUtils.getErrorMessage(request, Thread.currentThread().getStackTrace()[1].getMethodName(), "The Reservation CollectTime is set in past"));
+			return new ResponseEntity<Integer>(10, HttpStatus.CONFLICT);
+		}
+		
 		for(ReservationOffers reservation_offer : reservation_Offers) {
 			
 			// Bestellte Menge des Angebots ist 0 oder kleiner
