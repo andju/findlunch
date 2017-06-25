@@ -3,6 +3,11 @@
 <head th:replace="fragments/head :: includes">
 </head>
 <body>
+	<style type="text/css">
+		.control-label {
+		    text-align: left!important;
+		}
+	</style>
 
 	<div th:replace="fragments/navigation :: navbar"></div>
 	<div style="margin-left: 25px; margin-right: 25px;">
@@ -24,7 +29,7 @@
 				<table class="table" width="100%">
 					<tr>
 						<td><label class="control-label" for="title"
-							th:text="#{offer.label.title}">label</label>*</td>
+							th:text="#{offer.label.title}">label</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip" th:title="#{offerDetail.tooltip.title}"></span>
@@ -41,7 +46,7 @@
 					</tr>					
 					<tr>
 						<td><label class="control-label" for="description"
-							th:text="#{offer.label.description}">desc</label>*</td>
+							th:text="#{offer.label.description}">desc</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip"
@@ -60,7 +65,7 @@
 					</tr>	
 					<tr>
 						<td><label class="control-label" for="courseType" 
-							th:text="#{offer.label.course}">course</label>*
+							th:text="#{offer.label.course}">course</label>
 						</td>
 						<td style="width: 15px"><span 
 							style="padding-top: 7px"
@@ -80,7 +85,7 @@
 					</tr>
 					<tr>
 							<td><label class="control-label" for="price"
-							th:text="#{offer.label.price}">price</label>*</td>
+							th:text="#{offer.label.price}">price</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip" th:title="#{offerDetail.tooltip.price}"></span>
@@ -91,14 +96,14 @@
 								<input type="text"
 									th:field="*{price}" class="form-control" id="price" />
 								<div th:if="${#fields.hasErrors('price')}? has-error"
-									class="alert alert-danger" role="alert" th:errors="*{price}">Muss grï¿½ï¿½er 0,00
+									class="alert alert-danger" role="alert" th:errors="*{price}">Muss größer 0,00
 									sein</div>
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td><label class="control-label" for="neededPoints"
-							th:text="#{offer.label.neededPoints}">npoint</label>*</td>
+							th:text="#{offer.label.neededPoints}">npoint</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip"
@@ -117,7 +122,7 @@
 					</tr>
 					<tr>
 						<td><label class="control-label" for="preparationTime"
-							th:text="#{offer.label.preparationTime}">prepTime</label>*</td>
+							th:text="#{offer.label.preparationTime}">prepTime</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip"
@@ -136,7 +141,7 @@
 					</tr>
 					<tr>
 						<td><label class="control-label"
-							th:text="#{offerDetail.label.validityPeriod}">validityPeriod</label>*
+							th:text="#{offerDetail.label.validityPeriod}">validityPeriod</label>
 						</td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
@@ -213,7 +218,7 @@
 					</tr>
 					<tr>
 						<td><label class="control-label" for="additive"
-							th:text="#{offerDetail.label.additive}">additive</label>*</td>
+							th:text="#{offerDetail.label.additive}">additive</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip"
@@ -244,7 +249,7 @@
 					</tr>
 					<tr>
 						<td><label class="control-label" for="allergenic"
-							th:text="#{offerDetail.label.allergenic}">allergenic</label>*</td>
+							th:text="#{offerDetail.label.allergenic}">allergenic</label></td>
 						<td style="width: 15px"><span style="padding-top: 7px"
 							class="glyphicon glyphicon-question-sign" data-placement="left"
 							data-toggle="tooltip"
