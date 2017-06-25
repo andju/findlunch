@@ -286,7 +286,7 @@ public class ReservationRestController {
 						points.setPoints(points.getPoints() +amountOfPoints.intValue());
 					}
 					reservation.setPointsCollected(true);
-					reservation.setPoints(amountOfPoints);
+					reservation.setPoints(amountOfPoints.intValue());
 					reservationRepository.save(reservation);
 					pointsRepository.save(points);
 			}	

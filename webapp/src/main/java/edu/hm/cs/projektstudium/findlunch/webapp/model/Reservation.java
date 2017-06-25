@@ -41,6 +41,7 @@ public class Reservation {
 	
 	/** Points are Collected by the cusomer */
 	@Column(name="points_collected")
+	@JsonView({ReservationView.ReservationRest.class})
 	private boolean pointsCollected;
 	
 	/** The points collected by the customer */
@@ -76,7 +77,7 @@ public class Reservation {
 	
 	/** The bill.*/
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JsonView({ReservationView.ReservationRest.class})
+	//@JsonView({ReservationView.ReservationRest.class})
 	private Bill bill;
 
 	/** The reservationStatus.*/
@@ -91,12 +92,12 @@ public class Reservation {
 	private Date collectTime;
 	
 	/** The reservation time. */
-	@JsonView({ReservationView.ReservationRest.class})
+	//@JsonView({ReservationView.ReservationRest.class})
 	@Column(name="timestamp_received")
 	private Date timestampReceived;
 	
 	/** The reservation time. */
-	@JsonView({ReservationView.ReservationRest.class})
+	//@JsonView({ReservationView.ReservationRest.class})
 	@Column(name="timestamp_responded")
 	private Date timestampResponded;
 	
