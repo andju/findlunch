@@ -2,6 +2,7 @@ package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -216,6 +217,10 @@ public class Restaurant implements Serializable {
 	//bi-directional many-to-one association to OfferPhoto
 	@OneToMany(mappedBy="restaurant", cascade=CascadeType.ALL, orphanRemoval=true )
 	private List<RestaurantLogo> restaurantLogos;
+	
+	@JsonView(RestaurantView.RestaurantRest.class)
+	@Transient
+	private boolean currentlyOpen;
 	
 	/**
 	 * Instantiates a new restaurant.
@@ -869,5 +874,41 @@ public class Restaurant implements Serializable {
 		restaurantLogo.setRestaurant(null);
 
 		return restaurantLogo;
+	}
+
+	/**
+	 * @return the isOpen
+	 */
+	public boolean getCurrentlyOpen() {
+		
+		for (TimeSchedule timeSchedule : this.timeSchedules) {
+			Date actuallyDate = new Date();
+			if(actuallyDate.getDay()+1==timeSchedule.getDayOfWeek().getDayNumber()){
+				int openHour = timeSchedule.getOfferStartTime().getHours();
+				int openMin = timeSchedule.getOfferStartTime().getMinutes();
+				int closeHour = timeSchedule.getOfferEndTime().getHours();
+				int closeMin = timeSchedule.getOfferEndTime().getMinutes();
+				
+				int nowHour = actuallyDate.getHours();
+				int nowMin = actuallyDate.getMinutes();
+				
+				if(openHour > nowHour || (openHour == nowHour && openMin > nowMin )){
+					return false;
+				}
+				
+				if(closeHour < nowHour || (closeHour == nowHour && closeMin < nowMin )){
+					return false;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param isOpen the isOpen to set
+	 */
+	public void setcurrentlyOpen(boolean currentlyOpen) {
+		this.currentlyOpen = currentlyOpen;
 	}
 }
