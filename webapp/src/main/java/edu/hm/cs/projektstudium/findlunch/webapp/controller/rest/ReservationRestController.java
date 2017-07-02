@@ -337,7 +337,7 @@ public class ReservationRestController {
 		int neededPoints = 0;
 		
 		for(ReservationOffers reOffers : reservation_Offers){
-			Offer offer = reOffers.getOffer();
+			Offer offer = offerRepository.findById(reOffers.getOffer().getId());
 			neededPoints += reOffers.getAmount() * offer.getNeededPoints();
 		}
 		
