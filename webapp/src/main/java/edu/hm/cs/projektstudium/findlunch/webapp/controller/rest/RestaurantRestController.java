@@ -26,6 +26,7 @@ import edu.hm.cs.projektstudium.findlunch.webapp.distance.DistanceCalculator;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.User;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.comparison.RestaurantDistanceComparator;
 import edu.hm.cs.projektstudium.findlunch.webapp.repositories.PointsRepository;
@@ -102,7 +103,7 @@ public class RestaurantRestController {
 				}
 			}
 		}
-
+		
 		return restaurantList;
 	}
 
@@ -169,7 +170,7 @@ public class RestaurantRestController {
 
 		// sort by distance (ascending)
 		restaurantList.sort(new RestaurantDistanceComparator());
-
+		
 		return restaurantList;
 	}
 

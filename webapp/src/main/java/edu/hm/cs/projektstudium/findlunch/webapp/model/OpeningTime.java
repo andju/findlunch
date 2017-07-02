@@ -18,6 +18,9 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 
 
 /**
@@ -33,6 +36,7 @@ public class OpeningTime {
 	private int id;
 
 	/** The closing time. */
+	@JsonView(RestaurantView.RestaurantRest.class)
 	@Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm", locale="de", timezone="Europe/Berlin")
 	@DateTimeFormat(pattern="HH:mm")
@@ -40,6 +44,7 @@ public class OpeningTime {
 	private Date closingTime;
 
 	/** The opening time. */
+	@JsonView(RestaurantView.RestaurantRest.class)
 	@Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm", locale="de", timezone="Europe/Berlin")
 	@DateTimeFormat(pattern="HH:mm")

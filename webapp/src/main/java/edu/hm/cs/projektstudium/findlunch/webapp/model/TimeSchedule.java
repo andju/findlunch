@@ -54,6 +54,7 @@ public class TimeSchedule {
 
 	/** The opening times. */
 	// bi-directional many-to-one association to OpeningTime
+	@JsonView(RestaurantView.RestaurantRest.class)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "timeSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OpeningTime> openingTimes;
 
