@@ -1,5 +1,6 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

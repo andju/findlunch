@@ -1,6 +1,7 @@
 package edu.hm.cs.projektstudium.findlunch.webapp.controller.rest;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import edu.hm.cs.projektstudium.findlunch.webapp.controller.view.RestaurantView;
 import edu.hm.cs.projektstudium.findlunch.webapp.distance.DistanceCalculator;
 import edu.hm.cs.projektstudium.findlunch.webapp.logging.LogUtils;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.DayOfWeek;
+import edu.hm.cs.projektstudium.findlunch.webapp.model.OpeningTime;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Points;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.Restaurant;
 import edu.hm.cs.projektstudium.findlunch.webapp.model.TimeSchedule;
@@ -170,6 +173,23 @@ public class RestaurantRestController {
 
 		// sort by distance (ascending)
 		restaurantList.sort(new RestaurantDistanceComparator());
+		
+		// If the restaurant has no specific openingtimes it has to be set on the offertime
+		for(Restaurant restaurant : restaurantList) {
+			for(TimeSchedule schedule : restaurant.getTimeSchedules()) {
+				if(schedule.getOpeningTimes().isEmpty()) {
+					List<OpeningTime> openingTimes = new ArrayList<>();
+					OpeningTime open = new OpeningTime();
+
+						open.setTimeSchedule(schedule);
+						open.setOpeningTime(schedule.getOfferStartTime());
+						open.setClosingTime(schedule.getOfferEndTime());
+						openingTimes.add(open);
+						schedule.setOpeningTimes(openingTimes);
+				}
+			}
+		}
+		
 		
 		return restaurantList;
 	}

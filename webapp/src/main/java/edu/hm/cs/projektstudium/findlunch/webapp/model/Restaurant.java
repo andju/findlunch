@@ -881,13 +881,39 @@ public class Restaurant implements Serializable {
 	 */
 	public boolean getCurrentlyOpen() {
 		
+		int openHour = 0;
+		int openMin = 0;
+		int closeHour = 0;
+		int closeMin = 0;
+		
 		for (TimeSchedule timeSchedule : this.timeSchedules) {
 			Date actuallyDate = new Date();
 			if(actuallyDate.getDay()+1==timeSchedule.getDayOfWeek().getDayNumber()){
-				int openHour = timeSchedule.getOfferStartTime().getHours();
-				int openMin = timeSchedule.getOfferStartTime().getMinutes();
-				int closeHour = timeSchedule.getOfferEndTime().getHours();
-				int closeMin = timeSchedule.getOfferEndTime().getMinutes();
+				
+				// check if there is a openingtime for the day
+				List<OpeningTime> openingTimes = timeSchedule.getOpeningTimes();
+				if(!openingTimes.isEmpty()){
+					for(OpeningTime opening : openingTimes) {
+						if(opening.getTimeSchedule().getId()==timeSchedule.getId()){
+							openHour = opening.getOpeningTime().getHours();
+							openMin = opening.getOpeningTime().getMinutes();
+							closeHour = opening.getClosingTime().getHours();
+							closeHour = opening.getClosingTime().getMinutes();
+						}
+						else {
+							openHour = timeSchedule.getOfferStartTime().getHours();
+							openMin = timeSchedule.getOfferStartTime().getMinutes();
+							closeHour = timeSchedule.getOfferEndTime().getHours();
+							closeMin = timeSchedule.getOfferEndTime().getMinutes();
+						}
+					}
+				}
+				else {
+					openHour = timeSchedule.getOfferStartTime().getHours();
+					openMin = timeSchedule.getOfferStartTime().getMinutes();
+					closeHour = timeSchedule.getOfferEndTime().getHours();
+					closeMin = timeSchedule.getOfferEndTime().getMinutes();
+				}
 				
 				int nowHour = actuallyDate.getHours();
 				int nowMin = actuallyDate.getMinutes();
