@@ -64,7 +64,7 @@ public class User implements UserDetails {
 
 	/** The favorites. */
 	//bi-directional many-to-many association to Restaurant
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(
 		name="favorites"
 		, joinColumns={
