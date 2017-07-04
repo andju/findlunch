@@ -221,6 +221,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("additives", additivesRepository.findAll());
 			model.addAttribute("allergenic", allergenicRepository.findAll());
+			model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("courseTypes", courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			
@@ -238,6 +239,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			model.addAttribute("invalidPicture", true);
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("additives", additivesRepository.findAll());
+			model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("allergenic", allergenicRepository.findAll());
 			model.addAttribute("restaurant",restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
@@ -309,6 +311,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("additives", additivesRepository.findAll());
 			model.addAttribute("allergenic", allergenicRepository.findAll());
+			model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("restaurant",
 					restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
@@ -323,6 +326,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("additives", additivesRepository.findAll());
 			model.addAttribute("allergenic", allergenicRepository.findAll());
+			model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 			
@@ -340,6 +344,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 			model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 			model.addAttribute("additives", additivesRepository.findAll());
 			model.addAttribute("allergenic", allergenicRepository.findAll());
+			model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 			model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 			offer.setOfferPhotos((List<OfferPhoto>)session.getAttribute("photoList"));
 			
@@ -353,6 +358,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 		model.addAttribute("additives", additivesRepository.findAll());
 		model.addAttribute("allergenic", allergenicRepository.findAll());
+		model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 		model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		return "offerDetail";
@@ -427,6 +433,7 @@ public class OfferDetailController implements HandlerExceptionResolver {
 		model.addAttribute("dayOfWeeks", dayOfWeekRepository.findAll());
 		model.addAttribute("additives", additivesRepository.findAll());
 		model.addAttribute("allergenic", allergenicRepository.findAll());
+		model.addAttribute("courseTypes" , courseTypeRepository.findByRestaurantIdOrderBySortByAsc(authenticatedUser.getAdministratedRestaurant().getId()));
 		model.addAttribute("restaurant", restaurantRepository.findById(authenticatedUser.getAdministratedRestaurant().getId()));
 		session.setAttribute("photoList", offer.getOfferPhotos());
 		return "offerDetail";
