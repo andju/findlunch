@@ -557,7 +557,7 @@ public class RestaurantController {
 			accountRepository.save(account);
 		}
 		//
-		if(restaurant.getRestaurantLogos().isEmpty()) {
+		if(null == restaurant.getRestaurantLogos() || restaurant.getRestaurantLogos().isEmpty()) {
 			addDefaultLogo(restaurant);
 		}
 		
