@@ -24,6 +24,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.NumberFormat;
 import org.springframework.format.annotation.NumberFormat.Style;
@@ -135,6 +136,7 @@ public class Restaurant implements Serializable {
 	@JoinTable(name = "restaurant_has_kitchen_type", joinColumns = {
 	@JoinColumn(name = "restaurant_id") }, inverseJoinColumns = { @JoinColumn(name = "kitchen_type_id") })
 	@JsonView(RestaurantView.RestaurantRest.class)
+	@NotEmpty(message = "{restaurant.kitchenType.notEmpty}")
 	private List<KitchenType> kitchenTypes;
 
 	/** The restaurant type. */
